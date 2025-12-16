@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: joyjuncture-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: joyjuncture
+      POSTGRES_USER: joyjuncture_user
+      POSTGRES_PASSWORD: joyjuncture_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
