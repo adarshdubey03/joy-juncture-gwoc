@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-primary: #1E1D1B;
+  /* Near-Black */
+  --color-secondary: #EFEEE6;
+  /* Warm Off-White */
+  --color-accent: #F2C753;
+  /* Mustard Yellow */
+  --color-accent-hover: #AA8E3F;
+  /* Deep Golden Yellow */
+
+  --color-neutral-100: #FEFEFE;
+  /* Pure White */
+  --color-neutral-200: #EFEEE6;
+  /* Warm Off-White */
+  --color-neutral-300: #D1D0CE;
+  /* Soft Light Grey */
+  --color-neutral-400: #AAA9A7;
+  /* Mid Grey */
+  --color-neutral-500: #898680;
+  /* Interpolated */
+  --color-neutral-600: #676255;
+  /* Warm Charcoal Grey */
+  --color-neutral-700: #4A463D;
+  /* Interpolated */
+  --color-neutral-800: #2D2B26;
+  /* Interpolated */
+  --color-neutral-900: #1E1D1B;
+  /* Near-Black */
+
+  --font-sans: var(--font-inter);
+
+  --background-image-gradient-accent: linear-gradient(to right, #F2C753, #AA8E3F);
+
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-fade-up: fadeUp 0.5s ease-out forwards;
+  --animate-scale-in: scaleIn 0.3s ease-out forwards;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #1E1D1B;
+  background-color: #EFEEE6;
+  background-image: url('/contour-pattern.svg');
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
