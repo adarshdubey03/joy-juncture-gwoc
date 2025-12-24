@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { EnquiryModal } from "@/components/experiences/enquiry-modal";
 import { motion } from "framer-motion";
 import { Briefcase, Heart, PartyPopper, Tent } from "lucide-react";
+import Link from "next/link";
 
 const experiences = [
     {
@@ -104,13 +105,24 @@ export default function ExperiencesPage() {
                                     <p className="text-gray-500 text-lg mb-8 leading-relaxed">
                                         {exp.description}
                                     </p>
-                                    <Button
-                                        size="lg"
-                                        className="w-full rounded-xl text-lg font-bold"
-                                        onClick={() => handleEnquire(exp.title)}
-                                    >
-                                        Enquire Now
-                                    </Button>
+                                    <div className="flex gap-4">
+                                        <Link href={`/experiences/${exp.id}`} className="flex-1">
+                                            <Button
+                                                size="lg"
+                                                variant="outline"
+                                                className="w-full rounded-xl text-lg font-bold"
+                                            >
+                                                Learn More
+                                            </Button>
+                                        </Link>
+                                        <Button
+                                            size="lg"
+                                            className="flex-1 rounded-xl text-lg font-bold"
+                                            onClick={() => handleEnquire(exp.title)}
+                                        >
+                                            Enquire Now
+                                        </Button>
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}

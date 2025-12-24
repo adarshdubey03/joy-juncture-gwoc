@@ -52,6 +52,7 @@ const navItems = [
         dropdown: [
             { name: "Blog", href: "/community/blog" },
             { name: "Wallet & Points", href: "/community/wallet" },
+            { name: "Puzzles", href: "/community/puzzles" },
             { name: "About us", href: "/community/about" },
         ],
     },

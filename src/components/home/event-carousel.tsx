@@ -55,12 +55,14 @@ export function EventCarousel() {
                     <div className="max-w-xl">
                         <h2 className="text-4xl md:text-5xl font-bold mb-4">What's Happening Now</h2>
                         <p className="text-gray-500 text-lg">
-                            Don't miss out on the latest tournaments, workshops, and community gatherings.
+                            Upcoming events, active puzzles, new games, and community highlights. Stay in the loop with everything Joy Juncture.
                         </p>
                     </div>
-                    <Button variant="outline" className="hidden md:flex gap-2">
-                        View All Events <ArrowRight className="w-4 h-4" />
-                    </Button>
+                    <Link href="/events">
+                        <Button variant="outline" className="hidden md:flex gap-2">
+                            View All Events <ArrowRight className="w-4 h-4" />
+                        </Button>
+                    </Link>
                 </div>
 
                 <div className="relative">
@@ -98,9 +100,11 @@ export function EventCarousel() {
                                                 {event.description}
                                             </p>
 
-                                            <Button className="w-full gap-2 group-hover:bg-accent group-hover:text-white transition-colors">
-                                                Join Now
-                                            </Button>
+                                            <Link href="/events">
+                                                <Button className="w-full gap-2 group-hover:bg-accent group-hover:text-white transition-colors">
+                                                    Join Now
+                                                </Button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
@@ -123,9 +127,11 @@ export function EventCarousel() {
                     </div>
 
                     <div className="md:hidden mt-8 text-center">
-                        <Button variant="outline" className="w-full gap-2">
-                            View All Events <ArrowRight className="w-4 h-4" />
-                        </Button>
+                        <Link href="/events">
+                            <Button variant="outline" className="w-full gap-2">
+                                View All Events <ArrowRight className="w-4 h-4" />
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

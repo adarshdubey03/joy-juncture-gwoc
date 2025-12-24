@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Clock, Ticket } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 const events = [
     {
         id: 1,
+        slug: "the-great-board-game-marathon",
         title: "The Great Board Game Marathon",
         date: "Dec 24, 2024",
         time: "10:00 AM - 10:00 PM",
@@ -18,6 +20,7 @@ const events = [
     },
     {
         id: 2,
+        slug: "mystery-night-bloody-inheritance",
         title: "Mystery Night: The Bloody Inheritance",
         date: "Dec 31, 2024",
         time: "09:00 PM - 12:00 AM",
@@ -28,6 +31,7 @@ const events = [
     },
     {
         id: 3,
+        slug: "community-meetup-strategy",
         title: "Community Meetup: Strategy & Snacks",
         date: "Jan 05, 2025",
         time: "04:00 PM - 08:00 PM",
@@ -52,55 +56,56 @@ export function EventsList() {
 
                 <div className="space-y-6">
                     {events.map((event, index) => (
-                        <motion.div
-                            key={event.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                        >
-                            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                                <div className="flex flex-col md:flex-row">
-                                    <div className={`w-full md:w-64 h-48 md:h-auto ${event.image} relative`}>
-                                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
-                                            {event.price}
+                        <Link key={event.id} href={`/events/${event.slug}`}>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 cursor-pointer group">
+                                    <div className="flex flex-col md:flex-row">
+                                        <div className={`w-full md:w-64 h-48 md:h-auto ${event.image} relative`}>
+                                            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                                {event.price}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
+                                            <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
+                                                <div className="flex items-center gap-1">
+                                                    <Calendar className="w-4 h-4 text-accent" />
+                                                    {event.date}
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <Clock className="w-4 h-4 text-accent" />
+                                                    {event.time}
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <MapPin className="w-4 h-4 text-accent" />
+                                                    {event.location}
+                                                </div>
+                                            </div>
+
+                                            <h3 className="text-2xl font-bold mb-2 group-hover:text-accent transition-colors">{event.title}</h3>
+                                            <p className="text-gray-500 mb-6">
+                                                Join us for an unforgettable experience. Limited spots available!
+                                            </p>
+
+                                            <div className="flex items-center justify-between mt-auto">
+                                                <div className="text-sm font-medium text-orange-500">
+                                                    Only {event.spots} spots left!
+                                                </div>
+                                                <Button className="gap-2 rounded-full px-6 group-hover:bg-accent transition-colors">
+                                                    <Ticket className="w-4 h-4" />
+                                                    View Details
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
-                                        <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
-                                            <div className="flex items-center gap-1">
-                                                <Calendar className="w-4 h-4 text-accent" />
-                                                {event.date}
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <Clock className="w-4 h-4 text-accent" />
-                                                {event.time}
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <MapPin className="w-4 h-4 text-accent" />
-                                                {event.location}
-                                            </div>
-                                        </div>
-
-                                        <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
-                                        <p className="text-gray-500 mb-6">
-                                            Join us for an unforgettable experience. Limited spots available!
-                                        </p>
-
-                                        <div className="flex items-center justify-between mt-auto">
-                                            <div className="text-sm font-medium text-orange-500">
-                                                Only {event.spots} spots left!
-                                            </div>
-                                            <Button className="gap-2 rounded-full px-6">
-                                                <Ticket className="w-4 h-4" />
-                                                Register Now
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card>
-                        </motion.div>
+                                </Card>
+                            </motion.div>
+                        </Link>
                     ))}
                 </div>
             </div>
