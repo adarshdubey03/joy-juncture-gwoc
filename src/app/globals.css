@@ -3,8 +3,8 @@
 @theme {
   --color-primary: #1E1D1B;
   /* Near-Black */
-  --color-secondary: #EFEEE6;
-  /* Warm Off-White */
+  --color-secondary: #F1EFE7;
+  /* Light Beige */
   --color-accent: #F2C753;
   /* Mustard Yellow */
   --color-accent-hover: #AA8E3F;
@@ -30,6 +30,7 @@
   /* Near-Black */
 
   --font-sans: var(--font-inter);
+  --font-heading: 'Clash Display', sans-serif;
 
   --background-image-gradient-accent: linear-gradient(to right, #F2C753, #AA8E3F);
 
@@ -88,7 +89,7 @@
 
 body {
   color: #1E1D1B;
-  background-color: #EFEEE6;
+  background-color: #F1EFE7;
   background-image: url('/contour-pattern.svg');
   background-repeat: repeat;
   background-size: 800px 800px;

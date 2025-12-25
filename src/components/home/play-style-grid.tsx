@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Home, Users, PartyPopper, Trophy } from "lucide-react";
 
-const playStyles = [
+const playStyles: PlayStyle[] = [
     {
         title: "Play at Home",
         description: "Shop games for your collection",
@@ -118,5 +120,85 @@ export function PlayStyleGrid() {
                 </div>
             </div>
         </section>
+    );
+}
+
+function FlipCard({ styleData }: { styleData: PlayStyle }) {
+    const { title, tag, keywords, descriptionTitle, backIcon, frontIcon, theme } = styleData;
+    const contourPattern = "/contour-pattern.svg?v=2"; // Path to the svg pattern
+
+    return (
+        <div className="group card w-[250px] h-[320px] bg-transparent perspective-1000">
+            <div className="flip-content relative w-full h-full text-white transform-style-3d transition-transform duration-500 shadow-[0px_0px_10px_1px_#000000ee] rounded-[5px]">
+
+                {/* BACK (Sorta the Cover) */}
+                <div className="absolute inset-0 bg-[#F4C752] rounded-[5px] overflow-hidden flex justify-center items-center backface-hidden">
+                    {/* Rotating Gradient Border Effect - Dynamic Color */}
+                    <div className={`absolute w-[200px] h-[160%] bg-gradient-to-r from-transparent ${theme.borderGradient} to-transparent animate-rotation`} />
+
+                    {/* Inner Content Block */}
+                    <div className="absolute inset-[1px] bg-[#F4C752] rounded-[5px] flex flex-col justify-center items-center gap-[30px] z-10 p-4 text-center overflow-hidden">
+                        {/* Contour Pattern Overlay */}
+                        <div
+                            className="absolute inset-0 opacity-30 pointer-events-none"
+                            style={{ backgroundImage: `url(${contourPattern})`, backgroundSize: 'cover' }}
+                        />
+
+                        {/* Dynamic Icon */}
+                        <div className="text-gray-900 relative z-10">
+                            {backIcon}
+                        </div>
+                        <span className="text-xl font-bold tracking-wider leading-tight text-gray-900 relative z-10">{title}</span>
+
+                    </div>
+                </div>
+
+                {/* FRONT (Revealed on Hover) */}
+                <div className="absolute inset-0 bg-[#F4C752] rounded-[5px] overflow-hidden rotate-y-180 backface-hidden text-white">
+
+                    {/* Contour Pattern Overlay */}
+                    <div
+                        className="absolute inset-0 opacity-30 pointer-events-none"
+                        style={{ backgroundImage: `url(${contourPattern})`, backgroundSize: 'cover' }}
+                    />
+                    {/* Floating Circles Background - Dynamic Colors */}
+                    <div className="absolute w-full h-full object-cover pointer-events-none">
+                        <div
+                            className="absolute w-[90px] h-[90px] rounded-full blur-[15px] animate-floating top-0 left-0"
+                            style={{ backgroundColor: theme.blobs[0] }}
+                        />
+                        <div
+                            className="absolute w-[150px] h-[150px] rounded-full blur-[15px] animate-floating left-[50px] top-0 [animation-delay:-800ms]"
+                            style={{ backgroundColor: theme.blobs[1] }}
+                        />
+                        <div
+                            className="absolute w-[30px] h-[30px] rounded-full blur-[15px] animate-floating left-[160px] top-[-80px] [animation-delay:-1800ms]"
+                            style={{ backgroundColor: theme.blobs[2] }}
+                        />
+                    </div>
+
+                    {/* Front Content */}
+                    <div className="absolute inset-0 p-[20px] flex flex-col justify-between z-20">
+                        <span className={`px-[10px] py-[2px] rounded-[10px] backdrop-blur-[2px] w-fit text-sm font-medium ${theme.tagBg} text-white shadow-sm border border-white/10`}>
+                            {tag}
+                        </span>
+
+                        <div className="w-full p-[15px] bg-[#00000099] backdrop-blur-[5px] rounded-[5px] shadow-[0px_0px_10px_5px_#00000088]">
+                            <div className="flex justify-between items-start mb-2">
+                                <p className="font-bold text-sm leading-tight text-white w-[80%]">
+                                    {descriptionTitle}
+                                </p>
+                                <div className={theme.iconColor}>
+                                    {frontIcon}
+                                </div>
+                            </div>
+                            <p className="text-[#ffffff88] text-[10px] mt-[5px]">
+                                {keywords}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }

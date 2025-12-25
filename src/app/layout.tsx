@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Kalam } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
 import { CartProvider } from "@/contexts/cart-context";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const kalam = Kalam({
+  weight: ["300", "400", "700"],
+  subsets: ["latin"],
+  variable: "--font-kalam",
+});
 
 export const metadata: Metadata = {
   title: "Joy Juncture | Moments of Joy, One Game at a Time",

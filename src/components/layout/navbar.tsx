@@ -111,13 +111,13 @@ export function Navbar() {
     }, [isOpen]);
 
     return (
-        <div className="fixed top-4 left-0 right-0 z-50 px-4 md:px-8 pointer-events-none">
+        <div className="fixed top-0 left-0 right-0 z-50 w-full">
             <nav
                 className={cn(
-                    "mx-auto max-w-[1400px] rounded-[50px] border transition-all duration-300 pointer-events-auto",
+                    "w-full border-b transition-all duration-300",
                     isScrolled
-                        ? "bg-white/92 backdrop-blur-[20px] border-white/20"
-                        : "bg-white/15 backdrop-blur-[30px] border-white/20"
+                        ? "bg-white/95 backdrop-blur-md border-neutral-200/20"
+                        : "bg-transparent border-transparent"
                 )}
             >
                 <div className="px-8 h-16 flex items-center justify-between gap-8 lg:gap-16">

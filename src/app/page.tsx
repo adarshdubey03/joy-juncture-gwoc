@@ -11,13 +11,11 @@ import { GamificationTeaser } from "@/components/home/gamification-teaser";
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <Navbar />
       <Hero />
       <PlayStyleGrid />
       <EventCarousel />
       <Testimonials />
       <GamificationTeaser />
-      <Footer />
     </main>
   );
 }

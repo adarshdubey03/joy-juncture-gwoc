@@ -25,7 +25,7 @@ export function GamificationTeaser() {
                                 <span>Join the Fun</span>
                             </div>
 
-                            <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                            <h2 className="font-heading text-4xl md:text-6xl font-bold mb-6 leading-tight">
                                 Play Games. <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-accent">
                                     Earn Joy Points.

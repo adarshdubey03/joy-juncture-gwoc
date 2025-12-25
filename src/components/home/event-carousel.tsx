@@ -4,9 +4,9 @@ import * as React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { EventCard } from "@/components/home/event-card";
 
 const events = [
     {
@@ -23,6 +23,7 @@ const events = [
         date: "Dec 31, 2024",
         location: "Online Event",
         image: "bg-gradient-to-br from-red-500 to-orange-600",
+        imageUrl: "/events/bloody-inheritance.png",
         description: "Solve the murder mystery before the clock strikes midnight.",
     },
     {
@@ -53,7 +54,7 @@ export function EventCarousel() {
             <div className="container px-4 mx-auto">
                 <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
                     <div className="max-w-xl">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">What's Happening Now</h2>
+                        <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4">What&apos;s Happening Now</h2>
                         <p className="text-gray-500 text-lg">
                             Upcoming events, active puzzles, new games, and community highlights. Stay in the loop with everything Joy Juncture.
                         </p>
@@ -67,11 +68,11 @@ export function EventCarousel() {
 
                 <div className="relative">
                     <div className="overflow-hidden -mx-4 px-4 py-8" ref={emblaRef}>
-                        <div className="flex gap-6">
+                        <div className="flex gap-6 pb-4">
                             {events.map((event) => (
                                 <div
                                     key={event.id}
-                                    className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0"
+                                    className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 px-4"
                                 >
                                     <div className="group relative h-full bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
                                         {/* Image Placeholder */}
