@@ -4,9 +4,9 @@ import * as React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { EventCard } from "@/components/home/event-card";
 
 const events = [
     {
@@ -23,6 +23,7 @@ const events = [
         date: "Dec 31, 2024",
         location: "Online Event",
         image: "bg-gradient-to-br from-red-500 to-orange-600",
+        imageUrl: "/events/bloody-inheritance.png",
         description: "Solve the murder mystery before the clock strikes midnight.",
     },
     {
@@ -53,9 +54,9 @@ export function EventCarousel() {
             <div className="container px-4 mx-auto">
                 <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
                     <div className="max-w-xl">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">What's Happening Now</h2>
+                        <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4">What&apos;s Happening Now</h2>
                         <p className="text-gray-500 text-lg">
-                            Don't miss out on the latest tournaments, workshops, and community gatherings.
+                            Don&apos;t miss out on the latest tournaments, workshops, and community gatherings.
                         </p>
                     </div>
                     <Button variant="outline" className="hidden md:flex gap-2">
@@ -65,43 +66,20 @@ export function EventCarousel() {
 
                 <div className="relative">
                     <div className="overflow-hidden -mx-4 px-4 py-8" ref={emblaRef}>
-                        <div className="flex gap-6">
+                        <div className="flex gap-6 pb-4">
                             {events.map((event) => (
                                 <div
                                     key={event.id}
-                                    className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0"
+                                    className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 px-4"
                                 >
-                                    <div className="group relative h-full bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
-                                        {/* Image Placeholder */}
-                                        <div className={`h-48 w-full ${event.image} relative`}>
-                                            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
-                                                Upcoming
-                                            </div>
-                                        </div>
-
-                                        <div className="p-6">
-                                            <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                                                <div className="flex items-center gap-1">
-                                                    <Calendar className="w-4 h-4 text-accent" />
-                                                    {event.date}
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <MapPin className="w-4 h-4 text-accent" />
-                                                    {event.location}
-                                                </div>
-                                            </div>
-
-                                            <h3 className="text-xl font-bold mb-3 group-hover:text-accent transition-colors">
-                                                {event.title}
-                                            </h3>
-                                            <p className="text-gray-500 mb-6 line-clamp-2">
-                                                {event.description}
-                                            </p>
-
-                                            <Button className="w-full gap-2 group-hover:bg-accent group-hover:text-white transition-colors">
-                                                Join Now
-                                            </Button>
-                                        </div>
+                                    <div className="h-full flex justify-center">
+                                        <EventCard
+                                            title={event.title}
+                                            date={event.date}
+                                            description={event.description}
+                                            imageClass={event.image}
+                                            imageUrl={event.imageUrl}
+                                        />
                                     </div>
                                 </div>
                             ))}

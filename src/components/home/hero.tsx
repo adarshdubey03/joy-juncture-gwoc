@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Play } from "lucide-react";
+
+import { ShinyButton } from "@/components/ui/shiny-button";
+import { WoodenCartButton } from "@/components/ui/wooden-cart-button";
 
 export function Hero() {
     return (
@@ -23,7 +25,7 @@ export function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6 leading-[1.1]">
+                    <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tighter mb-6 leading-[1.1]">
                         Moments of Joy,
                         <br />
                         <span className="text-transparent bg-clip-text bg-gradient-accent">
@@ -45,30 +47,14 @@ export function Hero() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-12"
                 >
-                    <Button size="lg" className="rounded-full px-8 text-lg h-14 shadow-orange-500/20 shadow-2xl">
-                        Shop Games
-                    </Button>
-                    <Button variant="outline" size="lg" className="rounded-full px-8 text-lg h-14 border-white/20 text-white hover:bg-white/10 hover:text-white gap-2">
-                        <Play className="w-5 h-5 fill-current" />
-                        Play Free Online
-                    </Button>
+                    <WoodenCartButton text="Shop Games" />
+                    <ShinyButton text="Play Free Online" />
                 </motion.div>
             </div>
 
-            {/* Scroll Indicator */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2"
-            >
-                <div className="flex flex-col items-center gap-2 text-gray-400">
-                    <span className="text-xs uppercase tracking-widest">Scroll</span>
-                    <ArrowDown className="w-5 h-5 animate-bounce" />
-                </div>
-            </motion.div>
+
         </section>
     );
 }
