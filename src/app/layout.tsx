@@ -3,7 +3,7 @@ import { Inter, Kalam } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
-import { ColabsFooter } from "@/components/layout/colabs-footer";
+import { CartProvider } from "@/contexts/cart-context";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const kalam = Kalam({
@@ -24,18 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link
-          href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className={cn(inter.variable, kalam.variable, "font-sans antialiased")} suppressHydrationWarning>
-        <Navbar />
-        <main className="pt-20">
-          {children}
-        </main>
-        <ColabsFooter />
+      <body className={cn(inter.variable, "font-sans antialiased")} suppressHydrationWarning>
+        <CartProvider>
+          <Navbar />
+          <main className="pt-20">
+            {children}
+          </main>
+        </CartProvider>
       </body>
     </html>
   );

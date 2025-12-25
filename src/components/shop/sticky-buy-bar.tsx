@@ -5,15 +5,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/cart-context";
+import type { Product } from "@/lib/products";
 
 interface StickyBuyBarProps {
     productName: string;
     price: number;
     isVisible: boolean;
+    product: Product;
+    quantity: number;
+    setQuantity: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export function StickyBuyBar({ productName, price, isVisible }: StickyBuyBarProps) {
-    const [quantity, setQuantity] = React.useState(1);
+export function StickyBuyBar({ productName, price, isVisible, product, quantity, setQuantity }: StickyBuyBarProps) {
+    const { addToCart } = useCart();
+    const [isAdding, setIsAdding] = React.useState(false);
+
+    const handleAddToCart = () => {
+        setIsAdding(true);
+        addToCart(product, quantity);
+        setTimeout(() => setIsAdding(false), 500);
+    };
 
     return (
         <AnimatePresence>
@@ -47,9 +59,13 @@ export function StickyBuyBar({ productName, price, isVisible }: StickyBuyBarProp
                                 </button>
                             </div>
 
-                            <Button className="flex-1 md:flex-none gap-2 rounded-full px-8">
+                            <Button 
+                                className="flex-1 md:flex-none gap-2 rounded-full px-8"
+                                onClick={handleAddToCart}
+                                disabled={isAdding}
+                            >
                                 <ShoppingCart className="w-4 h-4" />
-                                Add to Cart - {formatCurrency(price * quantity)}
+                                {isAdding ? "Adding..." : `Add to Cart - ${formatCurrency(price * quantity)}`}
                             </Button>
                         </div>
                     </div>

@@ -1,3 +1,7 @@
+"use client";
+
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/home/hero";
 import { PlayStyleGrid } from "@/components/home/play-style-grid";
 import { EventCarousel } from "@/components/home/event-carousel";
