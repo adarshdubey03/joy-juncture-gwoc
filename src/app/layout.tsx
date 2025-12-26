@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Kalam } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/layout/navbar";
+import { CartProvider } from "@/contexts/cart-context";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const kalam = Kalam({
+  weight: ["300", "400", "700"],
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-kalam",
 });
 
 export const metadata: Metadata = {
-  title: "JOY JUNCTURE",
-  description: "created by dhurndhar",
+  title: "Joy Juncture | Moments of Joy, One Game at a Time",
+  description: "Discover board games that create memories. Shop games, book experiences, and join the community.",
 };
 
 export default function RootLayout({
@@ -23,11 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(inter.variable, "font-sans antialiased")} suppressHydrationWarning>
+        <CartProvider>
+          <Navbar />
+          <main className="pt-20">
+            {children}
+          </main>
+        </CartProvider>
       </body>
     </html>
   );

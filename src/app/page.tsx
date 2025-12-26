@@ -1,14 +1,21 @@
-import Image from "next/image";
-import NavBar from "@/components/NavBar";
-import {Button} from '@/components/ui/button';
-import { LoginButton } from "@/components/auth/login-button";
+"use client";
+
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
+import { Hero } from "@/components/home/hero";
+import { PlayStyleGrid } from "@/components/home/play-style-grid";
+import { EventCarousel } from "@/components/home/event-carousel";
+import { Testimonials } from "@/components/home/testimonials";
+import { GamificationTeaser } from "@/components/home/gamification-teaser";
+
 export default function Home() {
   return (
-    <div className=" min-h-screen  bg-zinc-50 font-sans dark:bg-black">
-      <LoginButton >
-    <Button size='lg' > Click me  </Button>
-    </LoginButton>
-    
-    </div>
+    <main className="min-h-screen">
+      <Hero />
+      <PlayStyleGrid />
+      <EventCarousel />
+      <Testimonials />
+      <GamificationTeaser />
+    </main>
   );
 }
