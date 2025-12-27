@@ -9,12 +9,17 @@ export function Hero() {
     return (
         <section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center bg-primary text-white">
             {/* Background Image */}
+            {/* Background Video */}
             <div className="absolute inset-0 z-0">
-                <img
-                    src="/hero-bg.jpg"
-                    alt="Joy Juncture Hero"
-                    className="w-full h-full object-cover opacity-40"
-                />
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover opacity-60"
+                >
+                    <source src="/hero-bg.mp4" type="video/mp4" />
+                </video>
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-primary" />
             </div>
 

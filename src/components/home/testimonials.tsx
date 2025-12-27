@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import SplitText from "@/components/ui/SplitText";
+
 const testimonials = [
     {
         id: 1,
@@ -42,7 +44,19 @@ export function Testimonials() {
         <section className="py-24 overflow-hidden">
             <div className="container px-4 mx-auto">
                 <div className="text-center mb-20">
-                    <h2 className="font-heading text-4xl md:text-6xl font-bold mb-6">Proof of Joy</h2>
+                    <SplitText
+                        text="Proof of Joy"
+                        className="font-heading text-4xl md:text-6xl font-bold mb-6 text-center"
+                        delay={100}
+                        duration={0.6}
+                        ease="power3.out"
+                        splitType="chars"
+                        from={{ opacity: 0, y: 40 }}
+                        to={{ opacity: 1, y: 0 }}
+                        threshold={0.1}
+                        rootMargin="-100px"
+                        textAlign="center"
+                    />
                     <p className="text-gray-500 text-lg max-w-2xl mx-auto font-kalam">
                         Hear from our community of players, families, and organizations who have found their joy with us.
                     </p>
