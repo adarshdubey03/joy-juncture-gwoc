@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Kalam } from "next/font/google";
+import { Geist, Geist_Mono, Fredoka } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
@@ -12,6 +12,12 @@ const kalam = Kalam({
   weight: ["300", "400", "700"],
   subsets: ["latin"],
   variable: "--font-kalam",
+});
+
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin"],
+  weight: ["500"], // SemiBold
 });
 
 export const metadata: Metadata = {
@@ -27,16 +33,16 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.variable, "font-sans antialiased")} suppressHydrationWarning>
-        <AuthProvider>
-          <CartProvider>
-            <Navbar />
-            <main className="pt-20">
-              {children}
-            </main>
-          </CartProvider>
-        </AuthProvider>
+    <html lang="en">
+      <body
+        className={`
+          ${geistSans.variable}
+          ${geistMono.variable}
+          ${fredoka.variable}
+          antialiased
+        `}
+      >
+        {children}
       </body>
     </html>
   );
