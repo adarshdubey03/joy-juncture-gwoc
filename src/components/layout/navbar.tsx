@@ -7,6 +7,9 @@ import { Menu, X, Instagram, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+import { UserButton } from "@/components/auth/user-button";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
 const navItems = [
     { name: "Home", href: "/" },
     {
@@ -62,26 +65,8 @@ export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const pathname = usePathname();
-
-    // Check auth state
-    useEffect(() => {
-        const checkAuth = () => {
-            const loggedIn = localStorage.getItem("userLoggedIn") === "true";
-            setIsLoggedIn(loggedIn);
-        };
-
-        checkAuth();
-        window.addEventListener("storage", checkAuth);
-        // Custom event for immediate updates within the same window
-        window.addEventListener("authChange", checkAuth);
-
-        return () => {
-            window.removeEventListener("storage", checkAuth);
-            window.removeEventListener("authChange", checkAuth);
-        };
-    }, []);
+    const user = useCurrentUser();
 
     // Scroll effect
     useEffect(() => {
@@ -174,14 +159,18 @@ export function Navbar() {
                         ))}
 
                         {/* Auth Link */}
-                        <Link
-                            href={isLoggedIn ? "/profile" : "/login"}
-                            className={cn(
-                                "text-sm uppercase tracking-[1px] font-normal transition-colors duration-300 py-2 border-b-2 border-transparent hover:text-accent hover:border-accent"
-                            )}
-                        >
-                            {isLoggedIn ? "Profile" : "Login"}
-                        </Link>
+                        {user ? (
+                            <UserButton />
+                        ) : (
+                            <Link
+                                href="/login"
+                                className={cn(
+                                    "text-sm uppercase tracking-[1px] font-normal transition-colors duration-300 py-2 border-b-2 border-transparent hover:text-accent hover:border-accent"
+                                )}
+                            >
+                                Login
+                            </Link>
+                        )}
                     </div>
 
                     {/* Right Side */}
@@ -290,10 +279,10 @@ export function Navbar() {
                                 {/* Mobile Auth Link */}
                                 <div className="border-b border-neutral-100 pb-4">
                                     <Link
-                                        href={isLoggedIn ? "/profile" : "/login"}
+                                        href={user ? "/profile" : "/login"}
                                         className="text-lg font-medium uppercase tracking-wide block"
                                     >
-                                        {isLoggedIn ? "Profile" : "Login"}
+                                        {user ? "Profile" : "Login"}
                                     </Link>
                                 </div>
                             </div>

@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
 import { CartProvider } from "@/contexts/cart-context";
+import { AuthProvider } from "@/components/providers/auth-provider";
+import { auth } from "@/auth";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const kalam = Kalam({
@@ -17,20 +19,24 @@ export const metadata: Metadata = {
   description: "Discover board games that create memories. Shop games, book experiences, and join the community.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "font-sans antialiased")} suppressHydrationWarning>
-        <CartProvider>
-          <Navbar />
-          <main className="pt-20">
-            {children}
-          </main>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="pt-20">
+              {children}
+            </main>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

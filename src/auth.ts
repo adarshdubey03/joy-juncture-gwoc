@@ -1,12 +1,112 @@
 import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { db } from "@/lib/db"
+import { authConfig } from "./auth.config"
+import Credentials from "next-auth/providers/credentials"
+import { LoginSchema } from "@/schemas"
+import { getUserById } from "@/data/user"
+import { UserRole } from "@prisma/client"
+import bcrypt from "bcrypt"
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import { checkRateLimit } from "@/lib/rate-limit";
 
-// ✅ You MUST destructure and export signIn here for the import to work
-export const { 
-  handlers, 
-  signIn, 
-  signOut, 
-  auth 
-} = NextAuth({ 
-  providers: [ GitHub ] 
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
+  pages: {
+    signIn: "/login",
+    error: "/error",
+  },
+  events: {
+    async linkAccount({ user }) {
+      await db.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() }
+      })
+    }
+  },
+  callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "credentials") return true;
+
+      if (user.id) {
+        const existingUser = await getUserById(user.id);
+        // Block if not verified
+        if (!existingUser?.emailVerified) return false;
+      }
+
+      return true;
+    },
+    async session({ token, session }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role && session.user) {
+        session.user.role = token.role as UserRole;
+      }
+
+      return session;
+    },
+    async jwt({ token }) {
+      if (!token.sub) return token;
+
+      const existingUser = await getUserById(token.sub);
+
+      if (!existingUser) return token;
+
+      token.role = existingUser.role;
+
+      return token;
+    }
+  },
+  adapter: PrismaAdapter(db) as any,
+  session: { strategy: "jwt" },
+  ...authConfig,
+  providers: [
+    ...authConfig.providers,
+    Credentials({
+      async authorize(credentials) {
+        const validatedFields = LoginSchema.safeParse(credentials);
+
+        if (validatedFields.success) {
+          const { email, password } = validatedFields.data;
+
+          let user = await db.user.findFirst({
+            where: {
+              OR: [
+                { email: email },
+                { phoneNumber: email }
+              ]
+            }
+          });
+
+          // If not found, try to parse as phone number (assuming IN default if missing country code)
+          if (!user) {
+            const phoneNumber = parsePhoneNumberFromString(email, 'IN');
+            if (phoneNumber) {
+              const formatted = phoneNumber.number; // E.164 format
+              user = await db.user.findUnique({
+                where: { phoneNumber: formatted }
+              });
+            }
+          }
+
+          if (!user || !user.password) return null;
+
+          const passwordsMatch = await bcrypt.compare(
+            password,
+            user.password,
+          );
+
+          if (passwordsMatch) return user;
+        }
+
+        return null;
+      }
+    })
+  ]
 })
