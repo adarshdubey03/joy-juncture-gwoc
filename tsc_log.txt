@@ -1,0 +1,12 @@
+src/app/(admin)/admin/products/page.tsx(14,8): error TS2307: Cannot find module '@/components/ui/table' or its corresponding type declarations.
+src/app/api/auth/[...nextauth]/route.ts(1,10): error TS2305: Module '"@/auth"' has no exported member 'handlers'.
+src/components/auth/back-button.tsx(12,17): error TS2322: Type '"link"' is not assignable to type '"outline" | "primary" | "secondary" | "ghost" | undefined'.
+src/components/auth/login-form.tsx(34,18): error TS18048: 'data' is possibly 'undefined'.
+src/components/auth/login-form.tsx(35,20): error TS18048: 'data' is possibly 'undefined'.
+src/components/auth/login-form.tsx(35,25): error TS2339: Property 'success' does not exist on type '{ error: string; }'.
+src/components/home/event-carousel.tsx(89,54): error TS2304: Cannot find name 'Calendar'.
+src/components/home/event-carousel.tsx(93,54): error TS2304: Cannot find name 'MapPin'.
+src/components/home/play-style-grid.tsx(8,19): error TS2304: Cannot find name 'PlayStyle'.
+src/components/home/play-style-grid.tsx(126,47): error TS2304: Cannot find name 'PlayStyle'.
+src/components/NavBar.tsx(10,14): error TS2741: Property 'alt' is missing in type '{ src: string; }' but required in type '{ src: string | StaticImport; alt: string; width?: number | `${number}` | undefined; height?: number | `${number}` | undefined; fill?: boolean | undefined; loader?: ImageLoader | undefined; ... 13 more ...; lazyRoot?: string | undefined; }'.
+src/lib/supabase/client.ts(1,30): error TS2307: Cannot find module '@supabase/supabase-js' or its corresponding type declarations.
