@@ -62,7 +62,7 @@ export default function BlogsPage() {
               className="flex flex-col md:flex-row items-center gap-12"
             >
               {/* Image */}
-              <div className="w-full md:w-1/2 relative h-[360px]">
+              <div className="w-full md:w-1/2 relative h-90">
                 <Image
                   src={blog.image}
                   alt={blog.title}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Instagram, ChevronDown, LogOut } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
-const ROUTE_MAP = {
+const ROUTE_MAP: Record<string, string> = {
   "About Us": "/about",
   "Blog":"/blogs"
 };
