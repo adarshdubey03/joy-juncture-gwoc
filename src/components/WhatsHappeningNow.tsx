@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function WhatsHappeningNow() {
   return (
-    <section className="w-full bg-[#F1EFE7] py-24">
+    <section className="w-full bg-[#FFF4D6] py-24">
       <div className="mx-auto max-w-7xl ">
         {/* Section Header */}
         <div className="mb-14 max-w-2xl">

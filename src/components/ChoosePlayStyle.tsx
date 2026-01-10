@@ -31,7 +31,7 @@ const PLAY_STYLES = [
 
 export default function ChoosePlayStyle() {
   return (
-    <section className="w-full bg-[#F1EFE7] py-10">
+    <section className="w-full bg-[#FFF4D6] py-10">
       
       {/* SECTION TITLE */}
       <div className="pl-20 pr-6 mb-16 ">

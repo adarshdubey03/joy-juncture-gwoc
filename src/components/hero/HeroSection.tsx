@@ -12,7 +12,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative w-full min-h-screen bg-[#F1EFE7] overflow-hidden">
+    <section className="relative w-full min-h-screen bg-[#FFF4D6] overflow-hidden">
 
       {/* LOGO FLOATING ABOVE VIDEO */}
       <div className="absolute left-16 z-30">
@@ -53,8 +53,9 @@ export default function HeroSection() {
           <div
             className="
               absolute top-0 left-0
-              h-24 w-60
-              bg-[#F1EFE7]
+              h-24
+              w-60
+              bg-[#FFF4D6]
               rounded-br-4xl
               z-10
             "
@@ -64,8 +65,9 @@ export default function HeroSection() {
           <div
             className="
               absolute bottom-0 left-0
-              h-72 w-xl
-              bg-[#F1EFE7]
+              h-72
+              w-xl
+              bg-[#FFF4D6]
               rounded-tr-4xl
               z-10
             "
