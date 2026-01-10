@@ -1,18 +1,18 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import {
-    DEFAULT_LOGIN_REDIRECT,
-    apiAuthPrefix,
-    authRoutes,
-    publicRoutes,
+  DEFAULT_LOGIN_REDIRECT,
+  apiAuthPrefix,
+  authRoutes,
+  publicRoutes,
 } from "@/routes";
 import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-    const { nextUrl } = req;
-    const isLoggedIn = !!req.auth;
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -59,10 +59,9 @@ export default auth((req) => {
         response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
     }
 
-    return response;
+  return response;
 });
 
-// Optionally, don't invoke Middleware on some paths
 export const config = {
-    matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

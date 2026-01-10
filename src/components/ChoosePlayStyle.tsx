@@ -1,0 +1,97 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+const PLAY_STYLES = [
+  {
+    title: "Play at Home",
+    bg: "#0353a4",
+    image: "/play-home.png",
+    href: "/play-at-home",
+  },
+  {
+    title: "Play Together (Live)",
+    bg: "#bc6c25",
+    image: "/play-live.png",
+    href: "/play-together",
+  },
+  {
+    title: "Play for Occasions",
+    bg: "#3a5a40",
+    image: "/play-occasions",
+    href: "/occasions",
+  },
+  {
+    title: "Play & Earn Points",
+    bg: "#662e9b",
+    image: "/play-points.png",
+    href: "/rewards",
+  },
+];
+
+export default function ChoosePlayStyle() {
+  return (
+    <section className="w-full bg-[#FFF4D6] py-3 overflow-hidden">
+
+      {/* SECTION TITLE */}
+      <div className="pl-20 pr-6 mb-16">
+        <h3 className="text-2xl font-medium text-neutral-900">
+          Choose your play style
+        </h3>
+      </div>
+
+      {/* HORIZONTAL COLLAGE */}
+      <div className="relative w-full overflow-hidden">
+        <div className="flex w-max playstyle-marquee">
+
+          {/* Duplicate list once for seamless loop */}
+          {[...PLAY_STYLES, ...PLAY_STYLES].map((style, index) => (
+            <div
+              key={`${style.title}-${index}`}
+              className="relative h-60 w-72 mx-2 rounded-3xl overflow-hidden shrink-0"
+              style={{ backgroundColor: style.bg }}
+            >
+              {/* TITLE */}
+              <div className="absolute top-6 left-6 z-10">
+                <h4 className="text-xl font-semibold text-amber-50">
+                  {style.title}
+                </h4>
+              </div>
+
+              {/* CENTER IMAGE */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Image
+                  src={style.image}
+                  alt={style.title}
+                  width={110}
+                  height={110}
+                  className="object-contain"
+                />
+              </div>
+
+              {/* RIGHT ARROW CTA */}
+              <Link
+                href={style.href}
+                className="
+                  absolute bottom-4 right-4 z-10
+                  flex h-11 w-11 items-center justify-center
+                  rounded-full bg-white/90
+                  text-neutral-900
+                  shadow-md
+                  transition-all
+                  hover:scale-105
+                  hover:bg-white
+                "
+                aria-label={`Go to ${style.title}`}
+              >
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+          ))}
+
+        </div>
+      </div>
+
+    </section>
+  );
+}

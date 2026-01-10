@@ -5,7 +5,7 @@ import { authConfig } from "./auth.config"
 import Credentials from "next-auth/providers/credentials"
 import { LoginSchema } from "@/schemas"
 import { getUserById } from "@/data/user"
-import { UserRole } from "@prisma/client"
+import { UserRole } from "./generated/prisma/enums"
 import bcrypt from "bcrypt"
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -64,6 +64,7 @@ export const {
     }
   },
   adapter: PrismaAdapter(db as any) as any,
+<<<<<<< HEAD
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 hours (default is 30 days)
@@ -80,6 +81,9 @@ export const {
       },
     },
   },
+=======
+  session: { strategy: "jwt" },
+>>>>>>> 25ae6e62d84b2b85a5eae8f35cc134b4cd2cd877
   ...authConfig,
   providers: [
     ...authConfig.providers,

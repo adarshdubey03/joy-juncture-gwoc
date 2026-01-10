@@ -49,9 +49,12 @@ export const generatePasswordResetToken = async (identifier: string, type: "emai
         if (existingToken) {
             // Rate Limit: 60 seconds
             const now = new Date();
-            const timeDiff = now.getTime() - new Date(existingToken.createdAt).getTime();
-            if (timeDiff < 60 * 1000) {
-                return { rateLimit: true };
+            const createdAt = (existingToken as any).createdAt ? new Date((existingToken as any).createdAt) : null;
+            if (createdAt) {
+                const timeDiff = now.getTime() - createdAt.getTime();
+                if (timeDiff < 60 * 1000) {
+                    return { rateLimit: true };
+                }
             }
             await db.passwordResetToken.delete({ where: { id: existingToken.id } });
         }
@@ -70,9 +73,12 @@ export const generatePasswordResetToken = async (identifier: string, type: "emai
         if (existingToken) {
             // Rate Limit: 60 seconds
             const now = new Date();
-            const timeDiff = now.getTime() - new Date(existingToken.createdAt).getTime();
-            if (timeDiff < 60 * 1000) {
-                return { rateLimit: true };
+            const createdAt = (existingToken as any).createdAt ? new Date((existingToken as any).createdAt) : null;
+            if (createdAt) {
+                const timeDiff = now.getTime() - createdAt.getTime();
+                if (timeDiff < 60 * 1000) {
+                    return { rateLimit: true };
+                }
             }
             await db.passwordResetToken.delete({ where: { id: existingToken.id } });
         }
