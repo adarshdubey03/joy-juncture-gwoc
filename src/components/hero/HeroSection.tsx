@@ -1,13 +1,21 @@
+"use client";
 import Image from "next/image";
 import HeroNavbar from "./HeroNavbar";
 import Link from "next/link";
 
 export default function HeroSection() {
+  const handleScrollDown = () => {
+    const next = document.getElementById("next-section");
+    if (next) {
+      next.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="relative w-full min-h-screen bg-[#FFF4D6] overflow-hidden">
 
       {/* LOGO FLOATING ABOVE VIDEO */}
-      <div className="absolute top-1 left-12 z-30">
+      <div className="absolute left-16 z-30">
         <Image
           src="/logo.png"
           alt="Joy Juncture"
@@ -18,10 +26,8 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* VIDEO FRAME — CREATES WHITE BORDER ALL AROUND */}
-      <div className="relative h-screen w-full p-5 pt-2 ">
-
-        {/* VIDEO CONTAINER (ROUNDED) */}
+      {/* VIDEO FRAME */}
+      <div className="relative h-screen w-full p-5 pt-2">
         <div className="relative h-full w-full overflow-hidden rounded-4xl rounded-tl-xs">
 
           {/* NAVBAR */}
@@ -43,7 +49,7 @@ export default function HeroSection() {
           {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-black/20" />
 
-          {/* TOP-LEFT WHITE EXCLUSION (LOGO CUT) */}
+          {/* TOP-LEFT WHITE EXCLUSION */}
           <div
             className="
               absolute top-0 left-0
@@ -55,7 +61,7 @@ export default function HeroSection() {
             "
           />
 
-          {/* BOTTOM-LEFT WHITE EXCLUSION (HEADLINE CUT) */}
+          {/* BOTTOM-LEFT WHITE EXCLUSION */}
           <div
             className="
               absolute bottom-0 left-0
@@ -67,17 +73,42 @@ export default function HeroSection() {
             "
           />
 
-          {/* HEADLINE CONTENT INSIDE BOTTOM CUT */}
-          <div className="absolute bottom-10 left-10 z-20 h-48 w-lg p-8 flex items-end">
-            <h1 className="text-4xl font-black text-neutral-900 leading-tight">
-              Discover Joyful Experiences that Bring People Together
+          {/* HEADLINE CONTENT — POLISHED */}
+          <div
+            className="
+              absolute bottom-10 left-6
+              z-20 h-48 w-lg
+              px-10 
+              flex flex-col justify-between
+            "
+          >
+            <h1 className="text-[2.75rem] font-black text-neutral-900 leading-tight max-w-md">
+              Discover joyful experiences that bring people together
             </h1>
+
+            {/* DOWN ARROW */}
+            <button
+              onClick={handleScrollDown}
+              aria-label="Scroll to next section"
+              className="
+                mt-6
+                flex h-14 w-14
+                items-center justify-center
+                rounded-full
+                border border-neutral-500
+                text-neutral-900
+                text-2xl
+                hover:border-neutral-700
+                hover:bg-neutral-100
+                transition
+              "
+            >
+              ↓
+            </button>
           </div>
 
-          {/* CTA BUTTONS — BOTTOM RIGHT ON VIDEO */}
+          {/* CTA BUTTONS — BOTTOM RIGHT */}
           <div className="absolute bottom-8 right-80 z-20 flex items-center gap-10">
-
-            {/* PRIMARY CTA */}
             <Link
               href="/shop"
               className="
@@ -94,10 +125,9 @@ export default function HeroSection() {
               Shop Games
             </Link>
 
-            {/* SECONDARY CTA */}
             <Link
               href="/play"
-               className="
+              className="
                 rounded-full bg-[#F4C752]
                 px-8 py-4
                 text-base font-semibold text-neutral-900
@@ -110,7 +140,6 @@ export default function HeroSection() {
             >
               Play Games
             </Link>
-
           </div>
 
         </div>
