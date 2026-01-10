@@ -1,8 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// ==========================================
+// Prisma Schema — Joy Juncture
+// INIT + COMMERCE
+// ==========================================
 
 generator client {
   provider = "prisma-client"
@@ -11,4 +10,311 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  
+}
+
+
+// ==========================
+// ENUMS
+// ==========================
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum PointTransactionReason {
+  PRODUCT_PURCHASE
+  EVENT_ATTENDANCE
+  PUZZLE_REWARD
+  ADMIN_ADJUSTMENT
+  REDEMPTION
+}
+
+enum OrderStatus {
+  CREATED
+  COMPLETED
+}
+
+enum EventType {
+  GAME_NIGHT
+  WORKSHOP
+  OTHER
+}
+
+enum PuzzleType {
+  SUDOKU
+  RIDDLE
+  PUZZLE
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+
+
+// ==========================
+// CORE MODELS
+// ==========================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+
+  role      UserRole @default(USER)
+
+  password  String?
+
+  phoneNumber String? @unique
+  phoneVerified DateTime?
+
+  wallet            Wallet?
+  receivedPoints    PointTransaction[] @relation("RecipientTransactions")
+  actedTransactions PointTransaction[] @relation("ActorTransactions")
+
+  // ✅ Commerce relation
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  emailVerified DateTime?
+
+  eventRegistrations EventRegistration[]
+  eventAttendances   EventAttendance[]
+
+  puzzleAttempts PuzzleAttempt[]
+
+  contents Content[]
+
+  // Security
+  failedLoginAttempts Int @default(0)
+  lockoutUntil DateTime?
+}
+
+model VerificationToken {
+  id String @id @default(cuid())
+  email String?
+  phone String?
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+  @@unique([phone, token])
+}
+
+model PasswordResetToken {
+  id String @id @default(cuid())
+  email String?
+  phone String?
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+  @@unique([phone, token])
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  balance   Int      @default(0)
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PointTransaction {
+  id        String   @id @default(cuid())
+
+  userId    String
+  user      User     @relation("RecipientTransactions", fields: [userId], references: [id])
+
+  actorId   String?
+  actor     User?    @relation("ActorTransactions", fields: [actorId], references: [id])
+
+  amount    Int
+  reason    PointTransactionReason
+
+  // ✅ Commerce source
+  order Order?
+
+  createdAt DateTime @default(now())
+
+  eventAttendance EventAttendance?
+
+  puzzleAttempt PuzzleAttempt?
+
+
+}
+
+// ==========================
+// COMMERCE
+// ==========================
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Int
+  isActive    Boolean  @default(true)
+
+  orderItems  OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+
+  totalAmount Int
+  status      OrderStatus
+
+  items       OrderItem[]
+
+  pointTxnId  String?    @unique
+  pointTxn    PointTransaction? @relation(fields: [pointTxnId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id            String   @id @default(cuid())
+  orderId       String
+  productId     String
+
+  productName   String
+  priceAtBuy    Int
+  quantity      Int
+
+  order         Order   @relation(fields: [orderId], references: [id])
+  product       Product @relation(fields: [productId], references: [id])
+}
+
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  type        EventType
+  startTime   DateTime
+  capacity    Int?
+  pointReward Int?
+
+  registrations EventRegistration[]
+  attendances   EventAttendance[]
+
+  createdAt DateTime @default(now())
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, eventId])
+}
+
+model EventAttendance {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  pointTxnId String? @unique
+  pointTxn   PointTransaction? @relation(fields: [pointTxnId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, eventId])
+}
+
+model Puzzle {
+  id          String     @id @default(cuid())
+  title       String
+  type        PuzzleType
+  prompt      String
+  answer      String
+  pointReward Int
+  isActive    Boolean    @default(true)
+
+  attempts    PuzzleAttempt[]
+
+  createdAt DateTime @default(now())
+}
+
+model PuzzleAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  puzzleId  String
+  answer    String
+  isCorrect Boolean
+
+  user      User     @relation(fields: [userId], references: [id])
+  puzzle    Puzzle   @relation(fields: [puzzleId], references: [id])
+
+  pointTxnId String? @unique
+  pointTxn   PointTransaction? @relation(fields: [pointTxnId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+
+model Content {
+  id        String        @id @default(cuid())
+  title     String
+  body      String
+  status    ContentStatus
+
+  authorId  String
+  author    User          @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model CorporateEnquiry {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  eventType String
+  message   String
+  status    EnquiryStatus @default(NEW)
+
+  createdAt DateTime @default(now())
+}
+
+model RateLimit {
+  id String @id @default(cuid())
+  ip String
+  action String
+  count Int @default(1)
+  expiresAt DateTime
+
+  @@unique([ip, action])
 }

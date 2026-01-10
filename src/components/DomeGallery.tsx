@@ -1,6 +1,6 @@
 
 "use client";  
-import { useEffect, useMemo, useRef, useCallback, use } from 'react';
+import { useEffect, useMemo, useRef, useCallback } from 'react';
 import { useGesture } from '@use-gesture/react';
 
 type ImageItem = string | { src: string; alt?: string };

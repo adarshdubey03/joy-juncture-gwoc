@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Instagram, ChevronDown } from "lucide-react";
+import { Instagram, ChevronDown, LogOut } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 
 const NAV_ITEMS = [
   {
@@ -29,6 +30,9 @@ const NAV_ITEMS = [
 
 export default function HeroNavbar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const { data: session, status } = useSession();
+
+  const isLoggedIn = status === "authenticated";
 
   return (
     <nav className="absolute top-6 left-8 right-8 z-30">
@@ -46,10 +50,7 @@ export default function HeroNavbar() {
                 onMouseEnter={() => setOpenMenu(nav.label)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
-                {/* Trigger */}
-                <button
-                  className="flex items-center gap-1 text-base font-medium text-neutral-900 hover:text-black transition-colors"
-                >
+                <button className="flex items-center gap-1 text-base font-medium text-neutral-900 hover:text-black transition-colors">
                   {nav.label}
                   <ChevronDown
                     size={16}
@@ -59,10 +60,8 @@ export default function HeroNavbar() {
                   />
                 </button>
 
-                {/* Hover buffer (prevents gap flicker) */}
                 <div className="absolute left-0 right-0 top-full h-4" />
 
-                {/* Dropdown */}
                 <div
                   className={`
                     absolute left-1/2 top-full mt-4 w-56 -translate-x-1/2
@@ -100,25 +99,59 @@ export default function HeroNavbar() {
           })}
         </div>
 
-        {/* RIGHT — LOGIN + SOCIAL */}
+        {/* RIGHT — AUTH + SOCIAL */}
         <div className="flex items-center gap-6">
-          
-          {/* LOGIN BUTTON */}
-          <Link
-            href="/login"
-            className="
-              rounded-full bg-[#F4C752]
-              px-6 py-2.5
-              text-sm font-semibold text-neutral-900
-              shadow-[0_6px_16px_rgba(244,199,82,0.35)]
-              transition-all
-              hover:-translate-y-px
-              hover:shadow-[0_10px_24px_rgba(244,199,82,0.45)]
-              active:translate-y-0
-            "
-          >
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <>
+              {/* SHOP */}
+              <Link
+                href="/shop"
+                className="
+                  rounded-full bg-[#F4C752]
+                  px-6 py-2.5
+                  text-sm font-semibold text-neutral-900
+                  shadow-[0_6px_16px_rgba(244,199,82,0.35)]
+                  transition-all
+                  hover:-translate-y-px
+                  hover:shadow-[0_10px_24px_rgba(244,199,82,0.45)]
+                "
+              >
+                Shop
+              </Link>
+
+              {/* LOGOUT */}
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="
+                  flex h-10 w-10 items-center justify-center
+                  rounded-full border border-neutral-400
+                  text-neutral-800
+                  transition-all
+                  hover:border-neutral-500
+                  hover:bg-neutral-100
+                  hover:text-neutral-900
+                "
+                aria-label="Logout"
+              >
+                <LogOut size={18} />
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className="
+                rounded-full bg-[#F4C752]
+                px-6 py-2.5
+                text-sm font-semibold text-neutral-900
+                shadow-[0_6px_16px_rgba(244,199,82,0.35)]
+                transition-all
+                hover:-translate-y-px
+                hover:shadow-[0_10px_24px_rgba(244,199,82,0.45)]
+              "
+            >
+              Login
+            </Link>
+          )}
 
           {/* INSTAGRAM */}
           <Link
@@ -137,7 +170,6 @@ export default function HeroNavbar() {
             <Instagram size={18} />
           </Link>
         </div>
-
       </div>
     </nav>
   );
