@@ -3,7 +3,7 @@ import { Inter, Kalam } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
-import { CartProvider } from "@/contexts/cart-context";
+// import { CartProvider } from "@/contexts/cart-context";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { auth } from "@/auth";
 
@@ -30,12 +30,13 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.variable, "font-sans antialiased")} suppressHydrationWarning>
         <AuthProvider>
-          <CartProvider>
+           {children}
+         {/* <CartProvider>
             <Navbar />
             <main className="pt-20">
-              {children}
-            </main>
-          </CartProvider>
+             
+            </main> 
+          </CartProvider> */}
         </AuthProvider>
       </body>
     </html>

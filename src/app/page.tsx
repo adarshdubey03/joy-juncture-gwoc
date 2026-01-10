@@ -2,11 +2,11 @@
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { Hero } from "@/components/home/hero";
-import { PlayStyleGrid } from "@/components/home/play-style-grid";
-import { EventCarousel } from "@/components/home/event-carousel";
-import { Testimonials } from "@/components/home/testimonials";
-import { GamificationTeaser } from "@/components/home/gamification-teaser";
+// import { Hero } from "@/components/home/hero";
+// import { PlayStyleGrid } from "@/components/home/play-style-grid";
+// import { EventCarousel } from "@/components/home/event-carousel";
+// import { Testimonials } from "@/components/home/testimonials";
+// import { GamificationTeaser } from "@/components/home/gamification-teaser";
 
 import { logout } from "@/actions/logout";
 import { Button } from "@/components/ui/button";
@@ -21,11 +21,11 @@ export default function Home() {
           </Button>
         </form>
       </div>
-      <Hero />
+      {/* <Hero />
       <PlayStyleGrid />
       <EventCarousel />
       <Testimonials />
-      <GamificationTeaser />
+      <GamificationTeaser /> */}
     </main>
   );
 }

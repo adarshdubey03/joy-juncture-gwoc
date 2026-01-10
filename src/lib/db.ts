@@ -1,8 +1,8 @@
-import { PrismaClient } from '../generated/prisma/client'
+import { PrismaClient } from '../generated/prisma'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const globalForPrisma = global as unknown as {
-    prisma: PrismaClient
+  prisma: PrismaClient
 }
 
 const adapter = new PrismaPg({

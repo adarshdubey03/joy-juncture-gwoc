@@ -16,6 +16,10 @@ export const newVerification = async (token: string) => {
         return { error: "Token has expired!" };
     }
 
+    if (!existingToken.email) {
+        return { error: "Email is missing from verification token" };
+    }
+
     const existingUser = await db.user.findFirst({
         where: { email: existingToken.email }
     });
@@ -36,7 +40,7 @@ export const newVerification = async (token: string) => {
         where: { id: existingToken.id }
     });
 
-    
+
 
     return { success: "Email verified!" };
 };

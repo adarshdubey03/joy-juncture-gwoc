@@ -45,7 +45,7 @@ export default auth((req) => {
         // If not logged in, we are on login/register page. Proceed with 'response' (NextResponse.next())
     } else if (!isLoggedIn && !isPublicRoute) {
         // Protected route, redirect to login
-        response = NextResponse.redirect(new URL("/login", nextUrl));
+        // response = NextResponse.redirect(new URL("/login", nextUrl));
     }
 
     // Attach Secure Headers to the response we are about to return
@@ -55,6 +55,8 @@ export default auth((req) => {
         response.headers.set("X-Content-Type-Options", "nosniff");
         response.headers.set("Referrer-Policy", "origin-when-cross-origin");
         response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), browsing-topics=()");
+        // HSTS: Enforce HTTPS for 1 year, include subdomains
+        response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
     }
 
     return response;
