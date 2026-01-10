@@ -5,7 +5,7 @@ import { authConfig } from "./auth.config"
 import Credentials from "next-auth/providers/credentials"
 import { LoginSchema } from "@/schemas"
 import { getUserById } from "@/data/user"
-import { UserRole } from "@prisma/client"
+import { UserRole } from "./generated/prisma/enums"
 import bcrypt from "bcrypt"
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -63,7 +63,7 @@ export const {
       return token;
     }
   },
-  adapter: PrismaAdapter(db) as any,
+  adapter: PrismaAdapter(db as any) as any,
   session: { strategy: "jwt" },
   ...authConfig,
   providers: [
