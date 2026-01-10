@@ -4,6 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { Instagram, ChevronDown } from "lucide-react";
 
+const ROUTE_MAP = {
+  "About Us": "/about",
+  "Blog":"/blogs"
+};
+
 const NAV_ITEMS = [
   {
     label: "Shop",
@@ -32,7 +37,7 @@ export default function HeroNavbar() {
 
   return (
     <nav className="absolute top-6 left-8 right-8 z-30">
-      <div className="flex items-center justify-between rounded-full bg-[#F1EFE7] px-12 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+      <div className="flex items-center justify-between rounded-full bg-[#F4C752] px-12 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
         
         {/* LEFT — NAV LINKS */}
         <div className="hidden md:flex items-center gap-10">
@@ -81,7 +86,7 @@ export default function HeroNavbar() {
                     {nav.items.map((item) => (
                       <Link
                         key={item}
-                        href="#"
+                        href={ROUTE_MAP[item] ?? "#"}
                         className="
                           block px-5 py-2 text-sm
                           text-neutral-800
