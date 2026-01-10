@@ -52,6 +52,9 @@ export default function RootLayout({
           ${kalam.variable}
           ${fredoka.variable}
           antialiased
+          bg-[#FFF4D6]
+          text-[#FFF4D6]
+         
         `}
       >
         <AuthSessionProvider>

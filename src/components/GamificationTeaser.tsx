@@ -1,6 +1,6 @@
 export default function GamificationTeaser() {
   return (
-    <section className="w-full bg-white py-24">
+    <section className="w-full bg-[#FFF4D6] py-24">
       <div className="mx-auto max-w-7xl px-6 flex flex-col items-center">
         {/* Header */}
         <div className="mb-12 max-w-2xl text-center">

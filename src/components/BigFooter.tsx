@@ -1,85 +1,101 @@
+import Image from "next/image";
 import { Instagram, Twitter, Linkedin } from "lucide-react";
 
 export default function BigFooter() {
   return (
-    <footer className="w-full bg-black text-white">
-      <div className="mx-auto max-w-7xl px-6 min-h-[80vh] flex flex-col justify-between py-24">
+    <footer className="w-full px-4 md:px-8 pb-10">
+      {/* Rounded Footer Container */}
+      <div className="w-full bg-[#1E1A14] text-[#FFF4D6] rounded-[28px] px-8 md:px-16 py-20">
         
         {/* Top: Brand Statement */}
         <div className="max-w-3xl">
-          <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
-            Joy isn’t something you buy.
+          <h2 className="text-2xl md:text-2xl font-semibold leading-tight text-[#F4C752]">
+            At Joy Juncture, we believe the best moments in life happen around a table... laughing, bonding, and competing with friends & family.
             <br />
             It’s something you share.
           </h2>
 
-          <p className="mt-6 text-neutral-400 text-lg">
-            Joy Juncture designs play experiences that bring people together —
-            at home, live, and in moments that matter.
+          <p className="mt-6 text-[#CFC3A3] text-lg">
+            Founded by two passionate siblings, we craft games that blend strategy, storytelling, and sheer joy!
           </p>
         </div>
 
         {/* Middle: Navigation */}
         <div className="mt-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12 text-sm">
-          <div>
-            <p className="mb-4 text-neutral-400 uppercase tracking-wide">
-              Play
-            </p>
-            <ul className="space-y-2 text-neutral-200">
-              <li>Play at Home</li>
-              <li>Play Together (Live)</li>
-              <li>Play for Occasions</li>
-              <li>Community Play</li>
-            </ul>
-          </div>
+          {[
+            {
+              title: "JJ Web-App",
+              items: [
+                "Play 'The Showdown'",
+              ],
+            },
+            {
+              title: "Quicklinks",
+              items: [
+                "Privacy Policy",
+                "Cancellation policy",
+                "Terms & Conditions",
+                "Return & refund policy",
+                "Shipping policy",
+                "Cookie policy",
 
-          <div>
-            <p className="mb-4 text-neutral-400 uppercase tracking-wide">
-              Games
-            </p>
-            <ul className="space-y-2 text-neutral-200">
-              <li>All Games</li>
-              <li>Party Games</li>
-              <li>Family Games</li>
-              <li>Couples & Friends</li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="mb-4 text-neutral-400 uppercase tracking-wide">
-              Experiences
-            </p>
-            <ul className="space-y-2 text-neutral-200">
-              <li>Live Events</li>
-              <li>Workshops</li>
-              <li>Corporate Play</li>
-              <li>Celebrations</li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="mb-4 text-neutral-400 uppercase tracking-wide">
-              About
-            </p>
-            <ul className="space-y-2 text-neutral-200">
-              <li>Our Philosophy</li>
-              <li>Proof of Joy</li>
-              <li>Careers</li>
-              <li>Contact</li>
-            </ul>
-          </div>
+              ],
+            },
+            {
+              title: "Collaborate",
+              items: [
+                "Partner with Us",
+                "a) Partnered Game Program (New Creators)",
+               " b) Amplified sales Program (Existing Creators)",
+              ],
+            },
+       
+          ].map((section) => (
+            <div key={section.title}>
+              <p className="mb-4 uppercase tracking-wide text-[#E6D8A8]">
+                {section.title}
+              </p>
+              <ul className="space-y-2">
+                {section.items.map((item) => (
+                  <li
+                    key={item}
+                    className="text-[#FFF4D6] hover:text-[#F4C752] cursor-pointer transition-colors"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Bottom: Social + Legal */}
-        <div className="mt-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-t border-neutral-800 pt-8">
-          <p className="text-sm text-neutral-500">
-            © {new Date().getFullYear()} Joy Juncture. Designed for moments that matter.
+        {/* Bottom Section */}
+        <div className="mt-24 flex flex-col md:flex-row items-center justify-between gap-8 border-t border-[#2A2208] pt-8">
+          
+          {/* Logo */}
+          <div className="flex items-center gap-3 opacity-90">
+            <Image
+              src="/logo.png" // make sure this exists in /public
+              alt="Joy Juncture"
+              width={42}
+              height={42}
+            />
+            <span className="text-lg font-semibold">Joy Juncture</span>
+          </div>
+
+          {/* Copyright */}
+          <p className="text-sm text-[#B8AC8A] text-center">
+            © {new Date().getFullYear()} Joy Juncture · Designed for moments that matter
           </p>
 
-          <div className="flex gap-6 text-neutral-400">
-            <Instagram className="h-5 w-5 cursor-pointer hover:text-white transition-colors" />
-            <Twitter className="h-5 w-5 cursor-pointer hover:text-white transition-colors" />
-            <Linkedin className="h-5 w-5 cursor-pointer hover:text-white transition-colors" />
+          {/* Social Icons */}
+          <div className="flex gap-6">
+            {[Instagram, Twitter, Linkedin].map((Icon, i) => (
+              <Icon
+                key={i}
+                className="h-5 w-5 cursor-pointer text-[#FFF4D6] hover:text-[#F4C752] hover:-translate-y-0.5 transition-all"
+              />
+            ))}
           </div>
         </div>
       </div>

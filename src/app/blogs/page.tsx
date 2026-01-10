@@ -41,7 +41,7 @@ const blogs = [
 
 export default function BlogsPage() {
   return (
-    <main className="min-h-screen bg-[#0E0E0E] text-white">
+    <main className="min-h-screen bg-[#FFF4D6] text-white">
       {/* Page Header */}
       <section className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <h1 className="text-5xl md:text-6xl font-extrabold mb-6">

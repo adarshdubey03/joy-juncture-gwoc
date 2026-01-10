@@ -7,7 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 
 const ROUTE_MAP: Record<string, string> = {
   "About Us": "/about",
-  "Blog":"/blogs"
+  "Blog": "/blogs",
 };
 
 const NAV_ITEMS = [
