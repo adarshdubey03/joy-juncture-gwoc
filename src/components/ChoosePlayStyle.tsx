@@ -31,22 +31,24 @@ const PLAY_STYLES = [
 
 export default function ChoosePlayStyle() {
   return (
-    <section className="w-full bg-[#FFF4D6] py-10">
-      
+    <section className="w-full bg-[#FFF4D6] py-3 overflow-hidden">
+
       {/* SECTION TITLE */}
-      <div className="pl-20 pr-6 mb-16 ">
-        <h3 className="text-3xl font-medium text-neutral-900">
+      <div className="pl-20 pr-6 mb-16">
+        <h3 className="text-2xl font-medium text-neutral-900">
           Choose your play style
         </h3>
       </div>
 
-      {/* CARDS */}
-      <div className="px-12 ">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-          {PLAY_STYLES.map((style) => (
+      {/* HORIZONTAL COLLAGE */}
+      <div className="relative w-full overflow-hidden">
+        <div className="flex w-max playstyle-marquee">
+
+          {/* Duplicate list once for seamless loop */}
+          {[...PLAY_STYLES, ...PLAY_STYLES].map((style, index) => (
             <div
-              key={style.title}
-              className="relative h-60 rounded-3xl overflow-hidden"
+              key={`${style.title}-${index}`}
+              className="relative h-60 w-72 mx-2 rounded-3xl overflow-hidden shrink-0"
               style={{ backgroundColor: style.bg }}
             >
               {/* TITLE */}
@@ -86,6 +88,7 @@ export default function ChoosePlayStyle() {
               </Link>
             </div>
           ))}
+
         </div>
       </div>
 

@@ -164,3 +164,16 @@ html {
     font-family: var(--font-fredoka), var(--font-geist-sans), system-ui, sans-serif;
   }
 }
+
+@keyframes playstyle-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.playstyle-marquee {
+  animation: playstyle-scroll 35s linear infinite;
+}
