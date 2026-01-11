@@ -2,6 +2,7 @@ import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import { OrderStatus } from "@/generated/prisma";
 import {
   User,
   Wallet,
@@ -32,11 +33,11 @@ export default async function ProfilePage() {
         take: 3,
         orderBy: { createdAt: 'desc' },
         include: { items: true },
-        where: { status: 'COMPLETED' } // Example filter, or just show all
+        where: { status: OrderStatus.DELIVERED } // Example filter, or just show all
       },
       eventRegistrations: {
         take: 3,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { registeredAt: 'desc' },
         include: { event: true }
       },
       puzzleAttempts: {
@@ -97,7 +98,7 @@ export default async function ProfilePage() {
                 <span className="text-xs font-bold uppercase tracking-wider opacity-80">Wallet Balance</span>
               </div>
               <div className="text-2xl font-black font-fredoka">
-                {userData.wallet?.balance || 0} <span className="text-base font-normal opacity-90">Points</span>
+                {userData.wallet?.balance.toString() || "0"} <span className="text-base font-normal opacity-90">Points</span>
               </div>
             </div>
           </div>
@@ -136,7 +137,7 @@ export default async function ProfilePage() {
                           {order.status}
                         </span>
                         <p className="font-bold text-neutral-900">
-                          ₹{order.totalAmount}
+                          ₹{order.totalAmount.toString()}
                         </p>
                       </div>
                     </div>
