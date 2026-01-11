@@ -37,6 +37,8 @@ export const metadata: Metadata = {
     "Discover board games that create memories. Shop games, book experiences, and join the community.",
 };
 
+import { CartProvider } from "@/context/CartContext";
+
 export default function RootLayout({
   children,
 }: {
@@ -58,7 +60,7 @@ export default function RootLayout({
         `}
       >
         <AuthSessionProvider>
-          {children}
+          <CartProvider>{children}</CartProvider>
         </AuthSessionProvider>
       </body>
     </html>
