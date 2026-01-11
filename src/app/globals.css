@@ -177,3 +177,10 @@ html {
 .playstyle-marquee {
   animation: playstyle-scroll 35s linear infinite;
 }
+.direction-rtl {
+  direction: rtl;
+}
+
+.direction-ltr {
+  direction: ltr;
+}
