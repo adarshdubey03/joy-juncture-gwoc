@@ -39,13 +39,16 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/context/CartContext";
 import HeroNavbar from "@/components/hero/HeroNavbar";
-import BigFooter from "@/components/BigFooter";
+import FooterWrapper from "@/components/FooterWrapper";
 
-export default function RootLayout({
+import { auth } from "@/auth";
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
     <html lang="en">
       <body
@@ -61,14 +64,14 @@ export default function RootLayout({
          
         `}
       >
-        <AuthSessionProvider>
+        <AuthSessionProvider session={session}>
           <CartProvider>
             <div className="flex flex-col min-h-screen">
               <HeroNavbar />
               <main className="flex-grow">
                 {children}
               </main>
-              <BigFooter />
+              <FooterWrapper />
             </div>
           </CartProvider>
         </AuthSessionProvider>

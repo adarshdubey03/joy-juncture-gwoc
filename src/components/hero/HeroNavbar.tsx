@@ -53,12 +53,20 @@ const NAV_ITEMS = [
   },
 ];
 
+import { usePathname } from "next/navigation";
+
 export default function HeroNavbar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const { status } = useSession();
   const { cartCount } = useCart();
+  const pathname = usePathname();
 
   const isLoggedIn = status === "authenticated";
+
+  // List of auth routes to hide navbar
+  const authRoutes = ["/login", "/register", "/verify", "/error", "/reset", "/new-password"];
+
+  if (authRoutes.some(route => pathname.startsWith(route))) return null;
 
   return (
     <>

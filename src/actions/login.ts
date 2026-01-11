@@ -11,51 +11,62 @@ import { AuthError } from "next-auth";
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
+import { checkRateLimit } from "@/lib/rate-limit";
+
 export const login = async (values: z.infer<typeof LoginSchema>) => {
-    const validatedFields = LoginSchema.safeParse(values);
+    let email: string, password: string;
 
-    if (!validatedFields.success) {
-        return { error: "Invalid fields!" };
-    }
+    try {
+        // 1. IP Rate Limiting for Login
+        // TODO: Use real IP in production (e.g., req.headers.get("x-forwarded-for"))
+        const ip = "127.0.0.1";
+        // Allow 5 attempts per 15 minutes (900 seconds)
+        const isAllowed = await checkRateLimit(ip, "LOGIN_ATTEMPT", 5, 900);
 
-    const { email, password } = validatedFields.data;
-
-    const existingUser = await db.user.findFirst({
-        where: {
-            OR: [
-                { email: email },
-                { phoneNumber: email } // 'email' field in schema holds identifier
-            ]
-        }
-    });
-
-    if (!existingUser || !existingUser.password) {
-        return { error: "Invalid credentials!" }
-    }
-
-    if (!existingUser.emailVerified && !existingUser.phoneVerified) {
-        // If NEITHER is verified, we should probably prompt verification.
-        // User said "verify both... independentaly".
-        // If existingUser.emailVerified is false, send email token?
-        // If existingUser.phoneVerified is false, send phone token?
-
-        // For now, let's keep it simple: strict verification required for at least one?
-        // Or strict for email? 
-        // "after this otp verification , user should login imidiately"
-
-        if (!existingUser.emailVerified) {
-            const verificationToken = await generateVerificationToken(existingUser.email, "email");
-            await sendVerificationEmail(verificationToken.email!, verificationToken.token);
-            return { success: "Email not verified. Sent new code!" };
+        if (!isAllowed) {
+            return { error: "Too many login attempts. Please try again later." };
         }
 
-        // If logged in via phone but phone not verified?
-        if (existingUser.phoneNumber === email && !existingUser.phoneVerified) {
-            // Logic to send phone OTP
-            const verificationToken = await generateVerificationToken(existingUser.phoneNumber, "phone");
-            await sendVerificationSMS(verificationToken.phone!, verificationToken.token);
-            return { success: "Phone not verified. Sent new code!" };
+        const validatedFields = LoginSchema.safeParse(values);
+
+        if (!validatedFields.success) {
+            return { error: "Invalid fields!" };
         }
+
+        email = validatedFields.data.email;
+        password = validatedFields.data.password;
+
+        const existingUser = await db.user.findFirst({
+            where: {
+                OR: [
+                    { email: email },
+                    { phoneNumber: email }
+                ]
+            }
+        });
+
+        if (!existingUser || !existingUser.password) {
+            return { error: "Invalid credentials!" }
+        }
+
+        if (!existingUser.emailVerified && !existingUser.phoneVerified) {
+            // If NEITHER is verified
+            if (!existingUser.emailVerified) {
+                const verificationToken = await generateVerificationToken(existingUser.email, "email");
+                await sendVerificationEmail(verificationToken.email!, verificationToken.token);
+                return { success: "Email not verified. Sent new code!" };
+            }
+
+            // If logged in via phone but phone not verified?
+            if (existingUser.phoneNumber === email && !existingUser.phoneVerified) {
+                const verificationToken = await generateVerificationToken(existingUser.phoneNumber, "phone");
+                await sendVerificationSMS(verificationToken.phone!, verificationToken.token);
+                return { success: "Phone not verified. Sent new code!" };
+            }
+        }
+    } catch (error) {
+        console.error("LOGIN_DB_ERROR", error);
+        return { error: "Something went wrong!" };
     }
 
 
