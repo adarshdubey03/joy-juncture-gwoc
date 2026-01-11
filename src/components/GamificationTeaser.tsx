@@ -3,17 +3,23 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const JoyJuncturePremium = () => {
+  interface FloatingPoint {
+    id: number;
+    x: number;
+    y: number;
+    amount: number;
+  }
   const [points, setPoints] = useState(1240);
-  const [floatingPoints, setFloatingPoints] = useState([]);
+  const [floatingPoints, setFloatingPoints] = useState<FloatingPoint[]>([]);
 
-  const handleEarn = (amount, e) => {
+  const handleEarn = (amount: number, e: React.MouseEvent) => {
     // Create a floating text effect at click position
     const newFloat = { id: Date.now(), x: e.clientX, y: e.clientY, amount };
     setFloatingPoints([...floatingPoints, newFloat]);
-    
+
     // Update total points
     setTimeout(() => setPoints(prev => prev + amount), 500);
-    
+
     // Remove float element after animation
     setTimeout(() => {
       setFloatingPoints(prev => prev.filter(f => f.id !== newFloat.id));
@@ -29,7 +35,7 @@ const JoyJuncturePremium = () => {
       </div>
 
       <header className="text-center mb-12">
-        <motion.h1 
+        <motion.h1
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="text-5xl font-black text-[#5C4D42] tracking-tight mb-2"
@@ -40,25 +46,25 @@ const JoyJuncturePremium = () => {
       </header>
 
       <div className="flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-7xl">
-        
+
         {/* LEFT: EARN ACTIONS */}
         <div className="flex flex-col gap-6 w-full lg:w-72">
-          <ActionItem 
-            icon="🛍️" label="Purchases" pts="+120" color="bg-orange-100" 
-            onClick={(e) => handleEarn(120, e)} 
+          <ActionItem
+            icon="🛍️" label="Purchases" pts="+120" color="bg-orange-100"
+            onClick={(e) => handleEarn(120, e)}
           />
-          <ActionItem 
-            icon="🗓️" label="Events" pts="+300" color="bg-blue-100" 
-            onClick={(e) => handleEarn(300, e)} 
+          <ActionItem
+            icon="🗓️" label="Events" pts="+300" color="bg-blue-100"
+            onClick={(e) => handleEarn(300, e)}
           />
-          <ActionItem 
-            icon="🎮" label="Play Games" pts="+50" color="bg-green-100" 
-            onClick={(e) => handleEarn(50, e)} 
+          <ActionItem
+            icon="🎮" label="Play Games" pts="+50" color="bg-green-100"
+            onClick={(e) => handleEarn(50, e)}
           />
         </div>
 
         {/* CENTER: THE 3D WALLET */}
-        <motion.div 
+        <motion.div
           whileHover={{ rotateY: 5, rotateX: 5 }}
           className="relative group cursor-default"
         >
@@ -67,8 +73,8 @@ const JoyJuncturePremium = () => {
             <span className="bg-[#5C4D42] text-white px-5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-lg">
               JJ Points Wallet
             </span>
-            
-            <motion.div 
+
+            <motion.div
               key={points}
               initial={{ scale: 0.8, filter: "blur(10px)" }}
               animate={{ scale: 1, filter: "blur(0px)" }}
@@ -79,7 +85,7 @@ const JoyJuncturePremium = () => {
 
             {/* Premium Progress Bar */}
             <div className="w-full h-10 bg-gray-100/50 rounded-3xl mt-8 p-1.5 inner-shadow">
-              <motion.div 
+              <motion.div
                 className="h-full rounded-2xl bg-gradient-to-r from-[#A5D8FF] via-[#B2F2BB] to-[#FFD8A8] shadow-[0_0_15px_rgba(165,216,255,0.6)]"
                 initial={{ width: "20%" }}
                 animate={{ width: "65%" }}
@@ -115,7 +121,15 @@ const JoyJuncturePremium = () => {
   );
 };
 
-const ActionItem = ({ icon, label, pts, color, onClick }) => (
+interface ActionItemProps {
+  icon: string;
+  label: string;
+  pts: string;
+  color: string;
+  onClick: (e: React.MouseEvent) => void;
+}
+
+const ActionItem = ({ icon, label, pts, color, onClick }: ActionItemProps) => (
   <motion.button
     whileHover={{ scale: 1.05, x: 10 }}
     whileTap={{ scale: 0.95 }}
@@ -130,7 +144,13 @@ const ActionItem = ({ icon, label, pts, color, onClick }) => (
   </motion.button>
 );
 
-const RewardItem = ({ title, icon, color }) => (
+interface RewardItemProps {
+  title: string;
+  icon: string;
+  color: string;
+}
+
+const RewardItem = ({ title, icon, color }: RewardItemProps) => (
   <motion.div
     animate={{ y: [0, -5, 0] }}
     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
