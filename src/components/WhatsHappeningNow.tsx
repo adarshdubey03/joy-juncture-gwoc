@@ -92,13 +92,22 @@ function Card({
 
       {/* Center Image */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <Image
-          src={image}
-          alt={title}
-          width={large ? 800 : 550}
-          height={large ? 100 : 300}
-          className="opacity-90"
-        />
+        {large ? (
+          <Image
+            src={image}
+            alt={title}
+            width={800}
+            height={100}
+            className="opacity-90"
+          />
+        ) : (
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover opacity-90"
+          />
+        )}
       </div>
 
       {/* Arrow CTA */}
