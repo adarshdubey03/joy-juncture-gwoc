@@ -31,11 +31,10 @@ const PLAY_STYLES = [
 
 export default function ChoosePlayStyle() {
   return (
-    <section className="w-full bg-[#FFF4D6] py-3 overflow-hidden">
-
+    <section className="w-full bg-[#FFF4D6] py-6 md:py-3 overflow-hidden">
       {/* SECTION TITLE */}
-      <div className="pl-20 pr-6 mb-16">
-        <h3 className="text-2xl font-medium text-neutral-900">
+      <div className="px-6 sm:px-10 md:pl-20 md:pr-6 mb-8 md:mb-16">
+        <h3 className="text-lg sm:text-xl md:text-2xl font-medium text-neutral-900">
           Choose your play style
         </h3>
       </div>
@@ -43,17 +42,25 @@ export default function ChoosePlayStyle() {
       {/* HORIZONTAL COLLAGE */}
       <div className="relative w-full overflow-hidden">
         <div className="flex w-max playstyle-marquee">
-
           {/* Duplicate list once for seamless loop */}
           {[...PLAY_STYLES, ...PLAY_STYLES].map((style, index) => (
             <div
               key={`${style.title}-${index}`}
-              className="relative h-60 w-72 mx-2 rounded-3xl overflow-hidden shrink-0"
+              className="
+                relative
+                h-44 w-56
+                sm:h-52 sm:w-64
+                md:h-60 md:w-72
+                mx-2
+                rounded-3xl
+                overflow-hidden
+                shrink-0
+              "
               style={{ backgroundColor: style.bg }}
             >
               {/* TITLE */}
-              <div className="absolute top-6 left-6 z-10">
-                <h4 className="text-xl font-semibold text-amber-50">
+              <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10">
+                <h4 className="text-sm sm:text-base md:text-xl font-semibold text-amber-50">
                   {style.title}
                 </h4>
               </div>
@@ -65,7 +72,12 @@ export default function ChoosePlayStyle() {
                   alt={style.title}
                   width={110}
                   height={110}
-                  className="object-contain"
+                  className="
+                    object-contain
+                    w-16 h-16
+                    sm:w-20 sm:h-20
+                    md:w-27.5 md:h-27.5
+                  "
                 />
               </div>
 
@@ -73,9 +85,11 @@ export default function ChoosePlayStyle() {
               <Link
                 href={style.href}
                 className="
-                  absolute bottom-4 right-4 z-10
-                  flex h-11 w-11 items-center justify-center
-                  rounded-full bg-white/90
+                  absolute bottom-3 right-3 md:bottom-4 md:right-4 z-10
+                  flex h-9 w-9 md:h-11 md:w-11
+                  items-center justify-center
+                  rounded-full
+                  bg-white/90
                   text-neutral-900
                   shadow-md
                   transition-all
@@ -84,14 +98,13 @@ export default function ChoosePlayStyle() {
                 "
                 aria-label={`Go to ${style.title}`}
               >
-                <ArrowRight size={20} />
+                <ArrowRight size={18} className="md:hidden" />
+                <ArrowRight size={20} className="hidden md:block" />
               </Link>
             </div>
           ))}
-
         </div>
       </div>
-
     </section>
   );
 }
