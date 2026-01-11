@@ -24,7 +24,7 @@ const PLAY_STYLES = [
   {
     title: "Play & Earn Points",
     bg: "#662e9b",
-    image: "/puzzle.png",
+    image: "/puzzle4.png",
     href: "/rewards",
   },
 ];
@@ -72,7 +72,11 @@ export default function ChoosePlayStyle() {
                   alt={style.title}
                   width={350}
                   height={200}
-                  className="object-contain"
+                  className={
+                    style.title.includes("Earn")
+                      ? "object-cover w-full h-full scale-110"
+                      : "object-contain"
+                  }
                 />
               </div>
 
