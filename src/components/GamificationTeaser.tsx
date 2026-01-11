@@ -17,7 +17,7 @@ export default function GamificationTeaser() {
         <div className="relative w-full h-[90vh] rounded-4xl overflow-hidden bg-white shadow-xl">
           <iframe
             className="absolute inset-0 h-full w-full"
-            src="https://youtu.be/D_CJ4lJ12Us?si=3fhrUGh5A4WFxHS0"
+            src="\wallenRewards2.mp4"
             title="Joy Juncture Gamification Teaser"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
