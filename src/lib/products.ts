@@ -18,6 +18,7 @@ export type Product = {
   occasion?: string[];
   included?: string[];
   specifications?: Record<string, string>;
+  mood?: string;
 };
 
 export const products: Product[] = [
@@ -29,13 +30,14 @@ export const products: Product[] = [
     originalPrice: 799,
     category: "Card Game",
     image: "/products/dead-mans-deck.jpg",
-    badges: ["Bestseller", "Sale"],
+    badges: ["Bestseller", "Sale", "First-time friendly", "Best for groups"],
     description:
       "A high-stakes bluffing card game where you bet, bluff, and try not to end up six feet under. Perfect for loud, chaotic game nights.",
-    images: ["/products/dead-mans-deck.jpg", "/products/dead-mans-deck.jpg", "/products/dead-mans-deck.jpg"],
+    images: ["/products/dead-mans-deck.jpg", "/products/dmd-1.jpg", "/products/dmd-2.jpg", "/products/dmd-3.jpg", "/products/dmd-4.jpg"],
     rating: 4.8,
     reviews: 124,
     features: ["2-6 Players", "30-45 Mins", "Ages 14+"],
+    mood: "Strategic",
     story:
       "Legend has it this cursed deck was found on a ghost ship drifting in the middle of nowhere. Every hand you play pulls you deeper into a web of bluffing, betrayal, and last-minute turnarounds. Will you trust your instincts, or will you fold? The stakes are high, and one wrong move could leave you with nothing. But play your cards right, and you might just walk away with everything.",
     howToPlay: [
@@ -76,10 +78,11 @@ export const products: Product[] = [
     badges: ["New", "Sale"],
     description:
       "A Bollywood and music-themed party game that turns every gathering into a full-on mehfil with singing, guessing, and friendly roasting.",
-    images: ["/products/mehfil.png", "/products/mehfil.png", "/products/mehfil.png"],
+    images: ["/products/mehfil.png", "/products/mehfil-1.jpeg", "/products/mehfil-3.png", "/products/mehfil2.jpeg"],
     rating: 4.7,
     reviews: 89,
     features: ["3-8 Players", "20-40 Mins", "Ages 12+"],
+    mood: "Cozy",
     story:
       "Born from hostel jam sessions and late-night antakshari battles, Mehfil captures the chaos of desi music nights in one tiny box. Remember those nights when someone's terrible singing became legendary? When 'Dilwale Dulhania Le Jayenge' played for the hundredth time and everyone still sang along? This is that energy, bottled up and ready to explode.",
     howToPlay: [
@@ -100,6 +103,7 @@ export const products: Product[] = [
       "Timer included",
       "Score sheets",
       "Rulebook with variants",
+      "Premium storage box",
     ],
     specifications: {
       "Players": "3-8",
@@ -120,10 +124,11 @@ export const products: Product[] = [
     badges: ["Sale"],
     description:
       "A dramatic bidding and bluffing game where you build the most masaledaar Bollywood blockbuster.",
-    images: ["/products/tamasha.jpeg", "/products/tamasha.jpeg", "/products/tamasha.jpeg"],
+    images: ["/products/tamasha.jpeg", "/products/tamasha-1.png", "/products/tamasha-2.jpeg", "/products/tamasha-3.jpeg", "/products/tamasha-4.jpeg"],
     rating: 4.6,
     reviews: 72,
     features: ["3-6 Players", "30-60 Mins", "Ages 13+"],
+    mood: "Chaotic",
     story:
       "You're a producer in a wild Bollywood universe, bidding for stars, scripts, and scandals to create the next big hit. Will you go for the superstar with the massive price tag, or bet on the underdog script that might just surprise everyone? Every bid matters, every combo counts, and the most dramatic film wins.",
     howToPlay: [
@@ -144,6 +149,7 @@ export const products: Product[] = [
       "Bidding chips",
       "Score trackers",
       "Rulebook",
+      "Storage Box",
     ],
     specifications: {
       "Players": "3-6",
@@ -164,10 +170,11 @@ export const products: Product[] = [
     badges: ["Trending", "Sale"],
     description:
       "A cozy, beautifully illustrated jigsaw puzzle inspired by late-night card tables and 'just one more round' energy.",
-    images: ["/products/one-more-round.png", "/products/one-more-round.png", "/products/one-more-round.png"],
+    images: ["/products/one-more-round.png", "/products/one-more-round-1.png", "/products/one-more-round-2.png", "/products/one-more-round-3.png", "/products/one-more-round-4.png"],
     rating: 4.5,
     reviews: 41,
     features: ["500 Pieces", "Relaxing", "Frame-worthy Art"],
+    mood: "Cozy",
     story:
       "Inspired by real Joy Juncture game nights, this puzzle captures that 2AM moment when everyone says they'll sleep — after one more round. Every piece tells a story of laughter, strategy, and that perfect moment when time stands still and all that matters is the game.",
     howToPlay: [
@@ -207,10 +214,11 @@ export const products: Product[] = [
     badges: ["Limited Edition", "Sale"],
     description:
       "A cinematic murder mystery experience in a box. Study the evidence, interrogate alibis, and find the killer before they strike again.",
-    images: ["/products/bloody-inheritance.jpeg", "/products/bloody-inheritance.jpeg", "/products/bloody-inheritance.jpeg"],
+    images: ["/products/bloody-inheritance.jpeg", "/products/TheBloodyInheritance.png"],
     rating: 4.9,
     reviews: 57,
     features: ["1-6 Players", "90-180 Mins", "Ages 16+"],
+    mood: "Strategic",
     story:
       "A wealthy patriarch is dead. A tangled web of relatives, secrets, and motives stands between you and the truth. Every document tells a story. Every alibi has a hole. Every suspect has something to hide. Can you piece together the puzzle before the evidence is lost forever?",
     howToPlay: [
@@ -251,10 +259,11 @@ export const products: Product[] = [
     badges: ["Sale"],
     description:
       "A hilarious party game where you judge your friends and guess their answers. Reveal secrets, share opinions, and discover who knows you best.",
-    images: ["/products/judge-me-and-guess.png", "/products/judge-me-and-guess.png", "/products/judge-me-and-guess.png"],
+    images: ["/products/judge-me-and-guess.png", "/products/jmg-1.png", "/products/jmg-2.jpg"],
     rating: 4.7,
     reviews: 95,
     features: ["3-8 Players", "30-60 Mins", "Ages 16+"],
+    mood: "Light",
     story:
       "Ever wondered what your friends really think about you? Or how well they know your deepest secrets? Judge Me & Guess is the game that brings out the truth, the laughs, and the 'I can't believe you said that!' moments. It's part confession, part guessing game, and 100% hilarious.",
     howToPlay: [
@@ -292,13 +301,14 @@ export const products: Product[] = [
     originalPrice: 599,
     category: "Party Game",
     image: "/products/buzzed.jpeg",
-    badges: ["Sale"],
+    badges: ["Sale", "Best for Groups"],
     description:
       "A fast, hilarious drinking game that turns any chill hang into absolute chaos. Best played with responsible adults.",
-    images: ["/products/buzzed.jpeg", "/products/buzzed.jpeg", "/products/buzzed.jpeg"],
+    images: ["/products/buzzed.jpeg", "/products/buzzed-1.jpg", "/products/buzzed-2.jpg"],
     rating: 4.4,
     reviews: 63,
     features: ["3-10 Players", "15-30 Mins", "Ages 18+"],
+    mood: "Chaotic",
     story:
       "Designed for house parties, after-parties, and that one friend who always says 'light drinks only' and then regrets everything. This is the game that turns 'just one drink' into stories you'll tell for years (or try to forget).",
     howToPlay: [
@@ -318,6 +328,7 @@ export const products: Product[] = [
       "150+ prompt cards",
       "Rule variations",
       "Responsible drinking guide",
+      "Storage Box",
     ],
     specifications: {
       "Players": "3-10",
@@ -327,10 +338,144 @@ export const products: Product[] = [
       "Components": "150+ pieces",
     },
   },
+  {
+    id: "8",
+    name: "Dreamers Fair",
+    slug: "dreamers-fair",
+    price: 449,
+    originalPrice: 899,
+    category: "Strategy",
+    image: "/products/dreamers-fair.png",
+    badges: ["New", "Family Friendly"],
+    description:
+      "A whimsical strategy game where you build the most magical fairground in the realm of dreams.",
+    images: ["/products/dreamers-fair.png", "/products/dreamers-fair.png", "/products/dreamers-fair.png"],
+    rating: 4.8,
+    reviews: 34,
+    features: ["2-5 Players", "45-60 Mins", "Ages 10+"],
+    mood: "Cozy",
+    story:
+      "Welcome to the Dreamers Fair, a legendary event that appears only once every century in the clouds. As a Master Architect of the Dream World, you must compete to build the most spectacular attractions. From Cloud Carousels to Starlight Coasters, every choice brings more visitors—but watch out for Nightmares that can scare your guests away!",
+    howToPlay: [
+      "Draft cards from the central dream pool to collect resources like 'Stardust', 'Moonbeams', and 'Whispers'.",
+      "Use resources to build attractions and upgrade your fairground board.",
+      "Earn victory points for having the most popular attractions and satisfying special visitor requests.",
+      "The game ends when the sun rises; the architect with the most joy points wins the title of Dream Weaver.",
+    ],
+    whatYoullLove: [
+      "Stunning, dream-like artwork",
+      "Satisfying engine-building mechanics",
+      "Low conflict, high strategy gameplay",
+      "Fun for both serious gamers and families",
+    ],
+    occasion: ["Family Game Night", "Relaxed Evening", "Sunday Afternoon"],
+    included: [
+      "1 Game Board",
+      "5 Player Boards",
+      "120 Attraction Cards",
+      "200 Resource Tokens",
+      "Rulebook",
+    ],
+    specifications: {
+      "Players": "2-5",
+      "Play Time": "45-60 minutes",
+      "Age": "10+",
+      "Difficulty": "Medium",
+      "Components": "300+ pieces",
+    },
+  },
+  {
+    id: "9",
+    name: "She Dare Mayhem (Bachelorette Edition)",
+    slug: "she-dare-mayhem-bachelorette-edition",
+    price: 349,
+    originalPrice: 699,
+    category: "Party Game",
+    image: "/products/she-dare-mayhem.png",
+    badges: ["Bestseller", "Best for Groups"],
+    description:
+      "The ultimate bachelorette party game designed to create unforgettable memories, wild dares, and hilarious bonding moments.",
+    images: ["/products/she-dare-mayhem.png", "/products/she-dare-mayhem.png", "/products/she-dare-mayhem.png"],
+    rating: 4.9,
+    reviews: 112,
+    features: ["3-12 Players", "30-90 Mins", "Ages 18+"],
+    mood: "Chaotic",
+    story:
+      "It's the bride's last ride! This isn't just a card game; it's a license to be wild, free, and absolutely ridiculous. Whether you're at a club, a cozy cabin, or a chaotic house party, She Dare Mayhem ensures the night is filled with laughter, embarrassing confessions, and photos you'll probably want to delete later (but won't).",
+    howToPlay: [
+      "Take turns drawing 'Dare' cards that range from 'mild' to 'wild'.",
+      "Complete the dare to earn points, or take a 'Penalty' sip if you chicken out.",
+      "Use 'Bride Privilege' cards to reverse dares or assign them to others.",
+      "The player with the most points wins the 'Maid of Mayhem' sash!",
+    ],
+    whatYoullLove: [
+      "Tailor-made for bachelorette parties",
+      "Mix of public and private dares",
+      "Great ice-breaker for bridesmaids who don't know each other",
+      "Creates instant inside jokes",
+    ],
+    occasion: ["Bachelorette Party", "Girls Night Out", "Bridal Shower"],
+    included: [
+      "100 Dare Cards",
+      "20 Penalty Cards",
+      "1 Bride Sash",
+      "Rulebook",
+    ],
+    specifications: {
+      "Players": "3-12",
+      "Play Time": "30-90 minutes",
+      "Age": "18+",
+      "Difficulty": "Easy",
+      "Components": "120+ pieces",
+    },
+  },
+  {
+    id: "10",
+    name: "Court52",
+    slug: "court52",
+    price: 299,
+    originalPrice: 499,
+    category: "Card Game",
+    image: "/products/court52-1.jpg",
+    badges: ["New", "Strategic"],
+    description:
+      "A fast-paced, pickleball-inspired card game where strategy meets sport. Serve, volley, and smash your way to victory!",
+    images: ["/products/court52-1.jpg", "/products/court52-2.jpg", "/products/court52-3.jpg", "/products/court52-4.jpg", "/products/court52-5.jpg", "/products/court52-6.jpg", "/products/court52-7.jpg", "/products/court52-8.jpg", "/products/court52-9.jpg", "/products/court52-11.jpg"],
+    rating: 4.6,
+    reviews: 45,
+    features: ["2-4 Players", "15-20 Mins", "Ages 8+"],
+    mood: "Light",
+    story:
+      "Love Pickleball but it's raining outside? Court52 brings the intensity of the court to your table. Designed by sports enthusiasts and gamers, this deck simulates the momentum shifts, the dinking battles, and the satisfying smashes of the real game. It's easy to learn but hard to master—just like the sport itself.",
+    howToPlay: [
+      "Deal 7 cards to each player. The court is your table.",
+      "Play 'Serve' cards to start a rally. Opponents must counter with 'Return' cards.",
+      "Use special 'Spin' and 'Smash' cards to catch your opponent off guard.",
+      "Score points when your opponent can't return the ball. First to 11 wins!",
+    ],
+    whatYoullLove: [
+      "Captures the feel of pickleball/tennis mechanics",
+      "Quick gameplay, perfect for travel",
+      "Fun for sports fans and card gamers alike",
+      "Compact size, play anywhere",
+    ],
+    occasion: ["Travel", "Picnic", "Game Night", "Between Matches"],
+    included: [
+      "52 Court Cards",
+      "4 Score Trackers",
+      "Rulebook",
+      "Storage Box",
+    ],
+    specifications: {
+      "Players": "2-4",
+      "Play Time": "15-20 minutes",
+      "Age": "8+",
+      "Difficulty": "Easy to Learn",
+      "Components": "56 pieces",
+    },
+  },
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
 }
-
-

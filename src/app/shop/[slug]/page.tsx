@@ -1,193 +1,174 @@
-
-import { db } from "@/lib/db";
+// app/shop/[slug]/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import AddToCartButton from "@/components/cart/AddToCartButton";
+import { getProductBySlug } from "@/lib/products";
+import { ProductGallery } from "@/components/ProductGallery";
+import { ProductActions } from "@/components/ProductActions";
+import { TrustBadges } from "@/components/TrustBadges";
 
-// Define strict params type for Next.js 15+ (Params are async)
-// However, in Next.js 14 it isn't async, but let's handle it safely.
-// Checking package.json -> it's "next": "^16.0.10" (Wait, Next 16?? Probably User meant 15 RC or canary, but let's assume async params typically).
-// Actually, Next.js 15 made params async.
-// But standard type is:
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+import { RelatedProducts } from "@/components/RelatedProducts";
 
-function Spec({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-neutral-500 mb-1">{label}</p>
-      <p className="text-neutral-800 font-medium">{value}</p>
-    </div>
-  );
-}
-
-export const dynamic = "force-dynamic";
-
-export default async function ProductPage({ params }: Props) {
-  // Await params if using newer Next.js versions
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-
-  const product = await db.product.findUnique({
-    where: { slug },
-  });
+  const product = getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
   return (
-    <main className="bg-[#FFF4D6] min-h-screen">
-      <div className="max-w-5xl mx-auto px-4 py-24">
-        {/* Back Link */}
-        <Link
-          href="/shop"
-          className="text-sm text-neutral-600 hover:text-black transition"
-        >
-          ← Back to Play at Home
-        </Link>
+    <main className="bg-[#FFF4D6] min-h-screen relative">
+      {/* Texture Overlay */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
+
+      <div className="max-w-6xl mx-auto px-4 py-24 relative z-10">
+        {/* Breadcrumbs */}
+        <div className="flex items-center gap-2 text-sm font-medium mb-8 text-neutral-500">
+          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/shop" className="hover:text-black transition-colors">Shop</Link>
+          <span>/</span>
+          <span className="text-black">{product.name}</span>
+        </div>
 
         {/* Hero */}
-        <section className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-white">
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-contain"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-neutral-400">No Image</div>
-            )}
-          </div>
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start animate-fade-in">
+          <ProductGallery images={product.images} name={product.name} badges={product.badges} />
 
-          <div className="flex flex-col gap-6">
-            <h1 className="font-fredoka text-4xl text-black">
-              {product.name}
-            </h1>
+          <div className="flex flex-col gap-6 pt-2">
+            <div>
+              <h1 className="font-fredoka text-5xl lg:text-6xl text-black mb-2 leading-[1.1]">
+                {product.name}
+              </h1>
 
-            <p className="text-neutral-700 text-lg leading-relaxed">
-              {product.description}
-            </p>
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2">
-              {product.badges.map((badge) => (
-                <span
-                  key={badge}
-                  className="px-3 py-1 text-xs rounded-full bg-[#F4C752] text-black"
-                >
-                  {badge}
-                </span>
-              ))}
-            </div>
-
-            <div className="text-xl font-bold">
-              ₹{product.price}
-            </div>
-
-            {/* CTA */}
-            <div className="pt-4">
-              {/* CTA */}
-              <div className="pt-4">
-                <AddToCartButton
-                  product={{
-                    id: product.id,
-                    slug: product.slug,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image,
-                  }}
-                  className="px-6 py-3"
-                />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex gap-1 text-[#F4C752]">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? "fill-current" : "text-neutral-300 fill-none"}`} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                  ))}
+                </div>
+                <span className="text-sm text-neutral-500 font-medium">({product.reviews} reviews)</span>
               </div>
+
+              <div className="mb-6">
+                <p className="text-3xl font-fredoka flex items-center gap-3">
+                  ₹{product.price}
+                  {product.originalPrice && (
+                    <>
+                      <span className="text-xl text-neutral-400 line-through font-sans font-normal">₹{product.originalPrice}</span>
+                      <span className="text-sm font-bold bg-green-100 text-green-700 px-2 py-1 rounded-md">
+                        {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                      </span>
+                    </>
+                  )}
+                </p>
+                <p className="text-xs text-neutral-500 mt-1">Tax included.</p>
+              </div>
+
+              <p className="text-neutral-700 text-lg leading-relaxed font-medium mb-2">
+                {product.description}
+              </p>
+            </div>
+
+
+            {/* CTA & Actions */}
+            <div className="pt-4 border-t border-neutral-200/50">
+              <ProductActions
+                price={product.price}
+                originalPrice={product.originalPrice}
+                productName={product.name}
+              />
+              <TrustBadges />
             </div>
           </div>
         </section>
 
-        {/* Specifications */}
-        <section className="mt-24 max-w-3xl">
-          <h2 className="font-fredoka text-3xl text-black mb-8">
-            Specifications
+        {/* Specifications Grid */}
+        <section className="mt-24">
+          <h2 className="font-fredoka text-3xl text-black mb-8 text-center">
+            Game Specs
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-12 text-sm">
-            <Spec label="Game Type" value={product.category} />
-            <Spec label="Occasion" value={product.occasion.join(", ")} />
-            <Spec label="Players" value={product.players} />
-            <Spec label="Duration" value={product.duration} />
-            <Spec label="Mood" value={product.mood} />
-            <Spec label="Difficulty" value={product.difficulty} />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <SpecCard label="Game Type" value={product.category} icon="🎲" />
+            <SpecCard label="Players" value={product.specifications?.["Players"] || product.features[0]} icon="👥" />
+            <SpecCard label="Duration" value={product.specifications?.["Play Time"] || product.features[1]} icon="⏱️" />
+            <SpecCard label="Mood" value={product.mood || "Fun"} icon="✨" />
           </div>
         </section>
 
-        {/* Story */}
-        {product.story && (
-          <section className="mt-28 max-w-3xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-28">
+          {/* Story */}
+          <section className="lg:col-span-7 bg-white rounded-3xl p-10 shadow-sm border border-neutral-100">
             <h2 className="font-fredoka text-3xl text-black mb-6">
-              The Idea Behind the Game
+              The Story
             </h2>
-            <p className="text-neutral-700 leading-relaxed">
+            <p className="text-neutral-700 leading-8 text-lg">
               {product.story}
             </p>
           </section>
-        )}
 
-        {/* How to Play */}
-        {product.howToPlay.length > 0 && (
-          <section className="mt-24 max-w-3xl">
+          {/* Ideal For */}
+          <section className="lg:col-span-5 bg-[#F4C752]/10 rounded-3xl p-10 border border-[#F4C752]/20">
             <h2 className="font-fredoka text-3xl text-black mb-6">
-              How to Play
+              Perfect For...
             </h2>
-            <ol className="list-decimal list-inside space-y-4 text-neutral-700">
-              {product.howToPlay.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
-          </section>
-        )}
-
-        {/* Ideal For (Mapped from whatYoullLove) */}
-        {product.whatYoullLove.length > 0 && (
-          <section className="mt-24 max-w-3xl">
-            <h2 className="font-fredoka text-3xl text-black mb-6">
-              Ideal For
-            </h2>
-            <ul className="list-disc list-inside space-y-3 text-neutral-700">
-              {product.whatYoullLove.map((item) => (
-                <li key={item}>{item}</li>
+            <ul className="space-y-4">
+              {product.whatYoullLove?.map((item, i) => (
+                <li key={item} className="flex gap-4 items-start">
+                  <div className="bg-[#F4C752] rounded-full p-1 mt-1 shrink-0">
+                    <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  <span className="text-neutral-800 font-medium text-lg">{item}</span>
+                </li>
               ))}
             </ul>
           </section>
-        )}
+        </div>
 
-        {/* Visual Walkthrough */}
-        {product.images.length > 0 && (
-          <section className="mt-28">
-            <h2 className="font-fredoka text-3xl text-black mb-10">
-              Visual Walkthrough
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {product.images.map((img, index) => (
-                <div
-                  key={index}
-                  className="relative aspect-4/3 bg-white rounded-xl overflow-hidden"
-                >
-                  <Image
-                    src={img}
-                    alt={`${product.name} walkthrough ${index + 1}`}
-                    fill
-                    className="object-contain"
-                  />
+        {/* How to Play - Visual Steps */}
+        <section className="mt-28">
+          <h2 className="font-fredoka text-4xl text-black mb-12 text-center">
+            How to Play
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {product.howToPlay.map((step, index) => (
+              <div
+                key={index}
+                className="bg-white p-8 rounded-3xl relative overflow-hidden shadow-sm group hover:-translate-y-2 transition-transform duration-300"
+              >
+                <div className="absolute -right-4 -top-4 text-9xl font-fredoka text-[#FFF4D6] group-hover:text-[#F4C752]/20 transition-colors select-none">
+                  {index + 1}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+                <div className="relative z-10">
+                  <h3 className="font-bold text-xl mb-4">Step {index + 1}</h3>
+                  <p className="text-neutral-600 leading-relaxed font-medium">
+                    {step}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <RelatedProducts currentSlug={product.slug} category={product.category} />
+
       </div>
-    </main>
+    </main >
+  );
+}
+
+function SpecCard({ label, value, icon }: { label: string; value: string; icon: string }) {
+  return (
+    <div className="bg-white p-6 rounded-2xl border border-neutral-100 flex items-center gap-4 shadow-sm">
+      <div className="w-12 h-12 bg-[#FFF4D6] rounded-full flex items-center justify-center text-2xl">
+        {icon}
+      </div>
+      <div>
+        <p className="text-neutral-500 text-xs font-bold uppercase tracking-wider mb-0.5">{label}</p>
+        <p className="text-black font-bold text-lg leading-tight">{value}</p>
+      </div>
+    </div>
   );
 }
