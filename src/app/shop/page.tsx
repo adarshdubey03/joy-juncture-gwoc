@@ -4,93 +4,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-type Game = {
-  slug: string;
-  title: string;
-  description: string;
-  players: string;
-  image: string;
-
-  // specs (used by filters)
-  gameType: string;
-  occasion: string[];
-  mood: string;
-};
-
-const GAMES: Game[] = [
-  {
-    slug: "dead-mans-deck",
-    title: "Dead Man’s Deck",
-    description:
-      "A tense bluffing card game where every move could be your last.",
-    players: "3–6 players",
-    mood: "Strategic",
-    gameType: "Card",
-    occasion: ["Friends", "Game Night"],
-    image: "/games/dead-mans-deck.jpg",
-  },
-  {
-    slug: "mehfil",
-    title: "Mehfil",
-    description:
-      "A conversational game inspired by gatherings, stories, and shared moments.",
-    players: "4–8 players",
-    mood: "Cozy",
-    gameType: "Party",
-    occasion: ["Family", "Friends"],
-    image: "/games/mehfil.jpg",
-  },
-  {
-    slug: "tamasha",
-    title: "Tamasha",
-    description:
-      "Fast, loud, and unpredictable — a party game that thrives on chaos.",
-    players: "5+ players",
-    mood: "Chaotic",
-    gameType: "Party",
-    occasion: ["Friends"],
-    image: "/games/tamasha.jpg",
-  },
-  {
-    slug: "the-bloody-inheritance",
-    title: "The Bloody Inheritance",
-    description:
-      "A narrative-driven murder mystery best played over an evening.",
-    players: "6–10 players",
-    mood: "Strategic",
-    gameType: "Mystery",
-    occasion: ["Game Night"],
-    image: "/games/bloody-inheritance.jpg",
-  },
-  {
-    slug: "court52",
-    title: "Court52",
-    description:
-      "A pickleball-inspired card game blending strategy and sport.",
-    players: "2–4 players",
-    mood: "Light",
-    gameType: "Card",
-    occasion: ["Friends"],
-    image: "/games/court52.jpg",
-  },
-  {
-    slug: "buzzed",
-    title: "Buzzed",
-    description:
-      "A light-hearted drinking game built for laughs and late nights.",
-    players: "4+ players",
-    mood: "Chaotic",
-    gameType: "Party",
-    occasion: ["Friends"],
-    image: "/games/buzzed.jpg",
-  },
-];
+import { products, type Product } from "@/lib/products";
+import { motion, AnimatePresence } from "framer-motion";
+import { ProductCard } from "@/components/ProductCard";
 
 const FILTERS = {
-  "Game Type": ["Card", "Party", "Mystery"],
-  Occasion: ["Family", "Friends", "Game Night"],
-  Mood: ["Light", "Strategic", "Chaotic"],
+  "Game Type": ["Card Game", "Party Game", "Mystery", "Strategy", "Puzzle"],
+  Occasion: ["Family", "Friends", "Game Night", "Party"],
+  Mood: ["Light", "Strategic", "Chaotic", "Cozy"],
 };
 
 export default function ShopPage() {
@@ -112,42 +33,53 @@ export default function ShopPage() {
     });
   }
 
-  const filteredGames = GAMES.filter((game) => {
+  const filteredGames = products.filter((game) => {
     const typeOk =
       activeFilters["Game Type"].length === 0 ||
-      activeFilters["Game Type"].includes(game.gameType);
+      activeFilters["Game Type"].includes(game.category);
 
     const occasionOk =
       activeFilters["Occasion"].length === 0 ||
-      game.occasion.some((o) => activeFilters["Occasion"].includes(o));
+      game.occasion?.some((o) => activeFilters["Occasion"].includes(o));
 
     const moodOk =
       activeFilters["Mood"].length === 0 ||
-      activeFilters["Mood"].includes(game.mood);
+      (game.mood && activeFilters["Mood"].includes(game.mood));
 
     return typeOk && occasionOk && moodOk;
   });
 
   return (
-    <main className="bg-[#FFF4D6] min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-24">
+    <main className="bg-[#FFF4D6] min-h-screen relative">
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
+      <div className="max-w-7xl mx-auto px-4 py-24 relative z-10">
         {/* Header */}
-        <header className="mb-16">
-          <h1 className="font-fredoka text-5xl text-black mb-6">
+        <motion.header
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <h1 className="font-fredoka text-6xl text-black mb-6 tracking-tight">
             Play at Home
           </h1>
-          <p className="text-neutral-700 max-w-xl text-lg">
+          <p className="text-neutral-700 max-w-xl text-xl leading-relaxed">
             Games designed for living rooms, late nights, and shared tables.
           </p>
-        </header>
+        </motion.header>
 
         {/* Content */}
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-16">
           {/* Filters */}
-          <aside className="space-y-10 lg:sticky lg:top-24 h-fit">
-            {Object.entries(FILTERS).map(([title, options]) => (
-              <div key={title}>
-                <h3 className="text-sm font-medium text-neutral-800 mb-4">
+          <aside className="space-y-12 lg:sticky lg:top-24 h-fit">
+            {Object.entries(FILTERS).map(([title, options], idx) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + idx * 0.1 }}
+              >
+                <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-4">
                   {title}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -159,14 +91,12 @@ export default function ShopPage() {
                         key={option}
                         onClick={() => toggleFilter(title, option)}
                         className={`
-                          px-3 py-1.5 text-xs rounded-full
-                          border
-                          ${
-                            active
-                              ? "bg-[#F4C752] border-[#F4C752] text-black"
-                              : "border-neutral-400/40 bg-white/60 text-neutral-700"
+                          px-4 py-2 text-sm rounded-xl font-medium
+                          border transition-all duration-200
+                          ${active
+                            ? "bg-[#F4C752] border-[#F4C752] text-black shadow-md scale-105"
+                            : "border-neutral-400/30 bg-white/50 text-neutral-600 hover:bg-white hover:border-neutral-400"
                           }
-                          transition
                         `}
                       >
                         {option}
@@ -174,69 +104,43 @@ export default function ShopPage() {
                     );
                   })}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </aside>
 
+
+
           {/* Cards */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-14">
-            {filteredGames.map((game) => (
-              <article
-                key={game.slug}
-                className="bg-white rounded-2xl border border-neutral-200 p-7 flex flex-col gap-6"
-              >
-                {/* Image */}
-                <div className="relative w-full aspect-4/3 bg-neutral-50 rounded-xl overflow-hidden">
-                  <Image
-                    src={game.image}
-                    alt={game.title}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="flex flex-col gap-3 flex-1">
-                  <h2 className="font-fredoka text-2xl text-black">
-                    {game.title}
-                  </h2>
-
-                  <p className="text-neutral-700 text-sm leading-relaxed">
-                    {game.description}
-                  </p>
-
-                  {/* Specifications */}
-                  <div className="text-xs text-neutral-500 space-y-1">
-                    <div>Type: {game.gameType}</div>
-                    <div>Players: {game.players}</div>
-                    <div>Mood: {game.mood}</div>
-                  </div>
-                </div>
-
-                {/* CTAs */}
-                <div className="flex gap-3 pt-4">
-                  <Link
-                    href={`/shop/${game.slug}`}
-                    className="flex-1 text-center text-sm font-medium bg-[#F4C752] text-black py-2.5 rounded-full hover:opacity-90 transition"
-                  >
-                    View product
-                  </Link>
-
-                  <button
-                    className="flex-1 text-center text-sm font-medium border border-[#F4C752] text-black py-2.5 rounded-full hover:bg-[#F4C752] transition"
-                  >
-                    Add to cart
-                  </button>
-                </div>
-              </article>
-            ))}
+          <motion.section
+            className="grid grid-cols-1 md:grid-cols-2 gap-10" // Reduced gap slightly for better density
+            layout
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredGames.map((game) => (
+                <ProductCard key={game.slug} product={game} />
+              ))}
+            </AnimatePresence>
 
             {filteredGames.length === 0 && (
-              <p className="text-neutral-600">
-                No games match your filters.
-              </p>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="col-span-2 text-center py-20"
+              >
+                <div className="bg-white/50 rounded-3xl p-10 inline-block">
+                  <p className="text-neutral-500 text-lg">
+                    No games match your filters. Try clearing them!
+                  </p>
+                  <button
+                    onClick={() => setActiveFilters({ "Game Type": [], Occasion: [], Mood: [] })}
+                    className="mt-4 text-[#F4C752] font-bold underline decoration-2 hover:text-black transition-colors"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              </motion.div>
             )}
-          </section>
+          </motion.section>
         </div>
       </div>
     </main>

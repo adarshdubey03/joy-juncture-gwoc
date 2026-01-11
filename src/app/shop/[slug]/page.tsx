@@ -1,190 +1,174 @@
 // app/shop/[slug]/page.tsx
-
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getProductBySlug } from "@/lib/products";
+import { ProductGallery } from "@/components/ProductGallery";
+import { ProductActions } from "@/components/ProductActions";
+import { TrustBadges } from "@/components/TrustBadges";
 
-const GAME = {
-  title: "Dead Man’s Deck",
-  description:
-    "A tense bluffing card game where trust collapses and every decision matters.",
+import { RelatedProducts } from "@/components/RelatedProducts";
 
-  // specs (aligned with filters)
-  gameType: "Card Game",
-  occasion: ["Friends", "Game Night"],
-  players: "3–6 players",
-  duration: "20–30 minutes",
-  mood: "Strategic",
-  difficulty: "Medium",
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
 
-  badges: ["First-time friendly", "Best for groups"],
-  heroImage: "/games/dead-mans-deck.jpg",
+  if (!product) {
+    notFound();
+  }
 
-  story:
-    "Dead Man’s Deck is a fast-paced bluffing game where players take risks, read the table, and decide when to push their luck. One wrong move can cost you the round — or the entire game.",
-
-  howToPlay: [
-    "Each player is dealt a hand of cards.",
-    "On your turn, play a card face-down and declare its value.",
-    "Other players may challenge your claim.",
-    "If you are caught bluffing, you lose the round.",
-  ],
-
-  idealFor: [
-    "Game nights with friends",
-    "Quick competitive sessions",
-    "Players who enjoy mind games",
-  ],
-
-  walkthroughImages: [
-    "/games/dead-mans-deck.jpg",
-    "/games/dead-mans-deck.jpg",
-    "/games/dead-mans-deck.jpg",
-  ],
-};
-
-export default function ProductPage() {
   return (
-    <main className="bg-[#FFF4D6] min-h-screen">
-      <div className="max-w-5xl mx-auto px-4 py-24">
-        {/* Back Link */}
-        <Link
-          href="/shop"
-          className="text-sm text-neutral-600 hover:text-black transition"
-        >
-          ← Back to Play at Home
-        </Link>
+    <main className="bg-[#FFF4D6] min-h-screen relative">
+      {/* Texture Overlay */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
+
+      <div className="max-w-6xl mx-auto px-4 py-24 relative z-10">
+        {/* Breadcrumbs */}
+        <div className="flex items-center gap-2 text-sm font-medium mb-8 text-neutral-500">
+          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/shop" className="hover:text-black transition-colors">Shop</Link>
+          <span>/</span>
+          <span className="text-black">{product.name}</span>
+        </div>
 
         {/* Hero */}
-        <section className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-white">
-            <Image
-              src={GAME.heroImage}
-              alt={GAME.title}
-              fill
-              className="object-contain"
-            />
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start animate-fade-in">
+          <ProductGallery images={product.images} name={product.name} badges={product.badges} />
+
+          <div className="flex flex-col gap-6 pt-2">
+            <div>
+              <h1 className="font-fredoka text-5xl lg:text-6xl text-black mb-2 leading-[1.1]">
+                {product.name}
+              </h1>
+
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex gap-1 text-[#F4C752]">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? "fill-current" : "text-neutral-300 fill-none"}`} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                  ))}
+                </div>
+                <span className="text-sm text-neutral-500 font-medium">({product.reviews} reviews)</span>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-3xl font-fredoka flex items-center gap-3">
+                  ₹{product.price}
+                  {product.originalPrice && (
+                    <>
+                      <span className="text-xl text-neutral-400 line-through font-sans font-normal">₹{product.originalPrice}</span>
+                      <span className="text-sm font-bold bg-green-100 text-green-700 px-2 py-1 rounded-md">
+                        {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                      </span>
+                    </>
+                  )}
+                </p>
+                <p className="text-xs text-neutral-500 mt-1">Tax included.</p>
+              </div>
+
+              <p className="text-neutral-700 text-lg leading-relaxed font-medium mb-2">
+                {product.description}
+              </p>
+            </div>
+
+
+            {/* CTA & Actions */}
+            <div className="pt-4 border-t border-neutral-200/50">
+              <ProductActions
+                price={product.price}
+                originalPrice={product.originalPrice}
+                productName={product.name}
+              />
+              <TrustBadges />
+            </div>
           </div>
+        </section>
 
-          <div className="flex flex-col gap-6">
-            <h1 className="font-fredoka text-4xl text-black">
-              {GAME.title}
-            </h1>
+        {/* Specifications Grid */}
+        <section className="mt-24">
+          <h2 className="font-fredoka text-3xl text-black mb-8 text-center">
+            Game Specs
+          </h2>
 
-            <p className="text-neutral-700 text-lg leading-relaxed">
-              {GAME.description}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <SpecCard label="Game Type" value={product.category} icon="🎲" />
+            <SpecCard label="Players" value={product.specifications?.["Players"] || product.features[0]} icon="👥" />
+            <SpecCard label="Duration" value={product.specifications?.["Play Time"] || product.features[1]} icon="⏱️" />
+            <SpecCard label="Mood" value={product.mood || "Fun"} icon="✨" />
+          </div>
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-28">
+          {/* Story */}
+          <section className="lg:col-span-7 bg-white rounded-3xl p-10 shadow-sm border border-neutral-100">
+            <h2 className="font-fredoka text-3xl text-black mb-6">
+              The Story
+            </h2>
+            <p className="text-neutral-700 leading-8 text-lg">
+              {product.story}
             </p>
+          </section>
 
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2">
-              {GAME.badges.map((badge) => (
-                <span
-                  key={badge}
-                  className="px-3 py-1 text-xs rounded-full bg-[#F4C752] text-black"
-                >
-                  {badge}
-                </span>
+          {/* Ideal For */}
+          <section className="lg:col-span-5 bg-[#F4C752]/10 rounded-3xl p-10 border border-[#F4C752]/20">
+            <h2 className="font-fredoka text-3xl text-black mb-6">
+              Perfect For...
+            </h2>
+            <ul className="space-y-4">
+              {product.whatYoullLove?.map((item, i) => (
+                <li key={item} className="flex gap-4 items-start">
+                  <div className="bg-[#F4C752] rounded-full p-1 mt-1 shrink-0">
+                    <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  <span className="text-neutral-800 font-medium text-lg">{item}</span>
+                </li>
               ))}
-            </div>
+            </ul>
+          </section>
+        </div>
 
-            {/* CTA */}
-            <div className="pt-4">
-              <button
-                className="
-                  px-6 py-3 rounded-full
-                  bg-[#F4C752]
-                  text-black font-medium
-                  hover:opacity-90
-                  transition
-                "
-              >
-                Add to cart
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Specifications */}
-        <section className="mt-24 max-w-3xl">
-          <h2 className="font-fredoka text-3xl text-black mb-8">
-            Specifications
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-12 text-sm">
-            <Spec label="Game Type" value={GAME.gameType} />
-            <Spec label="Occasion" value={GAME.occasion.join(", ")} />
-            <Spec label="Players" value={GAME.players} />
-            <Spec label="Duration" value={GAME.duration} />
-            <Spec label="Mood" value={GAME.mood} />
-            <Spec label="Difficulty" value={GAME.difficulty} />
-          </div>
-        </section>
-
-        {/* Story */}
-        <section className="mt-28 max-w-3xl">
-          <h2 className="font-fredoka text-3xl text-black mb-6">
-            The Idea Behind the Game
-          </h2>
-          <p className="text-neutral-700 leading-relaxed">
-            {GAME.story}
-          </p>
-        </section>
-
-        {/* How to Play */}
-        <section className="mt-24 max-w-3xl">
-          <h2 className="font-fredoka text-3xl text-black mb-6">
+        {/* How to Play - Visual Steps */}
+        <section className="mt-28">
+          <h2 className="font-fredoka text-4xl text-black mb-12 text-center">
             How to Play
           </h2>
-          <ol className="list-decimal list-inside space-y-4 text-neutral-700">
-            {GAME.howToPlay.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
-        </section>
-
-        {/* Ideal For */}
-        <section className="mt-24 max-w-3xl">
-          <h2 className="font-fredoka text-3xl text-black mb-6">
-            Ideal For
-          </h2>
-          <ul className="list-disc list-inside space-y-3 text-neutral-700">
-            {GAME.idealFor.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Visual Walkthrough */}
-        <section className="mt-28">
-          <h2 className="font-fredoka text-3xl text-black mb-10">
-            Visual Walkthrough
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {GAME.walkthroughImages.map((img, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {product.howToPlay.map((step, index) => (
               <div
                 key={index}
-                className="relative aspect-4/3 bg-white rounded-xl overflow-hidden"
+                className="bg-white p-8 rounded-3xl relative overflow-hidden shadow-sm group hover:-translate-y-2 transition-transform duration-300"
               >
-                <Image
-                  src={img}
-                  alt={`Step ${index + 1}`}
-                  fill
-                  className="object-contain"
-                />
+                <div className="absolute -right-4 -top-4 text-9xl font-fredoka text-[#FFF4D6] group-hover:text-[#F4C752]/20 transition-colors select-none">
+                  {index + 1}
+                </div>
+                <div className="relative z-10">
+                  <h3 className="font-bold text-xl mb-4">Step {index + 1}</h3>
+                  <p className="text-neutral-600 leading-relaxed font-medium">
+                    {step}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </section>
+
+        <RelatedProducts currentSlug={product.slug} category={product.category} />
+
       </div>
-    </main>
+    </main >
   );
 }
 
-function Spec({ label, value }: { label: string; value: string }) {
+function SpecCard({ label, value, icon }: { label: string; value: string; icon: string }) {
   return (
-    <div>
-      <p className="text-neutral-500 mb-1">{label}</p>
-      <p className="text-neutral-800 font-medium">{value}</p>
+    <div className="bg-white p-6 rounded-2xl border border-neutral-100 flex items-center gap-4 shadow-sm">
+      <div className="w-12 h-12 bg-[#FFF4D6] rounded-full flex items-center justify-center text-2xl">
+        {icon}
+      </div>
+      <div>
+        <p className="text-neutral-500 text-xs font-bold uppercase tracking-wider mb-0.5">{label}</p>
+        <p className="text-black font-bold text-lg leading-tight">{value}</p>
+      </div>
     </div>
   );
 }
