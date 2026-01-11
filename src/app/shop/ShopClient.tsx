@@ -49,7 +49,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
     return (
         <main className="bg-[#FFF4D6] min-h-screen relative">
             <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
-            <div className="max-w-7xl mx-auto px-4 py-24 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 py-32 relative z-10">
                 {/* Header */}
                 <header className="mb-16">
                     <h1 className="font-fredoka text-6xl text-black mb-6 tracking-tight">

@@ -62,6 +62,33 @@ export default function HeroNavbar() {
 
   return (
     <>
+      {/* ================= GLOBAL FIXED ELEMENTS (DESKTOP) ================= */}
+      {/* 1. TOP-LEFT CUTOUT BACKGROUND */}
+      <div
+        className="
+          hidden md:block
+          fixed top-0 left-0
+          h-24 w-60
+          bg-[#FFF4D6]
+          rounded-br-4xl
+          z-40
+        "
+      />
+
+      {/* 2. FLOATING LOGO */}
+      <div className="hidden md:block fixed top-1 left-16 z-50">
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="Joy Juncture"
+            width={280}
+            height={56}
+            className="h-24 w-32 object-contain"
+            priority
+          />
+        </Link>
+      </div>
+
       {/* ================= MOBILE HEADER ================= */}
       <div className="md:hidden flex items-center justify-between px-4 py-4">
         {/* LEFT — LOGO */}

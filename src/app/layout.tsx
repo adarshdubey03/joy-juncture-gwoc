@@ -38,6 +38,8 @@ export const metadata: Metadata = {
 };
 
 import { CartProvider } from "@/context/CartContext";
+import HeroNavbar from "@/components/hero/HeroNavbar";
+import BigFooter from "@/components/BigFooter";
 
 export default function RootLayout({
   children,
@@ -60,7 +62,15 @@ export default function RootLayout({
         `}
       >
         <AuthSessionProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <div className="flex flex-col min-h-screen">
+              <HeroNavbar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <BigFooter />
+            </div>
+          </CartProvider>
         </AuthSessionProvider>
       </body>
     </html>
