@@ -6,25 +6,25 @@ const PLAY_STYLES = [
   {
     title: "Play at Home",
     bg: "#0353a4",
-    image: "/play-home.png",
-    href: "/play-at-home",
+    image: "/products/mehfil2.jpeg",
+    href: "",
   },
   {
     title: "Play Together (Live)",
     bg: "#bc6c25",
-    image: "/play-live.png",
+    image: "/people_playing.jpg",
     href: "/play-together",
   },
   {
     title: "Play for Occasions",
     bg: "#3a5a40",
-    image: "/play-occasions",
+    image: "/BrideGroom.png",
     href: "/occasions",
   },
   {
     title: "Play & Earn Points",
     bg: "#662e9b",
-    image: "/play-points.png",
+    image: "/puzzle.png",
     href: "/rewards",
   },
 ];
@@ -70,14 +70,9 @@ export default function ChoosePlayStyle() {
                 <Image
                   src={style.image}
                   alt={style.title}
-                  width={110}
-                  height={110}
-                  className="
-                    object-contain
-                    w-16 h-16
-                    sm:w-20 sm:h-20
-                    md:w-27.5 md:h-27.5
-                  "
+                  width={350}
+                  height={200}
+                  className="object-contain"
                 />
               </div>
 
