@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface ProductGalleryProps {
     images: string[];
@@ -30,24 +29,15 @@ export function ProductGallery({ images, name, badges = [] }: ProductGalleryProp
                     ))}
                 </div>
 
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={selectedIndex}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="absolute inset-0 p-8 flex items-center justify-center h-full w-full"
-                    >
-                        <Image
-                            src={images[selectedIndex]}
-                            alt={`${name} view ${selectedIndex + 1}`}
-                            fill
-                            className="object-contain p-4 group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                            priority
-                        />
-                    </motion.div>
-                </AnimatePresence>
+                <div className="absolute inset-0 h-full w-full">
+                    <Image
+                        src={images[selectedIndex]}
+                        alt={`${name} view ${selectedIndex + 1}`}
+                        fill
+                        className="object-cover transition-transform duration-700 ease-in-out"
+                        priority
+                    />
+                </div>
             </div>
 
             {/* Thumbnails */}
