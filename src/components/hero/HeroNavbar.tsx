@@ -57,7 +57,7 @@ import { usePathname } from "next/navigation";
 
 export default function HeroNavbar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const { cartCount } = useCart();
   const pathname = usePathname();
 

@@ -88,6 +88,7 @@ export const VerifyForm = () => {
                   outline-none
                   focus:border-black
                   disabled:bg-black/5
+                  text-black
                 "
               />
 
@@ -98,10 +99,9 @@ export const VerifyForm = () => {
                 className={`
                   rounded-lg px-4 py-3 text-sm font-medium
                   transition
-                  ${
-                    emailVerified
-                      ? "bg-green-600 text-white"
-                      : "bg-black text-white hover:bg-black/90"
+                  ${emailVerified
+                    ? "bg-green-600 text-white"
+                    : "bg-black text-white hover:bg-black/90"
                   }
                   disabled:opacity-60
                   cursor-pointer
@@ -131,6 +131,7 @@ export const VerifyForm = () => {
                   outline-none
                   focus:border-black
                   disabled:bg-black/5
+                  text-black
                 "
               />
 
@@ -141,10 +142,9 @@ export const VerifyForm = () => {
                 className={`
                   rounded-lg px-4 py-3 text-sm font-medium
                   transition
-                  ${
-                    phoneVerified
-                      ? "bg-green-600 text-white"
-                      : "bg-black text-white hover:bg-black/90"
+                  ${phoneVerified
+                    ? "bg-green-600 text-white"
+                    : "bg-black text-white hover:bg-black/90"
                   }
                   disabled:opacity-60
                   cursor-pointer

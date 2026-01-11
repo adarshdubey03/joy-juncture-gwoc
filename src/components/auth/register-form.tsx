@@ -120,6 +120,7 @@ export const RegisterForm = () => {
                 w-full rounded-lg px-4 py-3 text-sm
                 bg-white border border-black/20
                 focus-within:border-black
+                [&_input]:text-black
               "
             />
             {errors.phoneNumber && (
