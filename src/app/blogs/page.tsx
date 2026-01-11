@@ -42,10 +42,10 @@ const blogs = [
 export default function BlogsPage() {
   return (
     <main className="min-h-screen bg-[#FFF4D6]">
-      {/* Page Header */}
+      {/* Header */}
       <section className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-black">
-          The JJ Blog journal
+          The JJ Blog Journal
         </h1>
         <p className="text-gray-600 max-w-2xl text-lg">
           Stories, thoughts, and ideas around games, play, human connection, and
@@ -53,41 +53,32 @@ export default function BlogsPage() {
         </p>
       </section>
 
-      {/* Blog List */}
+      {/* Blogs */}
       <section className="pb-32 px-6 max-w-7xl mx-auto">
-        <div className="flex flex-col gap-32">
+        <div className="flex flex-col gap-24">
           {blogs.map((blog, index) => {
             const isReversed = index % 2 !== 0;
 
             return (
-              <article
-                key={index}
-                className={`relative flex ${
-                  isReversed ? "justify-end" : "justify-start"
-                }`}
-              >
-                {/* Visual Wrapper */}
-                <div className="relative w-full md:w-[85%] h-[420px]">
+              <article key={index}>
+                <div
+                  className={`flex flex-col md:flex-row ${
+                    isReversed ? "md:flex-row-reverse" : ""
+                  } bg-[#1F1B16] rounded-3xl overflow-hidden shadow-xl`}
+                >
                   {/* Image */}
-                  <div
-                    className={`absolute top-0 ${
-                      isReversed ? "right-0" : "left-0"
-                    } w-[45%] h-full rounded-3xl overflow-hidden z-10`}
-                  >
+                  <div className="relative w-full md:w-[45%] aspect-[4/3] md:aspect-auto md:h-[420px]">
                     <Image
                       src={blog.image}
                       alt={blog.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 45vw"
                     />
                   </div>
 
-                  {/* Black Content Box */}
-                  <div
-                    className={`absolute top-[-5px] bottom-[-5px] ${
-                      isReversed ? "left-0 pr-[45%]" : "right-0 pl-[45%]"
-                    } bg-[#161616] rounded-3xl p-10 md:p-14 shadow-xl flex flex-col justify-center`}
-                  >
+                  {/* Content */}
+                  <div className="w-full md:w-[55%] p-8 md:p-14 flex flex-col justify-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
                       {blog.title}
                     </h2>
@@ -97,8 +88,7 @@ export default function BlogsPage() {
                     </p>
 
                     <button className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FFD84D] text-black font-semibold hover:scale-105 transition w-fit">
-                      Read more
-                      <span className="text-lg">→</span>
+                      Read more <span className="text-lg">→</span>
                     </button>
                   </div>
                 </div>
