@@ -93,7 +93,7 @@ export default async function OrdersPage({
                                             {order.items.length} items
                                         </TableCell>
                                         <TableCell>
-                                            {formatCurrency(order.totalAmount)}
+                                            {formatCurrency(Number(order.totalAmount))}
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant={getStatusColor(order.status)}>

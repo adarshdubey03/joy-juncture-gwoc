@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Fredoka, Inter, Kalam } from "next/font/google";
 import "./globals.css";
-<<<<<<< HEAD
-import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/layout/navbar";
-// import { CartProvider } from "@/contexts/cart-context";
-import { AuthProvider } from "@/components/providers/auth-provider";
-import { auth } from "@/auth";
-=======
->>>>>>> 25ae6e62d84b2b85a5eae8f35cc134b4cd2cd877
 
 import AuthSessionProvider from "@/components/providers/session-provider";
 
@@ -51,19 +43,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-<<<<<<< HEAD
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.variable, "font-sans antialiased")} suppressHydrationWarning>
-        <AuthProvider>
-           {children}
-         {/* <CartProvider>
-            <Navbar />
-            <main className="pt-20">
-             
-            </main> 
-          </CartProvider> */}
-        </AuthProvider>
-=======
     <html lang="en">
       <body
         className={`
@@ -81,7 +60,6 @@ export default function RootLayout({
         <AuthSessionProvider>
           {children}
         </AuthSessionProvider>
->>>>>>> 25ae6e62d84b2b85a5eae8f35cc134b4cd2cd877
       </body>
     </html>
   );

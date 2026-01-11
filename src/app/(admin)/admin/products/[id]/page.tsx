@@ -42,7 +42,7 @@ const ProductPage = async (props: ProductPageProps) => {
                             tags={tags || []}
                             occasions={occasions || []}
                             moods={moods || []}
-                            products={products || []}
+                            products={(products || []) as any[]}
                         />
                     </CardContent>
                 </Card>

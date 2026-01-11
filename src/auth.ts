@@ -64,7 +64,6 @@ export const {
     }
   },
   adapter: PrismaAdapter(db as any) as any,
-<<<<<<< HEAD
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 hours (default is 30 days)
@@ -81,9 +80,6 @@ export const {
       },
     },
   },
-=======
-  session: { strategy: "jwt" },
->>>>>>> 25ae6e62d84b2b85a5eae8f35cc134b4cd2cd877
   ...authConfig,
   providers: [
     ...authConfig.providers,
@@ -121,7 +117,7 @@ export const {
             user.password,
           );
 
-          if (passwordsMatch) return user;
+          if (passwordsMatch) return user as any;
         }
 
         return null;

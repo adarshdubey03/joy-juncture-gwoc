@@ -1,4 +1,3 @@
-
 import { getOrder } from "@/actions/admin/order-actions";
 import { OrderStatusForm } from "@/components/admin/order-status-form";
 import { Badge } from "@/components/ui/badge";
@@ -62,12 +61,12 @@ export default async function OrderPage({
                                             <div>
                                                 <p className="font-medium">{item.productName}</p>
                                                 <p className="text-sm text-muted-foreground">
-                                                    Qty: {item.quantity} × {formatCurrency(item.priceAtBuy)}
+                                                    Qty: {item.quantity} × {formatCurrency(Number(item.unitPrice))}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="font-medium">
-                                            {formatCurrency(item.priceAtBuy * item.quantity)}
+                                            {formatCurrency(Number(item.unitPrice) * item.quantity)}
                                         </div>
                                     </div>
                                 ))}
@@ -75,11 +74,11 @@ export default async function OrderPage({
                                     <div className="w-48 space-y-2">
                                         <div className="flex justify-between text-sm">
                                             <span className="text-muted-foreground">Subtotal</span>
-                                            <span>{formatCurrency(order.totalAmount - (order.shippingCost || 0) + Number(order.discount || 0))}</span>
+                                            <span>{formatCurrency(Number(order.totalAmount) - Number(order.shippingCost || 0) + Number(order.discount || 0))}</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
                                             <span className="text-muted-foreground">Shipping</span>
-                                            <span>{formatCurrency(order.shippingCost || 0)}</span>
+                                            <span>{formatCurrency(Number(order.shippingCost || 0))}</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
                                             <span className="text-muted-foreground">Discount</span>
@@ -88,7 +87,7 @@ export default async function OrderPage({
                                         <Separator />
                                         <div className="flex justify-between font-bold">
                                             <span>Total</span>
-                                            <span>{formatCurrency(order.totalAmount)}</span>
+                                            <span>{formatCurrency(Number(order.totalAmount))}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +120,7 @@ export default async function OrderPage({
                                                     </div>
                                                 )}
                                                 <div className="text-xs text-neutral-400 mt-1">
-                                                    By {history.changedBy}
+                                                    By {history.changedBy.name || "System"}
                                                 </div>
                                             </div>
                                         </div>

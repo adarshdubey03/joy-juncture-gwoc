@@ -14,13 +14,16 @@ export async function reserveInventory(orderId: string) {
         });
 
         if (!order) return { error: "Order not found" };
-        if (order.inventoryReserved) return { error: "Inventory already reserved" };
+        if (order.inventoryReservedAt) return { error: "Inventory already reserved" };
 
         await db.$transaction(async (tx) => {
             // 1. Mark order as reserved
             await tx.order.update({
                 where: { id: orderId },
-                data: { inventoryReserved: true, inventoryReleased: false }
+                data: {
+                    inventoryReservedAt: new Date(),
+                    inventoryReleasedAt: null
+                }
             });
 
             // 2. Adjust stock for each item
@@ -28,7 +31,7 @@ export async function reserveInventory(orderId: string) {
                 const product = await tx.product.findUnique({ where: { id: item.productId } });
                 if (!product) continue; // Should not happen ideally
 
-                const newStock = product.stock - item.quantity;
+                const newStock = product.stockQuantity - item.quantity;
 
                 // Construct reason
                 const reason = `Order Reservation #${orderId.slice(-6)}`;
@@ -36,7 +39,7 @@ export async function reserveInventory(orderId: string) {
                 // Update Product
                 await tx.product.update({
                     where: { id: item.productId },
-                    data: { stock: newStock }
+                    data: { stockQuantity: newStock }
                 });
 
                 // Create Log
@@ -70,14 +73,17 @@ export async function releaseInventory(orderId: string) {
         });
 
         if (!order) return { error: "Order not found" };
-        if (order.inventoryReleased) return { error: "Inventory already released" };
-        if (!order.inventoryReserved) return { error: "Inventory was never reserved" };
+        if (order.inventoryReleasedAt) return { error: "Inventory already released" };
+        if (!order.inventoryReservedAt) return { error: "Inventory was never reserved" };
 
         await db.$transaction(async (tx) => {
             // 1. Mark order as released
             await tx.order.update({
                 where: { id: orderId },
-                data: { inventoryReleased: true, inventoryReserved: false }
+                data: {
+                    inventoryReleasedAt: new Date(),
+                    inventoryReservedAt: null
+                }
             });
 
             // 2. Return stock for each item
@@ -85,13 +91,13 @@ export async function releaseInventory(orderId: string) {
                 const product = await tx.product.findUnique({ where: { id: item.productId } });
                 if (!product) continue;
 
-                const newStock = product.stock + item.quantity;
+                const newStock = product.stockQuantity + item.quantity;
                 const reason = `Order Release #${orderId.slice(-6)}`;
 
                 // Update Product
                 await tx.product.update({
                     where: { id: item.productId },
-                    data: { stock: newStock }
+                    data: { stockQuantity: newStock }
                 });
 
                 // Create Log

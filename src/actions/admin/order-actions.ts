@@ -79,6 +79,9 @@ export async function getOrder(id: string) {
                 statusHistory: {
                     orderBy: {
                         timestamp: "desc",
+                    },
+                    include: {
+                        changedBy: true
                     }
                 }
             }
@@ -109,7 +112,7 @@ export async function updateOrderStatus(id: string, status: OrderStatus, reason?
                     orderId: id,
                     fromStatus: order.status,
                     toStatus: status,
-                    changedBy: userId,
+                    changedById: userId,
                     reason,
                 }
             })
@@ -217,7 +220,7 @@ export async function bulkUpdateOrderStatus(orderIds: string[], status: OrderSta
                         orderId: id,
                         fromStatus: order.status,
                         toStatus: status,
-                        changedBy: userId,
+                        changedById: userId,
                         reason: "Bulk Update",
                     }
                 })
@@ -265,7 +268,7 @@ export async function getOrderStats(dateRange: { from: Date; to: Date }) {
             }
         });
 
-        const revenue = orders.reduce((acc, order) => acc + order.totalAmount, 0);
+        const revenue = orders.reduce((acc, order) => acc + Number(order.totalAmount), 0);
         const count = orders.length;
         const avgValue = count > 0 ? revenue / count : 0;
 
@@ -279,7 +282,7 @@ export async function getOrderStats(dateRange: { from: Date; to: Date }) {
 export async function calculateShipping(items: any[], address: any) {
     try {
         const rates = await db.shippingRate.findMany({
-            where: { active: true }
+            where: { isActive: true }
         });
         return { success: true, rates };
     } catch (error) {
@@ -315,8 +318,8 @@ export async function validateOrder(orderId: string) {
 
         const errors = [];
         for (const item of order.items) {
-            if (item.product.stock < item.quantity) {
-                errors.push(`Insufficient stock for ${item.productName} (Requested: ${item.quantity}, Available: ${item.product.stock})`);
+            if (item.product.stockQuantity < item.quantity) {
+                errors.push(`Insufficient stock for ${item.productName} (Requested: ${item.quantity}, Available: ${item.product.stockQuantity})`);
             }
         }
 

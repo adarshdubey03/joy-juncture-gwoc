@@ -22,7 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createProduct, updateProduct } from "@/actions/admin/product-actions";
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Product, Category, Badge, Tag, Occasion, Mood } from "@/generated/prisma/client";
+import { Product, Category, Badge, Tag, Occasion, Mood } from "@/generated/prisma";
 import ImageUpload from "@/components/ui/image-upload";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge as BadgeUI } from "@/components/ui/badge";
@@ -189,7 +189,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                     placeholder="999.00"
                                                     {...field}
                                                     value={field.value as number}
-                                                    onChange={(e) => {
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         const actualPrice = parseFloat(e.target.value) || 0;
                                                         field.onChange(actualPrice);
 
@@ -218,7 +218,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                     placeholder="799.00"
                                                     {...field}
                                                     value={field.value as number || ''}
-                                                    onChange={(e) => {
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         const discountedPrice = parseFloat(e.target.value) || 0;
                                                         field.onChange(discountedPrice || undefined);
 
@@ -251,7 +251,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                     placeholder="20"
                                                     {...field}
                                                     value={field.value as number || ''}
-                                                    onChange={(e) => {
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         const discountPercent = parseInt(e.target.value) || 0;
                                                         field.onChange(discountPercent || undefined);
 
@@ -344,7 +344,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                         <FormItem>
                                             <FormLabel>👥 Min Players</FormLabel>
                                             <FormControl>
-                                                <Input type="number" disabled={isPending} placeholder="1" {...field} value={field.value as number} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />
+                                                <Input type="number" disabled={isPending} placeholder="1" {...field} value={field.value as number} onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(parseInt(e.target.value) || 1)} />
                                             </FormControl>
                                             <FormDescription>Minimum players</FormDescription>
                                             <FormMessage />
@@ -355,7 +355,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                         <FormItem>
                                             <FormLabel>👥 Max Players</FormLabel>
                                             <FormControl>
-                                                <Input type="number" disabled={isPending} placeholder="4" {...field} value={field.value as number} onChange={(e) => field.onChange(parseInt(e.target.value) || 4)} />
+                                                <Input type="number" disabled={isPending} placeholder="4" {...field} value={field.value as number} onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(parseInt(e.target.value) || 4)} />
                                             </FormControl>
                                             <FormDescription>Maximum players</FormDescription>
                                             <FormMessage />
@@ -366,7 +366,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                         <FormItem>
                                             <FormLabel>🎂 Min Age</FormLabel>
                                             <FormControl>
-                                                <Input type="number" disabled={isPending} placeholder="8" {...field} value={field.value as number} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
+                                                <Input type="number" disabled={isPending} placeholder="8" {...field} value={field.value as number} onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(parseInt(e.target.value) || 0)} />
                                             </FormControl>
                                             <FormDescription>Minimum age</FormDescription>
                                             <FormMessage />
@@ -377,7 +377,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                         <FormItem>
                                             <FormLabel>⏱️ Play Time (min)</FormLabel>
                                             <FormControl>
-                                                <Input type="number" disabled={isPending} placeholder="30" {...field} value={field.value as number} onChange={(e) => field.onChange(parseInt(e.target.value) || 30)} />
+                                                <Input type="number" disabled={isPending} placeholder="30" {...field} value={field.value as number} onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(parseInt(e.target.value) || 30)} />
                                             </FormControl>
                                             <FormDescription>Average duration</FormDescription>
                                             <FormMessage />
@@ -420,8 +420,8 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                             <ImageUpload
                                                 value={field.value?.map((image) => image.url) || []}
                                                 disabled={isPending}
-                                                onChange={(url) => field.onChange([...(field.value || []), { url, isPrimary: field.value?.length === 0, sortOrder: field.value?.length || 0 }])}
-                                                onRemove={(url) => field.onChange((field.value?.filter((current) => current.url !== url)))}
+                                                onChange={(url: string) => field.onChange([...(field.value || []), { url, isPrimary: field.value?.length === 0, sortOrder: field.value?.length || 0 }])}
+                                                onRemove={(url: string) => field.onChange((field.value?.filter((current: any) => current.url !== url)))}
                                             />
                                         </FormControl>
                                         <FormDescription>Recommended: Square images (1:1 ratio), at least 800x800px</FormDescription>
@@ -468,10 +468,10 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                         <FormControl>
                                                             <Checkbox
                                                                 checked={field.value?.includes(category.id)}
-                                                                onCheckedChange={(checked) => {
+                                                                onCheckedChange={(checked: boolean | string) => {
                                                                     return checked
-                                                                        ? field.onChange([...field.value, category.id])
-                                                                        : field.onChange(field.value?.filter((value) => value !== category.id))
+                                                                        ? field.onChange([...(field.value || []), category.id])
+                                                                        : field.onChange(field.value?.filter((value: string) => value !== category.id))
                                                                 }}
                                                                 disabled={isPending}
                                                             />
@@ -498,10 +498,10 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                         <FormControl>
                                                             <Checkbox
                                                                 checked={field.value?.includes(occasion.id)}
-                                                                onCheckedChange={(checked) => {
+                                                                onCheckedChange={(checked: boolean | string) => {
                                                                     return checked
-                                                                        ? field.onChange([...field.value, occasion.id])
-                                                                        : field.onChange(field.value?.filter((value) => value !== occasion.id))
+                                                                        ? field.onChange([...(field.value || []), occasion.id])
+                                                                        : field.onChange(field.value?.filter((value: string) => value !== occasion.id))
                                                                 }}
                                                                 disabled={isPending}
                                                             />
@@ -526,10 +526,10 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                         <FormControl>
                                                             <Checkbox
                                                                 checked={field.value?.includes(mood.id)}
-                                                                onCheckedChange={(checked) => {
+                                                                onCheckedChange={(checked: boolean | string) => {
                                                                     return checked
-                                                                        ? field.onChange([...field.value, mood.id])
-                                                                        : field.onChange(field.value?.filter((value) => value !== mood.id))
+                                                                        ? field.onChange([...(field.value || []), mood.id])
+                                                                        : field.onChange(field.value?.filter((value: string) => value !== mood.id))
                                                                 }}
                                                                 disabled={isPending}
                                                             />
@@ -557,10 +557,10 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                                             <div className="flex items-center space-x-2">
                                                                 <Checkbox
                                                                     checked={field.value?.includes(badge.id)}
-                                                                    onCheckedChange={(checked) => {
+                                                                    onCheckedChange={(checked: boolean | string) => {
                                                                         return checked
-                                                                            ? field.onChange([...field.value, badge.id])
-                                                                            : field.onChange(field.value?.filter((value) => value !== badge.id))
+                                                                            ? field.onChange([...(field.value || []), badge.id])
+                                                                            : field.onChange(field.value?.filter((value: string) => value !== badge.id))
                                                                     }}
                                                                     disabled={isPending}
                                                                 />
@@ -591,7 +591,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                         <FormItem>
                                             <FormLabel>📦 Current Stock</FormLabel>
                                             <FormControl>
-                                                <Input type="number" disabled={isPending} placeholder="100" {...field} value={field.value as number} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
+                                                <Input type="number" disabled={isPending} placeholder="100" {...field} value={field.value as number} onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(parseInt(e.target.value) || 0)} />
                                             </FormControl>
                                             <FormDescription>Available quantity</FormDescription>
                                             <FormMessage />
@@ -602,7 +602,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                                         <FormItem>
                                             <FormLabel>⚠️ Low Stock Alert</FormLabel>
                                             <FormControl>
-                                                <Input type="number" disabled={isPending} placeholder="5" {...field} value={field.value as number} onChange={(e) => field.onChange(parseInt(e.target.value) || 5)} />
+                                                <Input type="number" disabled={isPending} placeholder="5" {...field} value={field.value as number} onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(parseInt(e.target.value) || 5)} />
                                             </FormControl>
                                             <FormDescription>Notify when below</FormDescription>
                                             <FormMessage />

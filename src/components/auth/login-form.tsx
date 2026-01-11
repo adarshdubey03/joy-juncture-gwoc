@@ -81,7 +81,8 @@ export const LoginForm = () => {
                   className="
                     w-full rounded-lg px-4 py-3 text-sm
                     bg-white border border-black/20
-                    outline-none focus:border-black
+                    outline-none focus:border-black text-black
+                    
                   "
                 />
                 {errors.email && (
@@ -101,7 +102,7 @@ export const LoginForm = () => {
                   className="
                     w-full rounded-lg px-4 py-3 text-sm
                     bg-white border border-black/20
-                    outline-none focus:border-black
+                    outline-none focus:border-black text-black
                   "
                 />
                 <div className="mt-1 text-right">

@@ -28,7 +28,7 @@ export default async function NewProductPage() {
                     tags={tags || []}
                     occasions={occasions || []}
                     moods={moods || []}
-                    products={products || []}
+                    products={(products || []) as any[]}
                 />
             </div>
         </div>
