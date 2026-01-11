@@ -167,8 +167,23 @@ model PointTransaction {
 model Product {
   id          String   @id @default(cuid())
   name        String
+  slug        String   @unique
   description String?
   price       Int
+  image       String   @default("")
+  images      String[] // For walkthrough/gallery
+  category    String   @default("Game")
+  players     String   @default("2+ Players")
+  duration    String   @default("30 mins")
+  difficulty  String   @default("Medium")
+  mood        String   @default("Fun")
+  occasion    String[] 
+  
+  badges      String[]
+  story       String?
+  howToPlay   String[]
+  whatYoullLove String[] // Mapped from idealFor/whatYoullLove
+
   isActive    Boolean  @default(true)
 
   orderItems  OrderItem[]
@@ -281,6 +296,22 @@ model PuzzleAttempt {
   createdAt DateTime @default(now())
 }
 
+
+
+model Blog {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  subtitle    String?
+  excerpt     String
+  content     String   // Stores full HTML or Markdown content
+  image       String
+  author      String   @default("Joy Juncture")
+  
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
 
 model Content {
   id        String        @id @default(cuid())
