@@ -12,29 +12,25 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative w-full min-h-screen bg-[#FFF4D6] overflow-hidden">
+    <section className="relative w-full bg-[#FFF4D6] overflow-hidden min-h-[70vh] md:min-h-screen">
+      {/* SINGLE NAVBAR INSTANCE */}
+      <HeroNavbar />
 
-      {/* LOGO FLOATING ABOVE VIDEO */}
-      <div className="absolute left-16 z-30">
+      {/* FLOATING LOGO — DESKTOP ONLY */}
+      <div className="hidden md:block fixed top-1 left-16 z-50">
         <Image
           src="/logo.png"
           alt="Joy Juncture"
           width={280}
           height={56}
-          className="h-28 w-36"
+          className="h-24 w-32"
           priority
         />
       </div>
 
       {/* VIDEO FRAME */}
-      <div className="relative h-screen w-full p-5 pt-2">
-        <div className="relative h-full w-full overflow-hidden rounded-4xl rounded-tl-xs">
-
-          {/* NAVBAR */}
-          <div className="absolute left-1/6 right-14 z-20 flex justify-center">
-            <HeroNavbar />
-          </div>
-
+      <div className="relative w-full p-4 md:p-5 pt-2">
+        <div className="relative w-full overflow-hidden rounded-4xl rounded-tl-xs h-[60vh] md:h-[95vh] shadow-xl">
           {/* VIDEO */}
           <video
             autoPlay
@@ -49,50 +45,54 @@ export default function HeroSection() {
           {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-black/20" />
 
-          {/* TOP-LEFT WHITE EXCLUSION */}
+          {/* TOP-LEFT WHITE EXCLUSION — DESKTOP ONLY */}
           <div
             className="
-              absolute top-0 left-0
-              h-24
-              w-60
+              hidden md:block
+              fixed top-0 left-0
+              h-24 w-60
               bg-[#FFF4D6]
               rounded-br-4xl
-              z-10
+              z-40
             "
           />
 
-          {/* BOTTOM-LEFT WHITE EXCLUSION */}
+          {/* BOTTOM-LEFT WHITE EXCLUSION — RESPONSIVE */}
           <div
             className="
               absolute bottom-0 left-0
-              h-72
-              w-xl
+              h-52 w-72
+              md:h-72 md:w-xl
               bg-[#FFF4D6]
               rounded-tr-4xl
               z-10
             "
           />
 
-          {/* HEADLINE CONTENT — POLISHED */}
+          {/* HEADLINE CONTENT */}
           <div
             className="
-              absolute bottom-10 left-6
-              z-20 h-48 w-lg
-              px-10 
+              absolute bottom-15 left-4
+              md:bottom-6 md:left-6
+              z-20
+              px-0 md:px-10
               flex flex-col justify-between
+              w-[65%] md:w-auto
+              text-left
             "
           >
-            <h1 className="text-[2.75rem] font-black text-neutral-900 leading-tight max-w-md">
+            <h1 className="text-[1.6rem] md:text-[2.75rem] font-black text-neutral-900 leading-tight max-w-md">
               Discover joyful experiences that bring people together
             </h1>
 
-            {/* DOWN ARROW */}
+            {/* SCROLL ARROW — DESKTOP ONLY */}
             <button
               onClick={handleScrollDown}
               aria-label="Scroll to next section"
               className="
+                hidden md:flex
                 mt-6
-                flex h-14 w-14
+                h-14 w-14
                 items-center justify-center
                 rounded-full
                 border border-neutral-500
@@ -107,8 +107,8 @@ export default function HeroSection() {
             </button>
           </div>
 
-          {/* CTA BUTTONS — BOTTOM RIGHT */}
-          <div className="absolute bottom-8 right-80 z-20 flex items-center gap-10">
+          {/* CTA BUTTONS — DESKTOP ONLY */}
+          <div className="hidden md:flex absolute bottom-8 right-80 z-20 items-center gap-10">
             <Link
               href="/shop"
               className="
@@ -141,7 +141,6 @@ export default function HeroSection() {
               Play Games
             </Link>
           </div>
-
         </div>
       </div>
     </section>

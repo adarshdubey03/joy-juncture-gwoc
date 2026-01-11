@@ -1,5 +1,5 @@
-// app/shop/page.tsx
-"use client";
+import { db } from "@/lib/db";
+import ShopClient from "./ShopClient";
 
 import { useState } from "react";
 import Image from "next/image";
