@@ -33,12 +33,45 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    // Load from LocalStorage on mount
+    // Load from LocalStorage on mount with Migration Logic
     useEffect(() => {
         const stored = localStorage.getItem("joy-juncture-cart");
         if (stored) {
             try {
-                setItems(JSON.parse(stored));
+                const parsedItems: CartItem[] = JSON.parse(stored);
+
+                // MIGRATION: Fix old image paths (e.g., from /games/ to /products/)
+                // Ensure users with old cart data see the new images
+                const migratedItems = parsedItems.map(item => {
+                    if (item.image?.includes("/games/")) {
+                        // Map slug to new verified image path
+                        const MIGRATION_MAP: Record<string, string> = {
+                            "dead-mans-deck": "/products/dead-mans-deck.jpg",
+                            "mehfil": "/products/mehfil.png",
+                            "tamasha": "/products/tamasha.jpeg",
+                            "the-bloody-inheritance": "/products/bloody-inheritance.jpeg",
+                            "court52": "/products/court52.png",
+                            "buzzed": "/products/buzzed.jpeg",
+                            "judge-me-and-guess": "/products/judge-me-and-guess.png",
+                            "one-more-round": "/products/one-more-round.png",
+                            "dreamers-fair": "/products/dreamers-fair.png",
+                            "she-dare-mayhem-bachelorette-edition": "/products/she-dare-mayhem.png"
+                        };
+
+                        if (MIGRATION_MAP[item.slug]) {
+                            return { ...item, image: MIGRATION_MAP[item.slug] };
+                        }
+                    }
+                    return item;
+                });
+
+                setItems(migratedItems);
+
+                // If migration happened, save immediately
+                if (JSON.stringify(migratedItems) !== stored) {
+                    localStorage.setItem("joy-juncture-cart", JSON.stringify(migratedItems));
+                }
+
             } catch (e) {
                 console.error("Failed to parse cart", e);
             }

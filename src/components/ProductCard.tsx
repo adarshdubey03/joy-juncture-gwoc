@@ -61,7 +61,7 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
                         {product.name}
                     </h2>
                     <div className="text-right shrink-0">
-                        <p className={`font-bold ${variant === "default" ? "text-lg" : "text-base"}`}>₹{product.price}</p>
+                        <p className={`font-black tracking-tight text-neutral-900 ${variant === "default" ? "text-xl" : "text-lg"}`}>₹{product.price}</p>
                         {product.originalPrice && (
                             <p className="text-xs text-neutral-400 line-through">₹{product.originalPrice}</p>
                         )}
@@ -85,8 +85,8 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
                 <Link
                     href={`/shop/${product.slug}`}
                     className={`mt-auto flex items-center justify-center gap-2 w-full rounded-xl font-bold transition-all group/btn ${variant === "default"
-                            ? "py-3 bg-neutral-50 border border-neutral-100 text-neutral-900 hover:bg-black hover:text-[#F4C752] mt-4"
-                            : "py-2 bg-transparent text-[#F4C752] hover:text-black hover:bg-neutral-50 text-sm mt-2"
+                        ? "py-3 bg-neutral-50 border border-neutral-100 text-neutral-900 hover:bg-black hover:text-[#F4C752] mt-4"
+                        : "py-2 bg-transparent text-[#F4C752] hover:text-black hover:bg-neutral-50 text-sm mt-2"
                         }`}
                 >
                     {variant === "default" ? "View Details" : "View Details"}

@@ -9,11 +9,24 @@ interface BadgeProps {
 export function ProductCardBadges({ product, className = "" }: BadgeProps) {
     // Helper to extract clean values
     const specs = product.specifications || {};
+    const features = product.features || [];
+    const p = product as any; // Cast to access potential Prisma fields not in the mock type
 
-    const time = specs["Play Time"]?.replace(" minutes", "m") || product.features.find(f => f.includes("Mins")) || "";
-    const players = specs["Players"] || product.features.find(f => f.includes("Players"))?.replace(" Players", "") || "";
-    const age = specs["Age"] || product.features.find(f => f.includes("+")) || "";
-    const difficulty = specs["Difficulty"];
+    const time = specs["Play Time"]?.replace(" minutes", "m")
+        || p.duration
+        || features.find((f: string) => f.includes("Mins"))
+        || "";
+
+    const players = specs["Players"]
+        || p.players
+        || features.find((f: string) => f.includes("Players"))?.replace(" Players", "")
+        || "";
+
+    const age = specs["Age"]
+        || features.find((f: string) => f.includes("+"))
+        || "";
+
+    const difficulty = specs["Difficulty"] || p.difficulty;
     const mood = product.mood;
 
     return (
