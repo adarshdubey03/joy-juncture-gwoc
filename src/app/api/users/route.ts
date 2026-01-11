@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
 
 export async function GET(req: Request) {
   try {
@@ -13,16 +13,20 @@ export async function GET(req: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { email },
       select: {
         id: true,
         name: true,
         email: true,
         image: true,
-        phone: true,
-        points: true,
+        // phoneNumber: true, // Renamed from phone in some schemas, check schema. Schema said `phoneNumber`.
         createdAt: true,
+        wallet: {
+          select: {
+            balance: true
+          }
+        }
       },
     });
 
