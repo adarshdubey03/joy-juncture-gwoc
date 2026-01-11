@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 
 export default function WhatsHappeningNow() {
   return (
-    <section className="w-full bg-[#F1EFE7] py-24">
-      <div className="mx-auto max-w-7xl ">
+    <section className="w-full bg-[#FFF4D6] py-32">
+      <div className="mx-auto max-w-360 px-8">
         {/* Section Header */}
         <div className="mb-14 max-w-2xl">
           <h2 className="text-4xl font-semibold text-neutral-900">
@@ -16,27 +16,27 @@ export default function WhatsHappeningNow() {
         </div>
 
         {/* Cards Layout */}
-        <div className="grid grid-cols-12 gap-6">
-          {/* Left Large Card */}
-          <div className="col-span-12 md:col-span-7">
+        <div className="grid grid-cols-12 gap-8">
+          {/* Left Large Card — 50% */}
+          <div className="col-span-12 md:col-span-6">
             <Card
               bg="bg-[#b1653b]"
               label="Event"
               title="Saturday Game Night"
               subtitle="Play together, hosted live"
-              image="/event-placeholder.png"
+              image="/gamenight1.jpg"
               large
             />
           </div>
 
-          {/* Right Stacked Cards */}
-          <div className="col-span-12 md:col-span-5 flex flex-col gap-6">
+          {/* Right Stacked Cards — 50% */}
+          <div className="col-span-12 md:col-span-6 flex flex-col gap-8">
             <Card
               bg="bg-[#059669]"
               label="Puzzle"
               title="Weekly Brain Teaser"
               subtitle="Solve anytime this week"
-              image="/puzzle-placeholder.png"
+              image="/BT2.jpg"
             />
 
             <Card
@@ -44,7 +44,7 @@ export default function WhatsHappeningNow() {
               label="New"
               title="New Cooperative Card Game"
               subtitle="Fresh ways to play at home"
-              image="/game-placeholder.png"
+              image="/DMD.jpg"
             />
           </div>
         </div>
@@ -95,8 +95,8 @@ function Card({
         <Image
           src={image}
           alt={title}
-          width={large ? 240 : 180}
-          height={large ? 240 : 180}
+          width={large ? 800 : 550}
+          height={large ? 100 : 300}
           className="opacity-90"
         />
       </div>

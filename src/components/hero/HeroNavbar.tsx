@@ -2,8 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Instagram, ChevronDown, LogOut } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { Instagram, ChevronDown, ShoppingCart, User } from "lucide-react";
+import { useSession } from "next-auth/react";
+
+const ROUTE_MAP: Record<string, string> = {
+  "All Games": "/shop",
+  "By Occasion": "/shop?filter=occasion",
+  "By Players": "/shop?filter=players",
+  "By Mood": "/shop?filter=mood",
+
+  "Corporate Engagement": "/experiences/corporate",
+  "Weddings": "/experiences/weddings",
+  "Birthdays": "/experiences/birthdays",
+  "Carnivals": "/experiences/carnivals",
+
+  "The Showdown": "/play/showdown",
+  "Free Online Games": "/play/free",
+  "How JJ Games Work": "/play/how-it-works",
+
+  "Upcoming Game Nights": "/events/upcoming-events",
+  "Past Events": "/events/past-events",
+
+  "Blog": "/blogs",
+  "Wallet & Points": "/wallet",
+  "About Us": "/about",
+};
 
 const NAV_ITEMS = [
   {
@@ -30,13 +53,13 @@ const NAV_ITEMS = [
 
 export default function HeroNavbar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const isLoggedIn = status === "authenticated";
 
   return (
     <nav className="absolute top-6 left-8 right-8 z-30">
-      <div className="flex items-center justify-between rounded-full bg-[#F1EFE7] px-12 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+      <div className="flex items-center justify-between rounded-full bg-[#F4C752] px-12 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
         
         {/* LEFT — NAV LINKS */}
         <div className="hidden md:flex items-center gap-10">
@@ -50,7 +73,8 @@ export default function HeroNavbar() {
                 onMouseEnter={() => setOpenMenu(nav.label)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
-                <button className="flex items-center gap-1 text-base font-medium text-neutral-900 hover:text-black transition-colors">
+                {/* Trigger */}
+                <button className="flex items-center gap-1 text-base font-medium text-neutral-900">
                   {nav.label}
                   <ChevronDown
                     size={16}
@@ -60,93 +84,77 @@ export default function HeroNavbar() {
                   />
                 </button>
 
-                <div className="absolute left-0 right-0 top-full h-4" />
+                {/* Hover buffer */}
+                {isOpen && (
+                  <div className="absolute left-0 right-0 h-4 top-full" />
+                )}
 
-                <div
-                  className={`
-                    absolute left-1/2 top-full mt-4 w-56 -translate-x-1/2
-                    rounded-2xl bg-white
-                    shadow-[0_16px_40px_rgba(0,0,0,0.12)]
-                    ring-1 ring-black/5
-                    transition-all duration-200 ease-out
-                    ${
-                      isOpen
-                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 -translate-y-2 pointer-events-none"
-                    }
-                  `}
-                >
-                  <div className="py-3">
-                    {nav.items.map((item) => (
-                      <Link
-                        key={item}
-                        href="#"
-                        className="
-                          block px-5 py-2 text-sm
-                          text-neutral-800
-                          transition-colors
-                          hover:bg-[#F4C752]/25
-                          hover:text-neutral-900
-                        "
-                      >
-                        {item}
-                      </Link>
-                    ))}
+                {/* Dropdown */}
+                {isOpen && (
+                  <div
+                    className="
+                      absolute left-1/2 top-full mt-4 w-56
+                      -translate-x-1/2
+                      rounded-2xl bg-white
+                      shadow-[0_16px_40px_rgba(0,0,0,0.12)]
+                      ring-1 ring-black/5
+                      animate-in fade-in slide-in-from-top-2
+                    "
+                  >
+                    <div className="py-3">
+                      {nav.items.map((item) => (
+                        <Link
+                          key={item}
+                          href={ROUTE_MAP[item]}
+                          className="
+                            block px-5 py-2 text-sm
+                            text-neutral-800
+                            hover:bg-[#F4C752]/25
+                            transition-colors
+                          "
+                        >
+                          {item}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
         </div>
 
-        {/* RIGHT — AUTH + SOCIAL */}
-        <div className="flex items-center gap-6">
+        {/* RIGHT — ACTIONS */}
+        <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <>
-              {/* SHOP */}
+              {/* CART */}
               <Link
-                href="/shop"
-                className="
-                  rounded-full bg-[#F4C752]
-                  px-6 py-2.5
-                  text-sm font-semibold text-neutral-900
-                  shadow-[0_6px_16px_rgba(244,199,82,0.35)]
-                  transition-all
-                  hover:-translate-y-px
-                  hover:shadow-[0_10px_24px_rgba(244,199,82,0.45)]
-                "
+                href="/cart"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-900/20 text-neutral-900 hover:bg-white/40 transition"
+                aria-label="Cart"
               >
-                Shop
+                <ShoppingCart size={18} />
               </Link>
 
-              {/* LOGOUT */}
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="
-                  flex h-10 w-10 items-center justify-center
-                  rounded-full border border-neutral-400
-                  text-neutral-800
-                  transition-all
-                  hover:border-neutral-500
-                  hover:bg-neutral-100
-                  hover:text-neutral-900
-                "
-                aria-label="Logout"
+              {/* PROFILE */}
+              <Link
+                href="/profile"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-900/20 text-neutral-900 hover:bg-white/40 transition"
+                aria-label="Profile"
               >
-                <LogOut size={18} />
-              </button>
+                <User size={18} />
+              </Link>
             </>
           ) : (
             <Link
               href="/login"
               className="
-                rounded-full bg-[#F4C752]
+                rounded-full bg-[#FFF4D6]
                 px-6 py-2.5
-                text-sm font-semibold text-neutral-900
-                shadow-[0_6px_16px_rgba(244,199,82,0.35)]
-                transition-all
-                hover:-translate-y-px
-                hover:shadow-[0_10px_24px_rgba(244,199,82,0.45)]
+                text-sm font-medium text-neutral-900
+                transition
+                hover:opacity-90
               "
             >
               Login
@@ -157,15 +165,7 @@ export default function HeroNavbar() {
           <Link
             href="#"
             aria-label="Instagram"
-            className="
-              flex h-10 w-10 items-center justify-center
-              rounded-full border border-neutral-400
-              text-neutral-800
-              transition-all
-              hover:border-neutral-500
-              hover:bg-neutral-100
-              hover:text-neutral-900
-            "
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-900/20 text-neutral-900 hover:bg-white/40 transition"
           >
             <Instagram size={18} />
           </Link>

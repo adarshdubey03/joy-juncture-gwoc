@@ -2,8 +2,8 @@ import DomeGallery from "./DomeGallery";
 
 export default function ProofOfJoy() {
   return (
-    <section className="w-full bg-[#F1EFE7] py-16">
-      <div className="mx-auto max-w-7xl px-6 flex flex-col">
+    <section className="w-full bg-[#FFF4D6] ">
+      <div className="mx-auto max-w-360 px-8 flex flex-col">
         {/* Section Header */}
         <div className="mb-14 max-w-2xl">
           <h2 className="text-4xl font-semibold text-neutral-900">
@@ -15,7 +15,7 @@ export default function ProofOfJoy() {
         </div>
 
         {/* Gallery Container */}
-        <div className="relative w-full h-[70vh] rounded-3xl overflow-hidden bg-white">
+        <div className="relative w-full h-[82vh] rounded-3xl overflow-hidden bg-white">
           <DomeGallery
             fit={1.0}
             minRadius={900}
