@@ -24,7 +24,7 @@ export default function WhatsHappeningNow() {
               label="Event"
               title="Saturday Game Night"
               subtitle="Play together, hosted live"
-              image="/event-placeholder.png"
+              image="/gamenight1.jpg"
               large
             />
           </div>
@@ -36,7 +36,7 @@ export default function WhatsHappeningNow() {
               label="Puzzle"
               title="Weekly Brain Teaser"
               subtitle="Solve anytime this week"
-              image="/puzzle-placeholder.png"
+              image="/BT2.jpg"
             />
 
             <Card
@@ -44,7 +44,7 @@ export default function WhatsHappeningNow() {
               label="New"
               title="New Cooperative Card Game"
               subtitle="Fresh ways to play at home"
-              image="/game-placeholder.png"
+              image="/DMD.jpg"
             />
           </div>
         </div>
@@ -95,8 +95,8 @@ function Card({
         <Image
           src={image}
           alt={title}
-          width={large ? 240 : 180}
-          height={large ? 240 : 180}
+          width={large ? 800 : 550}
+          height={large ? 100 : 300}
           className="opacity-90"
         />
       </div>

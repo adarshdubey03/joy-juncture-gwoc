@@ -132,7 +132,7 @@ export default function AboutPage() {
 
         <p className="mt-4 font-geist text-white/80 max-w-2xl">
           Whether you’re here to discover a game, attend an event, or simply
-          belong — your next joyful moment starts here.
+          belong — your next jz                               oyful moment starts here.
         </p>
       </section>
     </main>
