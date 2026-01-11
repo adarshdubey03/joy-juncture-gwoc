@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,63 +15,58 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { getOrders, OrderFilters as BackendFilters } from "@/actions/admin/order-actions";
-import { OrdersToolbar, OrderFiltersState } from "@/components/admin/orders/orders-toolbar";
-import { OrderStatsCards } from "@/components/admin/orders/order-stats-cards";
-import { OrderStatusBadge } from "@/components/admin/orders/order-status-badge";
-import { Loader2, ArrowUpDown } from "lucide-react";
+import { getCustomers, CustomerFilters as BackendFilters } from "@/actions/admin/customer-actions";
+import { CustomersToolbar, CustomerFiltersState } from "@/components/admin/customers/customers-toolbar";
+import { CustomerStatsCards } from "@/components/admin/customers/customer-stats-cards";
+import { CustomerStatusBadge } from "@/components/admin/customers/customer-status-badge";
+import { getUserRoleLabel } from "@/lib/customer-constants";
+import { Loader2, ArrowUpDown, Eye } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
-function OrdersContent() {
+function CustomersContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [isPending, startTransition] = useTransition();
-    const [ordersData, setOrdersData] = useState<any>(null);
+    const [customersData, setCustomersData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     // Initialize filters from URL params
-    const [filters, setFilters] = useState<OrderFiltersState>({
+    const [filters, setFilters] = useState<CustomerFiltersState>({
         search: searchParams.get("search") || "",
-        status: (searchParams.get("status")?.split(",").filter(Boolean) || []) as any[],
-        paymentStatus: searchParams.get("paymentStatus")?.split(",").filter(Boolean) || [],
-        paymentMethod: searchParams.get("paymentMethod")?.split(",").filter(Boolean) || [],
+        role: (searchParams.get("role")?.split(",").filter(Boolean) || []) as any[],
+        verified: searchParams.get("verified") ? searchParams.get("verified") === "true" : undefined,
         dateFrom: searchParams.get("dateFrom") ? new Date(searchParams.get("dateFrom")!) : undefined,
         dateTo: searchParams.get("dateTo") ? new Date(searchParams.get("dateTo")!) : undefined,
-        amountMin: searchParams.get("amountMin") ? Number(searchParams.get("amountMin")) : undefined,
-        amountMax: searchParams.get("amountMax") ? Number(searchParams.get("amountMax")) : undefined,
     });
 
     const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
-    const [sortBy, setSortBy] = useState<"createdAt" | "totalAmount">("createdAt");
+    const [sortBy, setSortBy] = useState<"createdAt" | "name" | "email">("createdAt");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-    // Fetch orders whenever filters change
+    // Fetch customers whenever filters change
     useEffect(() => {
-        const fetchOrders = async () => {
+        const fetchCustomers = async () => {
             setLoading(true);
             const backendFilters: BackendFilters = {
                 search: filters.search,
-                status: filters.status as any[],
-                paymentStatus: filters.paymentStatus,
-                paymentMethod: filters.paymentMethod,
+                role: filters.role as any[],
+                verified: filters.verified,
                 dateFrom: filters.dateFrom,
                 dateTo: filters.dateTo,
-                amountMin: filters.amountMin,
-                amountMax: filters.amountMax,
                 page: currentPage,
                 limit: 15,
                 sortBy,
                 sortOrder,
             };
 
-            const data = await getOrders(backendFilters);
-            setOrdersData(data);
+            const data = await getCustomers(backendFilters);
+            setCustomersData(data);
             setLoading(false);
         };
 
         // Debounce search
         const timeoutId = setTimeout(() => {
-            fetchOrders();
+            fetchCustomers();
         }, filters.search ? 300 : 0);
 
         return () => clearTimeout(timeoutId);
@@ -81,19 +76,16 @@ function OrdersContent() {
     useEffect(() => {
         const params = new URLSearchParams();
         if (filters.search) params.set("search", filters.search);
-        if (filters.status.length > 0) params.set("status", filters.status.join(","));
-        if (filters.paymentStatus.length > 0) params.set("paymentStatus", filters.paymentStatus.join(","));
-        if (filters.paymentMethod.length > 0) params.set("paymentMethod", filters.paymentMethod.join(","));
+        if (filters.role.length > 0) params.set("role", filters.role.join(","));
+        if (filters.verified !== undefined) params.set("verified", filters.verified.toString());
         if (filters.dateFrom) params.set("dateFrom", filters.dateFrom.toISOString());
         if (filters.dateTo) params.set("dateTo", filters.dateTo.toISOString());
-        if (filters.amountMin !== undefined) params.set("amountMin", filters.amountMin.toString());
-        if (filters.amountMax !== undefined) params.set("amountMax", filters.amountMax.toString());
         if (currentPage > 1) params.set("page", currentPage.toString());
 
-        router.replace(`/admin/orders?${params.toString()}`, { scroll: false });
+        router.replace(`/admin/customers?${params.toString()}`, { scroll: false });
     }, [filters, currentPage, router]);
 
-    const toggleSort = (field: "createdAt" | "totalAmount") => {
+    const toggleSort = (field: "createdAt" | "name" | "email") => {
         if (sortBy === field) {
             setSortOrder(sortOrder === "asc" ? "desc" : "asc");
         } else {
@@ -105,23 +97,23 @@ function OrdersContent() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
+                <h2 className="text-3xl font-bold tracking-tight">Customers</h2>
             </div>
 
             {/* Stats Cards */}
-            {ordersData?.stats && <OrderStatsCards stats={ordersData.stats} />}
+            {customersData?.stats && <CustomerStatsCards stats={customersData.stats} />}
 
             {/* Toolbar */}
-            <OrdersToolbar
+            <CustomersToolbar
                 filters={filters}
                 onFiltersChange={setFilters}
-                totalResults={ordersData?.pagination.total || 0}
+                totalResults={customersData?.pagination.total || 0}
             />
 
-            {/* Orders Table */}
+            {/* Customers Table */}
             <Card>
                 <CardHeader>
-                    <CardTitle>All Orders</CardTitle>
+                    <CardTitle>All Customers</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -133,8 +125,30 @@ function OrdersContent() {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Order ID</TableHead>
-                                        <TableHead>Customer</TableHead>
+                                        <TableHead>Customer ID</TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="-ml-3 h-8"
+                                                onClick={() => toggleSort("name")}
+                                            >
+                                                Name
+                                                <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="-ml-3 h-8"
+                                                onClick={() => toggleSort("email")}
+                                            >
+                                                Email
+                                                <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>Phone</TableHead>
                                         <TableHead>
                                             <Button
                                                 variant="ghost"
@@ -142,70 +156,65 @@ function OrdersContent() {
                                                 className="-ml-3 h-8"
                                                 onClick={() => toggleSort("createdAt")}
                                             >
-                                                Date
+                                                Registered
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
-                                        <TableHead>Items</TableHead>
-                                        <TableHead>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="-ml-3 h-8"
-                                                onClick={() => toggleSort("totalAmount")}
-                                            >
-                                                Total
-                                                <ArrowUpDown className="ml-2 h-4 w-4" />
-                                            </Button>
-                                        </TableHead>
-                                        <TableHead>Payment</TableHead>
+                                        <TableHead>Orders</TableHead>
+                                        <TableHead>Total Spent</TableHead>
+                                        <TableHead>Points</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="text-right">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {!ordersData?.orders || ordersData.orders.length === 0 ? (
+                                    {!customersData?.customers || customersData.customers.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={8} className="text-center h-64 text-muted-foreground">
-                                                No orders found. Try adjusting your filters.
+                                            <TableCell colSpan={10} className="text-center h-64 text-muted-foreground">
+                                                No customers found. Try adjusting your filters.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        ordersData.orders.map((order: any) => (
-                                            <TableRow key={order.id} className="hover:bg-muted/50">
+                                        customersData.customers.map((customer: any) => (
+                                            <TableRow key={customer.id} className="hover:bg-muted/50">
                                                 <TableCell className="font-mono text-xs font-medium">
-                                                    #{order.id.substring(0, 8)}
+                                                    #{customer.id.substring(0, 8)}
                                                 </TableCell>
                                                 <TableCell>
                                                     <div>
-                                                        <div className="font-medium">{order.user.name || "Guest"}</div>
-                                                        <div className="text-xs text-muted-foreground">{order.user.email}</div>
+                                                        <div className="font-medium">{customer.name || "N/A"}</div>
+                                                        <Badge variant="outline" className="text-xs mt-1">
+                                                            {getUserRoleLabel(customer.role)}
+                                                        </Badge>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="text-sm">
-                                                    {format(new Date(order.createdAt), "MMM d, yyyy")}
-                                                    <div className="text-xs text-muted-foreground">
-                                                        {format(new Date(order.createdAt), "h:mm a")}
-                                                    </div>
+                                                    {customer.email}
+                                                </TableCell>
+                                                <TableCell className="text-sm">
+                                                    {customer.phoneNumber || "N/A"}
+                                                </TableCell>
+                                                <TableCell className="text-sm">
+                                                    {format(new Date(customer.createdAt), "MMM d, yyyy")}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <span className="text-sm">{order.items.length} items</span>
+                                                    <span className="text-sm font-medium">{customer.orderCount}</span>
                                                 </TableCell>
                                                 <TableCell className="font-semibold">
-                                                    {formatCurrency(Number(order.totalAmount))}
+                                                    {formatCurrency(customer.totalSpent)}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <div className="text-sm">
-                                                        <div className="font-medium">{order.paymentMethod || "N/A"}</div>
-                                                        <div className="text-xs text-muted-foreground">{order.paymentStatus || "PENDING"}</div>
-                                                    </div>
+                                                    <span className="text-sm font-medium">{Number(customer.points).toLocaleString()}</span>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <OrderStatusBadge status={order.status} />
+                                                    <CustomerStatusBadge
+                                                        emailVerified={customer.emailVerified}
+                                                        isActive={customer.isActive}
+                                                    />
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    <Button variant="ghost" size="sm" asChild>
-                                                        <Link href={`/admin/orders/${order.id}`}>View</Link>
+                                                    <Button variant="ghost" size="sm">
+                                                        <Eye className="h-4 w-4" />
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
@@ -215,12 +224,12 @@ function OrdersContent() {
                             </Table>
 
                             {/* Pagination */}
-                            {ordersData?.pagination && ordersData.pagination.totalPages > 1 && (
+                            {customersData?.pagination && customersData.pagination.totalPages > 1 && (
                                 <div className="flex items-center justify-between mt-4">
                                     <div className="text-sm text-muted-foreground">
                                         Showing {((currentPage - 1) * 15) + 1} to{" "}
-                                        {Math.min(currentPage * 15, ordersData.pagination.total)} of{" "}
-                                        {ordersData.pagination.total} orders
+                                        {Math.min(currentPage * 15, customersData.pagination.total)} of{" "}
+                                        {customersData.pagination.total} customers
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button
@@ -232,7 +241,7 @@ function OrdersContent() {
                                             Previous
                                         </Button>
                                         <div className="flex items-center gap-1">
-                                            {Array.from({ length: Math.min(5, ordersData.pagination.totalPages) }, (_, i) => {
+                                            {Array.from({ length: Math.min(5, customersData.pagination.totalPages) }, (_, i) => {
                                                 const pageNum = i + 1;
                                                 return (
                                                     <Button
@@ -245,14 +254,14 @@ function OrdersContent() {
                                                     </Button>
                                                 );
                                             })}
-                                            {ordersData.pagination.totalPages > 5 && (
+                                            {customersData.pagination.totalPages > 5 && (
                                                 <span className="px-2 text-muted-foreground">...</span>
                                             )}
                                         </div>
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            disabled={currentPage === ordersData.pagination.totalPages}
+                                            disabled={currentPage === customersData.pagination.totalPages}
                                             onClick={() => setCurrentPage(currentPage + 1)}
                                         >
                                             Next
@@ -268,14 +277,14 @@ function OrdersContent() {
     );
 }
 
-export default function OrdersPage() {
+export default function CustomersPage() {
     return (
         <Suspense fallback={
             <div className="flex items-center justify-center h-full">
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
         }>
-            <OrdersContent />
+            <CustomersContent />
         </Suspense>
     );
 }

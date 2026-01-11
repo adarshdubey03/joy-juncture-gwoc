@@ -1,67 +1,211 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { OrderStatus } from "@/generated/prisma/client";
+import { OrderStatus } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 
-export async function getOrders({
-    query,
-    status,
-    page = 1,
-    limit = 10,
-}: {
-    query?: string;
-    status?: OrderStatus;
+// Advanced filter types
+export type OrderFilters = {
+    search?: string;
+    status?: OrderStatus[];
+    paymentStatus?: string[];
+    paymentMethod?: string[];
+    dateFrom?: Date;
+    dateTo?: Date;
+    amountMin?: number;
+    amountMax?: number;
     page?: number;
     limit?: number;
-}) {
+    sortBy?: 'createdAt' | 'totalAmount' | 'status';
+    sortOrder?: 'asc' | 'desc';
+};
+
+export type OrdersResponse = {
+    orders: any[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
+    stats: {
+        totalOrders: number;
+        totalRevenue: number;
+        averageOrderValue: number;
+        statusBreakdown: Record<string, number>;
+    };
+    error?: string;
+};
+
+export async function getOrders(filters: OrderFilters = {}): Promise<OrdersResponse> {
+    const {
+        search,
+        status,
+        paymentStatus,
+        paymentMethod,
+        dateFrom,
+        dateTo,
+        amountMin,
+        amountMax,
+        page = 1,
+        limit = 10,
+        sortBy = 'createdAt',
+        sortOrder = 'desc'
+    } = filters;
+
     const skip = (page - 1) * limit;
 
+    // Build where clause
     const where: any = {};
 
-    if (query) {
+    // Search across multiple fields
+    if (search) {
         where.OR = [
-            { id: { contains: query, mode: "insensitive" } },
-            { user: { name: { contains: query, mode: "insensitive" } } },
-            { user: { email: { contains: query, mode: "insensitive" } } },
+            { id: { contains: search, mode: "insensitive" } },
+            { user: { name: { contains: search, mode: "insensitive" } } },
+            { user: { email: { contains: search, mode: "insensitive" } } },
+            { shippingName: { contains: search, mode: "insensitive" } },
+            { trackingNumber: { contains: search, mode: "insensitive" } },
         ];
     }
 
-    if (status) {
-        where.status = status;
+    // Multi-status filter
+    if (status && status.length > 0) {
+        where.status = { in: status };
+    }
+
+    // Payment filters
+    if (paymentStatus && paymentStatus.length > 0) {
+        where.paymentStatus = { in: paymentStatus };
+    }
+
+    if (paymentMethod && paymentMethod.length > 0) {
+        where.paymentMethod = { in: paymentMethod };
+    }
+
+    // Date range filter
+    if (dateFrom || dateTo) {
+        where.createdAt = {};
+        if (dateFrom) {
+            where.createdAt.gte = dateFrom;
+        }
+        if (dateTo) {
+            // Add 1 day to include the entire end date
+            const endDate = new Date(dateTo);
+            endDate.setHours(23, 59, 59, 999);
+            where.createdAt.lte = endDate;
+        }
+    }
+
+    // Amount range filter
+    if (amountMin !== undefined || amountMax !== undefined) {
+        where.totalAmount = {};
+        if (amountMin !== undefined) {
+            where.totalAmount.gte = amountMin;
+        }
+        if (amountMax !== undefined) {
+            where.totalAmount.lte = amountMax;
+        }
     }
 
     try {
-        const [orders, total] = await Promise.all([
+        // Parallel queries for performance
+        const [ordersRaw, total, stats, statusCounts] = await Promise.all([
+            // Get filtered orders
             db.order.findMany({
                 where,
                 include: {
                     user: {
                         select: {
+                            id: true,
                             name: true,
                             email: true,
+                            phoneNumber: true,
                         }
                     },
-                    items: true,
+                    items: {
+                        select: {
+                            id: true,
+                            productName: true,
+                            quantity: true,
+                            unitPrice: true,
+                        }
+                    },
                 },
                 orderBy: {
-                    createdAt: "desc",
+                    [sortBy]: sortOrder,
                 },
                 skip,
                 take: limit,
             }),
+
+            // Get total count
             db.order.count({ where }),
+
+            // Get analytics
+            db.order.aggregate({
+                where,
+                _count: true,
+                _sum: {
+                    totalAmount: true,
+                },
+                _avg: {
+                    totalAmount: true,
+                },
+            }),
+
+            // Calculate status breakdown concurrently
+            db.order.groupBy({
+                by: ['status'],
+                where,
+                _count: true,
+            })
         ]);
+
+        // Serialize Decimal to Number for client safety
+        const orders = ordersRaw.map(order => ({
+            ...order,
+            subtotal: Number(order.subtotal),
+            discount: Number(order.discount),
+            taxAmount: Number(order.taxAmount),
+            shippingCost: Number(order.shippingCost),
+            totalAmount: Number(order.totalAmount),
+            refundAmount: order.refundAmount ? Number(order.refundAmount) : null,
+            items: order.items.map(item => ({
+                ...item,
+                unitPrice: Number(item.unitPrice),
+            }))
+        }));
+
+        const statusBreakdown = statusCounts.reduce((acc, item) => {
+            acc[item.status] = item._count;
+            return acc;
+        }, {} as Record<string, number>);
 
         return {
             orders,
-            totalPages: Math.ceil(total / limit),
-            total,
+            pagination: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit),
+            },
+            stats: {
+                totalOrders: stats._count || 0,
+                totalRevenue: stats._sum.totalAmount ? Number(stats._sum.totalAmount) : 0,
+                averageOrderValue: stats._avg.totalAmount ? Number(stats._avg.totalAmount) : 0,
+                statusBreakdown,
+            },
         };
     } catch (error) {
         console.error("GET_ORDERS_ERROR", error);
-        return { error: "Failed to fetch orders" };
+        return {
+            orders: [],
+            pagination: { total: 0, page, limit, totalPages: 0 },
+            stats: { totalOrders: 0, totalRevenue: 0, averageOrderValue: 0, statusBreakdown: {} },
+            error: "Failed to fetch orders"
+        };
     }
 }
 
@@ -138,7 +282,7 @@ export async function updateTracking(id: string, data: {
             where: { id },
             data: {
                 ...data,
-                status: "SHIPPED", // Auto-update status to SHIPPED if adding tracking?
+                status: OrderStatus.SHIPPED, // Auto-update status to SHIPPED if adding tracking
             }
         });
 

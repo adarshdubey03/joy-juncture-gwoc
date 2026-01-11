@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { Product } from "@/generated/prisma/client";
+import { Product } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { ProductSchema } from "@/schemas";
 import { z } from "zod";
