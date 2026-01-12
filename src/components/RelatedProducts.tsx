@@ -29,7 +29,13 @@ export function RelatedProducts({ currentSlug, category }: RelatedProductsProps)
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {related.map((product) => (
                     <div key={product.id} className="h-full">
-                        <ProductCard product={product} variant="compact" />
+                        <ProductCard
+                            product={{
+                                ...product,
+                                badges: product.badges || [], // Ensure badges is always an array
+                            } as any}
+                            variant="compact"
+                        />
                     </div>
                 ))}
             </div>
