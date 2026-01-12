@@ -1,589 +1,211 @@
-"use client"
-import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
-import { useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import Image from "next/image";
+import ExperienceHero from "@/components/experiences/ExperienceHero";
+import ProblemCards from "@/components/experiences/ProblemCards";
+import SolutionCards from "@/components/experiences/SolutionCards";
+import ExperienceFormats from "@/components/experiences/ExperienceFormats";
+import MomentsGallery from "@/components/experiences/MomentsGallery";
+import TrustSection from "@/components/experiences/TrustSection";
+import EnquiryForm from "@/components/experiences/EnquiryForm";
 
-export default function WeddingExperiencesPage() {
-  const [formData, setFormData] = useState({
-    coupleName: "",
-    email: "",
-    phone: "",
-    weddingDate: "",
-    functions: "",
-    guestCount: "",
-    message: "",
-  });
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function WeddingsPage() {
+    const problemCards = [
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            ),
+            title: "Guests just watch",
+            description: "Beautiful ceremony, but guests are passive observers",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+            ),
+            title: "Everyone's on phones",
+            description: "People scrolling instead of connecting",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ),
+            title: "Awkward downtime",
+            description: "Dead zones between events where guests feel lost",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            ),
+            title: "Forgettable reception",
+            description: "Same old dinner and dance routine",
+        },
+    ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    const solutionCards = [
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+            ),
+            title: "Interactive Celebrations",
+            highlight: "Guest Engagement",
+            description:
+                "Transform your wedding into an experience where every guest feels part of the celebration. Games that bring strangers together and create lasting memories.",
+        },
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            ),
+            title: "Memorable Moments",
+            highlight: "Photo-Worthy",
+            description:
+                "Create Instagram-worthy moments that guests will talk about for years. Your wedding becomes the one everyone remembers.",
+        },
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ),
+            title: "Elegant & Fun",
+            highlight: "Premium Quality",
+            description:
+                "Sophisticated entertainment that matches your wedding aesthetic. Classy, beautiful, and incredibly fun.",
+        },
+    ];
 
-    try {
-      const combinedMessage = `Functions: ${formData.functions}\nWedding Date: ${formData.weddingDate}\n\n${formData.message}`;
+    const formats = [
+        {
+            title: "Cocktail Hour Games",
+            whatItIs: "Elegant lawn games and interactive stations during pre-ceremony",
+            whenItWorks: "Guest arrival, cocktail hour, photo session gaps",
+            whoItsFor: "Couples wanting to keep guests entertained and mingling",
+            imagePath: "/weddings/cocktail-games.jpg",
+        },
+        {
+            title: "Reception Entertainment",
+            whatItIs: "Full evening of interactive games woven into your celebration",
+            whenItWorks: "Between dinner courses, after first dance, late night",
+            whoItsFor: "Couples planning unforgettable receptions",
+            imagePath: "/weddings/reception.jpg",
+        },
+        {
+            title: "Mehendi & Sangeet Specials",
+            whatItIs: "Traditional celebrations elevated with interactive games",
+            whenItWorks: "Pre-wedding functions, family gatherings",
+            whoItsFor: "Multi-day celebrations wanting variety",
+            imagePath: "/weddings/mehendi.jpg",
+        },
+    ];
 
-      const result = await submitExperienceEnquiry({
-        name: formData.coupleName,
-        email: formData.email,
-        phone: formData.phone,
-        type: "Wedding",
-        guestCount: formData.guestCount,
-        message: combinedMessage,
-        company: "N/A"
-      });
+    const galleryImages = [
+        "/BrideGroom.png",
+        "/people_playing.jpg",
+        "/peopleplaying.jpg",
+        "/gamenight1.jpg",
+        "/funatcafe.jpg",
+        "/event1.jpg",
+        "/mehfil2.jpg",
+        "/IMG_9307.jpg",
+    ];
 
-      if (result.success) {
-        setFormSubmitted(true);
-        setFormData({
-          coupleName: "",
-          email: "",
-          phone: "",
-          weddingDate: "",
-          functions: "",
-          guestCount: "",
-          message: "",
-        });
-        setTimeout(() => setFormSubmitted(false), 5000);
-      } else {
-        alert(result.error);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    const trustPoints = [
+        {
+            number: "01",
+            title: "Seamless Integration",
+            description: "Fits perfectly into your wedding timeline and theme.",
+        },
+        {
+            number: "02",
+            title: "All Ages Welcome",
+            description: "Games that grandparents and kids both enjoy.",
+        },
+        {
+            number: "03",
+            title: "Stress-Free Setup",
+            description: "We coordinate with your planner. Zero hassle for you.",
+        },
+        {
+            number: "04",
+            title: "Premium Presentation",
+            description: "Beautiful setups that enhance your décor.",
+        },
+    ];
 
-  const handleScrollToForm = () => {
-    const form = document.getElementById("enquiry-form");
-    if (form) {
-      form.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  return (
-    <main className="bg-[#FFF4D6] min-h-screen relative">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
-
-      {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Gradient Background - Soft Pink to Cream */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FFE5E5] via-[#FFF4D6] to-[#FFEEF0]" />
-
-        {/* Animated Shapes - Romantic & Soft */}
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-20 right-20 w-96 h-96 bg-pink-200/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-20 left-20 w-80 h-80 bg-rose-200/20 rounded-full blur-3xl"
-        />
-
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 py-32 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-block mb-6 px-6 py-2 bg-rose-100/60 backdrop-blur-sm rounded-full"
-            >
-              <p className="text-rose-800 font-semibold text-sm uppercase tracking-wider">
-                Wedding Experiences & Entertainment
-              </p>
-            </motion.div>
-
-            <h1 className="font-fredoka text-5xl md:text-7xl text-black mb-6 leading-tight tracking-tight">
-              Togetherness. Joy. Celebration.
-            </h1>
-            <p className="text-black/80 text-xl md:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
-              Make every guest part of your celebration. Create moments of connection
-              that feel as special as the wedding itself.
-            </p>
-
-            {/* CTA Button */}
-            <button
-              onClick={handleScrollToForm}
-              className="mt-10 px-10 py-4 rounded-full bg-rose-600 text-white font-semibold text-lg shadow-lg hover:scale-105 transition-transform duration-300"
-            >
-              Design Our Wedding Experience
-            </button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* The Problem Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-16 text-center">
-            The Problem
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ProblemCard
-              icon="💔"
-              title="Guests feel disconnected"
-              description="Large weddings often leave guests sitting at tables with strangers, struggling to connect beyond small talk."
+    return (
+        <>
+            <ExperienceHero
+                category="WEDDING EXPERIENCES"
+                headline="Weddings Guests Actually Enjoy"
+                subheadline="Turn your celebration into an unforgettable experience everyone talks about"
+                ctaText="Make It Memorable"
+                ctaHref="#enquiry"
+                backgroundGradient="from-[#FFF4D6] via-[#FFE8B3] to-[#F4C752]/40"
+                accentColor="#F4C752"
+                decorations={
+                    <>
+                        {/* Heart */}
+                        <svg className="absolute top-24 right-24 w-20 h-20 text-[#F4C752]/30" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                        {/* Rings */}
+                        <svg className="absolute bottom-28 left-20 w-24 h-24 text-[#F4C752]/25" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
+                        </svg>
+                        {/* Sparkles */}
+                        <svg className="absolute top-1/3 right-1/4 w-16 h-16 text-[#F4C752]/35" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16.8 5.6 21.2 8 14l-6-4.8h7.6z" />
+                        </svg>
+                        {/* Small heart */}
+                        <svg className="absolute top-1/2 left-1/4 w-12 h-12 text-[#F4C752]/20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </>
+                }
             />
-            <ProblemCard
-              icon="⏰"
-              title="Downtime between rituals"
-              description="Long gaps between ceremonies leave guests bored and disengaged, checking phones instead of celebrating."
-            />
-            <ProblemCard
-              icon="🔁"
-              title="Entertainment feels repetitive"
-              description="The same DJ, same photo booth, same activities that guests have seen at every other wedding."
-            />
-          </div>
-        </motion.div>
-      </section>
 
-      {/* Our Approach Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">
-            Our Approach
-          </h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Entertainment that enhances, never interrupts
-          </p>
+            <ProblemCards
+                sectionTitle="Why Wedding Guests Get Bored"
+                cards={problemCards}
+            />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <SolutionCard
-              icon="💝"
-              title="Tailored to Your Story"
-              description="Interactive games and activities designed around your relationship, inside jokes, and shared memories."
+            <SolutionCards
+                sectionTitle="How We Create Magic"
+                cards={solutionCards}
             />
-            <SolutionCard
-              icon="👨‍👩‍👧‍👦"
-              title="Family-Friendly & Inclusive"
-              description="Play formats that work for all ages—from grandparents to kids—ensuring everyone can participate."
-            />
-            <SolutionCard
-              icon="⚡"
-              title="Seamlessly Integrated"
-              description="Activities that fit naturally into your wedding timeline without disrupting ceremonies or traditions."
-            />
-          </div>
-        </motion.div>
-      </section>
 
-      {/* Wedding Experiences Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">
-            Wedding Experiences
-          </h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Moments designed for every celebration
-          </p>
+            <ExperienceFormats
+                sectionTitle="Perfect for Every Moment"
+                formats={formats}
+            />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ExperienceCard
-              image="/weddings/mehndi-haldi.png"
-              title="Mehndi & Haldi Games"
-              when="Pre-wedding ceremonies"
-              why="Break the ice between families"
-              forWhom="Close family and friends"
-              description="Colorful, energetic games that match the vibrant atmosphere of mehndi and haldi, creating laughter and bonding moments."
+            <MomentsGallery
+                sectionTitle="Celebrations That Shine"
+                images={galleryImages}
             />
-            <ExperienceCard
-              image="/weddings/sangeet.png"
-              title="Sangeet Interactive Play"
-              when="Sangeet night"
-              why="Engage guests between performances"
-              forWhom="All wedding guests"
-              description="Team-based games and challenges that complement the musical celebration and get everyone involved."
-            />
-            <ExperienceCard
-              image="/weddings/reception.png"
-              title="Reception Engagement Zones"
-              when="Wedding reception"
-              why="Keep energy high throughout"
-              forWhom="All ages, all guests"
-              description="Sophisticated play stations integrated into your reception decor, offering optional engagement for guests."
-            />
-            <ExperienceCard
-              image="/weddings/hampers.png"
-              title="Entertainment Hampers for Guests"
-              when="Throughout the wedding"
-              why="Thoughtful guest experience"
-              forWhom="Guest tables and rooms"
-              description="Beautifully packaged game kits placed at tables or in guest rooms as elegant wedding favors."
-            />
-          </div>
-        </motion.div>
-      </section>
 
-      {/* Visual Storytelling Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">
-            Moments That Matter
-          </h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Real weddings, real connections
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ProofCard
-              image="/weddings/proof-1.png"
-              caption="Three generations playing together, creating memories that last beyond the wedding day"
+            <TrustSection
+                sectionTitle="Why Couples Love Us"
+                points={trustPoints}
             />
-            <ProofCard
-              image="/weddings/proof-2.png"
-              caption="Bride's and groom's families meeting for the first time, bonding through laughter and play"
-            />
-            <ProofCard
-              image="/weddings/proof-3.png"
-              caption="Candid moments of joy that happen naturally when guests feel truly engaged"
-            />
-          </div>
-        </motion.div>
-      </section>
 
-      {/* Why Couples Choose This Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-16 text-center">
-            Why Couples Choose This
-          </h2>
-
-          <div className="space-y-8 max-w-4xl mx-auto">
-            <WhyCard
-              number="01"
-              title="Personalized to your story"
-              description="Every game, every activity reflects who you are as a couple. Your guests experience your journey through play."
-            />
-            <WhyCard
-              number="02"
-              title="Keeps guests engaged naturally"
-              description="No forced participation. Activities are inviting and optional, allowing guests to engage at their own comfort level."
-            />
-            <WhyCard
-              number="03"
-              title="Adds a memorable layer"
-              description="Years later, guests won't just remember the venue or the food—they'll remember the moments of connection and joy."
-            />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Enquiry Form Section */}
-      <section id="enquiry-form" className="relative z-10 max-w-4xl mx-auto px-4 py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">
-            Create Your Wedding Experience
-          </h2>
-          <p className="text-neutral-700 text-xl text-center mb-12 leading-relaxed">
-            Let's design something beautiful together
-          </p>
-
-          {formSubmitted && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mb-8 p-6 bg-green-50 border-2 border-green-500 rounded-2xl text-center shadow-lg"
-            >
-              <p className="text-green-700 font-bold text-xl">
-                ✓ Thank you! We'll be in touch within 24 hours to discuss your wedding.
-              </p>
-            </motion.div>
-          )}
-
-          <form onSubmit={handleSubmit} className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-neutral-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  Couple Names *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.coupleName}
-                  onChange={(e) => setFormData({ ...formData, coupleName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors"
-                  placeholder="Bride & Groom names"
+            <div id="enquiry">
+                <EnquiryForm
+                    headline="Let's Make Your Day Extraordinary"
+                    subtext="Share your vision and we'll create the perfect entertainment experience"
+                    ctaText="Start Planning Your Celebration"
+                    experienceType="wedding"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors"
-                  placeholder="you@example.com"
-                />
-              </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors"
-                  placeholder="+91 98765 43210"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  Wedding Date
-                </label>
-                <input
-                  type="text"
-                  value={formData.weddingDate}
-                  onChange={(e) => setFormData({ ...formData, weddingDate: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors"
-                  placeholder="DD/MM/YYYY"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  Functions *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.functions}
-                  onChange={(e) => setFormData({ ...formData, functions: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors"
-                  placeholder="Mehndi, Sangeet, Reception..."
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                  Guest Count *
-                </label>
-                <select
-                  required
-                  value={formData.guestCount}
-                  onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors"
-                >
-                  <option value="">Select guest count</option>
-                  <option value="50-100">50-100 guests</option>
-                  <option value="100-200">100-200 guests</option>
-                  <option value="200-300">200-300 guests</option>
-                  <option value="300-500">300-500 guests</option>
-                  <option value="500+">500+ guests</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-neutral-700 mb-2">
-                Tell us about your vision
-              </label>
-              <textarea
-                rows={5}
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-rose-400 focus:outline-none transition-colors resize-none"
-                placeholder="What kind of atmosphere do you want to create? Any specific themes or ideas?"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full md:w-auto px-12 py-4 rounded-full bg-rose-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:hover:scale-100"
-            >
-              {isSubmitting ? "Sending..." : "Create Our Wedding Play Experience"}
-            </button>
-          </form>
-        </motion.div>
-      </section>
-
-      {/* Bottom Spacing */}
-      <div className="h-24" />
-    </main>
-  );
-}
-
-// Component: Problem Card
-function ProblemCard({ icon, title, description }: { icon: string; title: string; description: string }) {
-  return (
-    <motion.div
-      whileHover={{ y: -8, scale: 1.02 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 border-2 border-neutral-200 hover:border-rose-300 hover:shadow-xl transition-all"
-    >
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-      <p className="text-neutral-600 leading-relaxed">{description}</p>
-    </motion.div>
-  );
-}
-
-// Component: Solution Card
-function SolutionCard({ icon, title, description }: { icon: string; title: string; description: string }) {
-  return (
-    <motion.div
-      whileHover={{ y: -8, scale: 1.02 }}
-      transition={{ duration: 0.3 }}
-      className="bg-gradient-to-br from-rose-100/40 to-white/70 backdrop-blur-sm rounded-2xl p-8 border-2 border-rose-200/50 hover:border-rose-300 hover:shadow-2xl transition-all"
-    >
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-      <p className="text-neutral-700 leading-relaxed">{description}</p>
-    </motion.div>
-  );
-}
-
-// Component: Experience Card
-function ExperienceCard({
-  image,
-  title,
-  when,
-  why,
-  forWhom,
-  description,
-}: {
-  image: string;
-  title: string;
-  when: string;
-  why: string;
-  forWhom: string;
-  description: string;
-}) {
-  return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border-2 border-neutral-200 hover:border-rose-300"
-    >
-      <div className="relative h-64 overflow-hidden">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-500 hover:scale-110"
-        />
-      </div>
-      <div className="p-8">
-        <h3 className="font-fredoka text-2xl text-black mb-4">{title}</h3>
-        <div className="space-y-2 mb-4 text-sm">
-          <p className="text-neutral-600">
-            <span className="font-semibold text-black">When:</span> {when}
-          </p>
-          <p className="text-neutral-600">
-            <span className="font-semibold text-black">Why:</span> {why}
-          </p>
-          <p className="text-neutral-600">
-            <span className="font-semibold text-black">For whom:</span> {forWhom}
-          </p>
-        </div>
-        <p className="text-neutral-700 leading-relaxed">{description}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-// Component: Proof Card
-function ProofCard({ image, caption }: { image: string; caption: string }) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.3 }}
-      className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl"
-    >
-      <Image
-        src={image}
-        alt={caption}
-        fill
-        className="object-cover transition-transform duration-500 group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-        <p className="text-white font-medium leading-relaxed">{caption}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-// Component: Why Card
-function WhyCard({ number, title, description }: { number: string; title: string; description: string }) {
-  return (
-    <motion.div
-      whileHover={{ x: 8 }}
-      transition={{ duration: 0.3 }}
-      className="flex gap-6 items-start bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-2 border-neutral-200 hover:border-rose-300 hover:shadow-lg transition-all"
-    >
-      <div className="flex-shrink-0 w-16 h-16 rounded-full bg-rose-500 flex items-center justify-center">
-        <span className="font-fredoka text-2xl text-white">{number}</span>
-      </div>
-      <div>
-        <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-        <p className="text-neutral-700 leading-relaxed">{description}</p>
-      </div>
-    </motion.div>
-  );
+        </>
+    );
 }
