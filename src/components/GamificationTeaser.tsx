@@ -1,164 +1,145 @@
 "use client"
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { ShoppingBag, Calendar, Gamepad2, Ticket, Gift, Puzzle } from 'lucide-react';
 
-const JoyJuncturePremium = () => {
-  interface FloatingPoint {
-    id: number;
-    x: number;
-    y: number;
-    amount: number;
-  }
-  const [points, setPoints] = useState(1240);
-  const [floatingPoints, setFloatingPoints] = useState<FloatingPoint[]>([]);
-
-  const handleEarn = (amount: number, e: React.MouseEvent) => {
-    // Create a floating text effect at click position
-    const newFloat = { id: Date.now(), x: e.clientX, y: e.clientY, amount };
-    setFloatingPoints([...floatingPoints, newFloat]);
-
-    // Update total points
-    setTimeout(() => setPoints(prev => prev + amount), 500);
-
-    // Remove float element after animation
-    setTimeout(() => {
-      setFloatingPoints(prev => prev.filter(f => f.id !== newFloat.id));
-    }, 1000);
-  };
-
+const GamificationTeaser = () => {
   return (
-    <div className="min-h-screen bg-[#FFF4D6] flex flex-col items-center justify-center p-4 font-sans overflow-hidden">
-      {/* Background Sparkles (Decorative) */}
-      <div className="absolute inset-0 pointer-events-none opacity-40">
-        <div className="absolute top-20 left-1/4 w-4 h-4 bg-white rounded-full blur-sm animate-pulse" />
-        <div className="absolute bottom-40 right-1/3 w-6 h-6 bg-yellow-200 rounded-full blur-md animate-bounce" />
-      </div>
+    <section className="relative w-full bg-[#FFF4D6] py-10 md:py-20 overflow-hidden font-sans">
+      <div className="max-w-7xl mx-auto px-4 relative z-10 flex flex-col items-center">
 
-      <header className="text-center mb-12">
-        <motion.h1
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-5xl font-black text-[#5C4D42] tracking-tight mb-2"
-        >
-          Play. Earn. Redeem.
-        </motion.h1>
-        <p className="text-[#8B7361] font-medium italic">Your Joy becomes JJ Points.</p>
-      </header>
-
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-7xl">
-
-        {/* LEFT: EARN ACTIONS */}
-        <div className="flex flex-col gap-6 w-full lg:w-72">
-          <ActionItem
-            icon="🛍️" label="Purchases" pts="+120" color="bg-orange-100"
-            onClick={(e) => handleEarn(120, e)}
-          />
-          <ActionItem
-            icon="🗓️" label="Events" pts="+300" color="bg-blue-100"
-            onClick={(e) => handleEarn(300, e)}
-          />
-          <ActionItem
-            icon="🎮" label="Play Games" pts="+50" color="bg-green-100"
-            onClick={(e) => handleEarn(50, e)}
-          />
+        {/* Header */}
+        <div className="text-center mb-10 md:mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-5xl font-black text-[#4A3B32] mb-3 tracking-wide"
+          >
+            Play. Earn. Redeem
+          </motion.h2>
+          <p className="text-[#8B7361] font-medium text-base md:text-lg">Your Joy becomes JJ Points.</p>
         </div>
 
-        {/* CENTER: THE 3D WALLET */}
-        <motion.div
-          whileHover={{ rotateY: 5, rotateX: 5 }}
-          className="relative group cursor-default"
-        >
-          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-300 to-blue-400 rounded-[50px] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-          <div className="relative bg-white/80 backdrop-blur-xl border-8 border-white rounded-[50px] p-12 shadow-2xl flex flex-col items-center w-[400px]">
-            <span className="bg-[#5C4D42] text-white px-5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-lg">
-              JJ Points Wallet
-            </span>
+        {/* Main Content Grid */}
+        <div className="relative flex flex-col lg:flex-row items-center justify-center gap-12 w-full">
 
-            <motion.div
-              key={points}
-              initial={{ scale: 0.8, filter: "blur(10px)" }}
-              animate={{ scale: 1, filter: "blur(0px)" }}
-              className="text-9xl font-black text-[#5C4D42] drop-shadow-sm"
-            >
-              {points}
-            </motion.div>
+          {/* SVG Connecting Lines (Absolute behind) */}
+          <div className="absolute inset-0 pointer-events-none hidden lg:block">
+            <svg className="w-full h-full" viewBox="0 0 1000 400" preserveAspectRatio="none">
+              {/* Left Lines (Solid, curved) */}
+              <path d="M 250 100 C 350 100, 350 200, 450 200" fill="none" stroke="#FFD700" strokeWidth="4" />
+              <path d="M 250 200 C 350 200, 350 200, 450 210" fill="none" stroke="#AEEeee" strokeWidth="4" />
+              <path d="M 250 300 C 350 300, 350 220, 450 220" fill="none" stroke="#90EE90" strokeWidth="4" />
 
-            {/* Premium Progress Bar */}
-            <div className="w-full h-10 bg-gray-100/50 rounded-3xl mt-8 p-1.5 inner-shadow">
-              <motion.div
-                className="h-full rounded-2xl bg-gradient-to-r from-[#A5D8FF] via-[#B2F2BB] to-[#FFD8A8] shadow-[0_0_15px_rgba(165,216,255,0.6)]"
-                initial={{ width: "20%" }}
-                animate={{ width: "65%" }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
+              {/* Right Lines (Dotted) */}
+              <path d="M 550 180 L 750 80" fill="none" stroke="#FDE68A" strokeWidth="3" strokeDasharray="8 8" />
+              <path d="M 550 200 L 750 200" fill="none" stroke="#FDE68A" strokeWidth="3" strokeDasharray="8 8" />
+              <path d="M 550 220 L 750 320" fill="none" stroke="#FDE68A" strokeWidth="3" strokeDasharray="8 8" />
+            </svg>
+          </div>
+
+          {/* LEFT COLUMN: EARN (Circle Icons + Text) */}
+          <div className="flex flex-col gap-10 lg:w-1/3 items-start lg:items-end z-10">
+            {/* Purchases */}
+            <div className="flex items-center gap-4 lg:flex-row-reverse text-right">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-orange-100 border-4 border-orange-200 flex items-center justify-center shadow-sm">
+                <ShoppingBag className="w-6 h-6 md:w-8 md:h-8 text-orange-600" />
+              </div>
+              <div className="text-left lg:text-right">
+                <h3 className="font-bold text-[#4A3B32] text-lg md:text-xl">Purchases</h3>
+                <p className="font-bold text-[#5C4D42] text-sm md:text-base">+120 JJ Points</p>
+              </div>
+            </div>
+
+            {/* Events */}
+            <div className="flex items-center gap-4 lg:flex-row-reverse text-right">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-blue-100 border-4 border-blue-200 flex items-center justify-center shadow-sm">
+                <Calendar className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
+              </div>
+              <div className="text-left lg:text-right">
+                <h3 className="font-bold text-[#4A3B32] text-lg md:text-xl">Events</h3>
+                <p className="font-bold text-[#5C4D42] text-sm md:text-base">+300 JJ Points</p>
+              </div>
+            </div>
+
+            {/* Play Games */}
+            <div className="flex items-center gap-4 lg:flex-row-reverse text-right">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-green-100 border-4 border-green-200 flex items-center justify-center shadow-sm">
+                <Puzzle className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
+              </div>
+              <div className="text-left lg:text-right">
+                <h3 className="font-bold text-[#4A3B32] text-lg md:text-xl">Play Games</h3>
+                <p className="font-bold text-[#5C4D42] text-sm md:text-base">+50 JJ Points</p>
+              </div>
             </div>
           </div>
-        </motion.div>
 
-        {/* RIGHT: REWARDS */}
-        <div className="flex flex-col gap-6 w-full lg:w-72">
-          <RewardItem title="Free Games" icon="✨" color="from-blue-100 to-blue-200" />
-          <RewardItem title="Event Passes" icon="🎟️" color="from-green-100 to-green-200" />
-          <RewardItem title="Exclusive Merch" icon="🎁" color="from-yellow-100 to-yellow-200" />
+          {/* CENTER COLUMN: WALLET CARD */}
+          <div className="lg:w-1/3 flex justify-center z-20 w-full px-4 md:px-0">
+            <Link href="/wallet" className="block transform transition-transform hover:scale-105 active:scale-95 duration-300 w-full max-w-[380px]">
+              <div className="relative bg-gradient-to-br from-[#FFF8E7] to-[#FFF0D0] rounded-[40px] md:rounded-[60px] p-2 shadow-2xl border-[4px] md:border-[8px] border-[#A5D8FF]/50 w-full h-[260px] flex items-center justify-center">
+                <div className="absolute inset-0 rounded-[30px] md:rounded-[50px] border-4 border-white/60 pointer-events-none"></div>
+
+                <div className="flex flex-col items-center w-full">
+                  {/* Badge */}
+                  <div className="bg-[#4A3B32] text-[#FFF4D6] px-6 py-2 rounded-full font-bold text-lg mb-2 shadow-md">
+                    JJ Points: Wallet
+                  </div>
+
+                  {/* Points */}
+                  <div className="text-8xl font-black text-[#FFF8E7] drop-shadow-[0_4px_4px_rgba(92,77,66,1)] stroke-text">
+                    <span style={{
+                      WebkitTextStroke: '3px #5C4D42',
+                      color: '#FFF4D6'
+                    }}>1240</span>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="w-3/4 h-8 bg-[#E0E0E0] rounded-full mt-4 overflow-hidden border-2 border-white/50 shadow-inner">
+                    <div className="h-full w-2/3 bg-gradient-to-r from-teal-300 via-yellow-300 to-orange-300"></div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* RIGHT COLUMN: REWARDS (Rounded Cards) */}
+          <div className="flex flex-col gap-6 lg:w-1/3 items-start z-10">
+
+            {/* Free Online Games */}
+            <div className="bg-[#E0F2FE] border-2 border-[#BAE6FD] rounded-3xl p-4 flex items-center gap-4 w-64 shadow-sm hover:shadow-md transition-shadow -ml-4 lg:ml-0 rotate-2 lg:rotate-3">
+              <Gamepad2 className="w-8 h-8 text-blue-600 flex-shrink-0" />
+              <div className="leading-tight">
+                <h3 className="font-bold text-[#4A3B32] text-lg">Free Online</h3>
+                <p className="font-bold text-[#4A3B32] text-lg">Games 🎵</p>
+              </div>
+            </div>
+
+            {/* Event Discounts */}
+            <div className="bg-[#DCFCE7] border-2 border-[#86EFAC] rounded-3xl p-4 flex items-center gap-4 w-60 shadow-sm hover:shadow-md transition-shadow lg:ml-8 -rotate-1 lg:-rotate-2">
+              <Ticket className="w-8 h-8 text-green-600 flex-shrink-0" />
+              <div className="leading-tight">
+                <h3 className="font-bold text-[#4A3B32] text-lg">Event</h3>
+                <p className="font-bold text-[#4A3B32] text-lg">Discounts</p>
+              </div>
+            </div>
+
+            {/* Merch */}
+            <div className="bg-[#FEF3C7] border-2 border-[#FDE68A] rounded-3xl p-4 flex items-center gap-4 w-64 shadow-sm hover:shadow-md transition-shadow -ml-2 lg:ml-4 rotate-1 lg:rotate-2">
+              <Gift className="w-8 h-8 text-yellow-600 flex-shrink-0" />
+              <div className="leading-tight">
+                <h3 className="font-bold text-[#4A3B32] text-lg">Joy Juncture</h3>
+                <p className="font-bold text-[#4A3B32] text-lg">Games & Merch</p>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
-
-      {/* Floating Points Animation Layer */}
-      <AnimatePresence>
-        {floatingPoints.map(f => (
-          <motion.div
-            key={f.id}
-            initial={{ opacity: 1, y: f.y, x: f.x }}
-            animate={{ opacity: 0, y: f.y - 200, x: window.innerWidth / 2 }}
-            exit={{ opacity: 0 }}
-            className="fixed pointer-events-none text-2xl font-bold text-orange-500 z-50"
-          >
-            +{f.amount} JJ
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
+    </section>
   );
 };
 
-interface ActionItemProps {
-  icon: string;
-  label: string;
-  pts: string;
-  color: string;
-  onClick: (e: React.MouseEvent) => void;
-}
-
-const ActionItem = ({ icon, label, pts, color, onClick }: ActionItemProps) => (
-  <motion.button
-    whileHover={{ scale: 1.05, x: 10 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={onClick}
-    className={`${color} w-full p-4 rounded-3xl flex items-center gap-4 shadow-sm border-2 border-white/50 hover:shadow-md transition-all`}
-  >
-    <span className="text-3xl filter drop-shadow-md">{icon}</span>
-    <div className="text-left">
-      <div className="text-sm font-bold text-[#5C4D42]">{label}</div>
-      <div className="text-xs font-black text-orange-600">{pts} Points</div>
-    </div>
-  </motion.button>
-);
-
-interface RewardItemProps {
-  title: string;
-  icon: string;
-  color: string;
-}
-
-const RewardItem = ({ title, icon, color }: RewardItemProps) => (
-  <motion.div
-    animate={{ y: [0, -5, 0] }}
-    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-    className={`bg-gradient-to-br ${color} p-5 rounded-[2rem] border-4 border-white shadow-lg flex items-center gap-4 cursor-pointer`}
-  >
-    <span className="text-2xl">{icon}</span>
-    <span className="font-extrabold text-[#5C4D42] text-sm uppercase tracking-tighter">{title}</span>
-  </motion.div>
-);
-
-export default JoyJuncturePremium;
+export default GamificationTeaser;

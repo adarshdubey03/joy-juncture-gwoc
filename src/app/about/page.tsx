@@ -1,140 +1,144 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <main className="w-full bg-[#F4C752] text-black">
-      {/* ================= HERO SECTION ================= */}
-      <section className="min-h-[90vh] grid grid-cols-1 md:grid-cols-2">
-        {/* LEFT — Text */}
-        <div className="flex flex-col justify-center px-8 md:px-16 py-16">
-          <h1 className="font-fredoka text-4xl md:text-5xl leading-tight">
-            Where games turn into memories.
+    <main className="w-full bg-[#FFF4D6] text-[#2D2D2D] min-h-screen">
+
+      {/* HERO SECTION */}
+      <section className="px-8 md:px-16 py-12 md:py-20 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+        <div className="flex-1 space-y-6">
+          <h1 className="font-fredoka text-5xl md:text-6xl leading-tight">
+            Where Play <br />
+            Brings People <br />
+            Together
           </h1>
+        </div>
+        <div className="flex-1 w-full flex justify-center md:justify-end">
+          {/* Constrained container to "crop" the image if it is too tall */}
+          <div className="relative w-full max-w-lg h-[400px] rounded-2xl overflow-hidden mt-[10px]">
+            <Image
+              src="/about/hero-illustration.png"
+              alt="Group playing games together"
+              fill
+              className="object-cover object-top"
+              priority
+            />
+          </div>
+        </div>
+      </section>
 
-          <p className="mt-6 text-base md:text-lg text-black/80 font-geist max-w-xl">
-            Joy Juncture is built on one simple belief — games aren’t just things
-            you play. They’re moments you remember, stories you share, and bonds
-            you build.
+      {/* PHILOSOPHY SECTION */}
+      <section className="px-4 md:px-8 max-w-7xl mx-auto mb-16">
+        <div className="bg-[#FCF3CC] border-2 border-[#F6D387] rounded-[2.5rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 shadow-sm">
+          <div className="flex-1 space-y-6">
+            <h2 className="font-fredoka text-3xl md:text-4xl text-[#2D2D2D]">
+              Our Philosophy & Vision
+            </h2>
+            <h3 className="font-fredoka text-xl text-[#2D2D2D]/80">
+              More Than Just Games, It's About Connection
+            </h3>
+            <p className="font-geist text-lg text-[#2D2D2D]/70 leading-relaxed max-w-2xl">
+              At Joy Juncture, we believe games are powerful tools. They're
+              catalysts for laughter, silences, and building lasting bonds. We
+              create platforms for people to gather, explore new worlds, and
+              forge friendships through the universal language of play.
+            </p>
+          </div>
+          <div className="flex-1 flex justify-center">
+            <div className="relative w-64 h-64 md:w-80 md:h-80">
+              <Image
+                src="/about/philosophy-illustration.png"
+                alt="Philosophy of connection"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* BONDING TOOLS SECTION */}
+      <section className="px-8 md:px-16 pb-24 max-w-7xl mx-auto">
+        <h2 className="font-fredoka text-3xl md:text-4xl text-[#2D2D2D] mb-12">
+          Games as Tools for Bonding
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Card 1 */}
+          <div className="flex flex-col items-center text-center space-y-4 group">
+            <div className="bg-white rounded-[2rem] shadow-sm w-full aspect-[4/3] flex items-center justify-center relative overflow-hidden transition-transform duration-300 group-hover:-translate-y-2">
+              <div className="relative w-full h-full">
+                <Image
+                  src="/about/spark-conversations.png"
+                  alt="Spark Conversations"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <h3 className="font-fredoka text-xl text-[#2D2D2D]">
+              Spark Conversations
+            </h3>
+          </div>
+
+          {/* Card 2 */}
+          <div className="flex flex-col items-center text-center space-y-4 group">
+            <div className="bg-white rounded-[2rem] shadow-sm w-full aspect-[4/3] flex items-center justify-center relative overflow-hidden transition-transform duration-300 group-hover:-translate-y-2">
+              <div className="relative w-full h-full">
+                <Image
+                  src="/about/foster-teamwork.png"
+                  alt="Foster Teamwork"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <h3 className="font-fredoka text-xl text-[#2D2D2D]">
+              Foster Teamwork
+            </h3>
+          </div>
+
+          {/* Card 3 */}
+          <div className="flex flex-col items-center text-center space-y-4 group">
+            <div className="bg-white rounded-[2rem] shadow-sm w-full aspect-[4/3] flex items-center justify-center relative overflow-hidden transition-transform duration-300 group-hover:-translate-y-2">
+              <div className="relative w-full h-full">
+                <Image
+                  src="/about/shared-memories.png"
+                  alt="Create Shared Memories"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <h3 className="font-fredoka text-xl text-[#2D2D2D]">
+              Create Shared Memories
+            </h3>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= FOUNDERS CTA ================= */}
+      <section className="px-8 md:px-16 py-24 border-t border-[#2D2D2D]/10">
+        <div className="max-w-4xl">
+          <h2 className="font-fredoka text-3xl md:text-4xl text-[#2D2D2D]">
+            Curious how it all began?
+          </h2>
+
+          <p className="mt-4 font-geist text-[#2D2D2D]/80 text-lg max-w-2xl">
+            Joy Juncture didn’t start with a perfect plan — it started with chaos,
+            laughter, and two people who believed games could bring people closer.
           </p>
 
-          <p className="mt-4 text-base md:text-lg text-black/80 font-geist max-w-xl">
-            From living rooms to large events, we design experiences that bring
-            people closer — naturally, joyfully, and playfully.
-          </p>
-        </div>
-
-        {/* RIGHT — Visual */}
-        <div className="relative hidden md:block">
-          <Image
-            src="/joy-juncture-team.jpg"
-            alt="People playing games together"
-            fill
-            priority
-            className="object-cover"
-          />
+          <Link
+            href="/our_story"
+            className="inline-block mt-8 rounded-full bg-[#2D2D2D] px-8 py-4 font-geist text-white transition hover:scale-105"
+          >
+            Meet the founders →
+          </Link>
         </div>
       </section>
 
-      {/* ================= PHILOSOPHY ================= */}
-      <section className="bg-white px-8 md:px-16 py-20">
-        <h2 className="font-fredoka text-3xl md:text-4xl">
-          Games are not products.
-        </h2>
-
-        <p className="mt-6 font-geist text-black/80 max-w-3xl">
-          In a world full of screens and scrolling, Joy Juncture exists to bring
-          people back together — around tables, laughter, and shared moments.
-        </p>
-
-        <p className="mt-4 font-geist text-black/80 max-w-3xl">
-          Every game, event, and experience we create is designed to spark
-          conversations, break ice, and turn strangers into teammates.
-        </p>
-      </section>
-
-      {/* ================= WHAT WE DO ================= */}
-      <section className="px-8 md:px-16 py-20">
-        <h2 className="font-fredoka text-3xl md:text-4xl mb-12">
-          How people play with Joy Juncture
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Card */}
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h3 className="font-fredoka text-2xl">Play at Home</h3>
-            <p className="mt-3 font-geist text-black/70">
-              Thoughtfully designed card and board games for friends, families,
-              and first-time players.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h3 className="font-fredoka text-2xl">Play Together (Live)</h3>
-            <p className="mt-3 font-geist text-black/70">
-              Game nights, workshops, and hosted sessions that turn gatherings
-              into unforgettable experiences.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h3 className="font-fredoka text-2xl">Play for Occasions</h3>
-            <p className="mt-3 font-geist text-black/70">
-              Custom-designed games for corporates, weddings, birthdays, and
-              large-scale events.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h3 className="font-fredoka text-2xl">Play & Belong</h3>
-            <p className="mt-3 font-geist text-black/70">
-              A growing community with points, puzzles, online games, and stories
-              that reward participation and curiosity.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= FOUNDER STORY ================= */}
-      <section className="bg-white px-8 md:px-16 py-20">
-        <h2 className="font-fredoka text-3xl md:text-4xl">
-          Why Joy Juncture began
-        </h2>
-
-        <p className="mt-6 font-geist text-black/80 max-w-3xl">
-          Joy Juncture started with a simple question — why do some moments stay
-          with us long after they end?
-        </p>
-
-        <p className="mt-4 font-geist text-black/80 max-w-3xl">
-          The answer was always the same: people, play, and presence. What began
-          as small game nights slowly grew into a movement focused on designing
-          joy — one experience at a time.
-        </p>
-      </section>
-
-      {/* ================= COMMUNITY ================= */}
-      <section className="px-8 md:px-16 py-20">
-        <h2 className="font-fredoka text-3xl md:text-4xl mb-6">
-          Built by players, for players
-        </h2>
-
-        <p className="font-geist text-black/80 max-w-3xl">
-          Every laugh, every inside joke, every shared victory shapes Joy
-          Juncture. Our community is at the heart of everything we build.
-        </p>
-      </section>
-
-      {/* ================= CLOSING ================= */}
-      <section className="bg-black text-white px-8 md:px-16 py-20">
-        <h2 className="font-fredoka text-3xl md:text-4xl">
-          Come play with us.
-        </h2>
-
-        <p className="mt-4 font-geist text-white/80 max-w-2xl">
-          Whether you’re here to discover a game, attend an event, or simply
-          belong — your next jz                               oyful moment starts here.
-        </p>
-      </section>
     </main>
   );
 }

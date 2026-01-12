@@ -6,8 +6,8 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       {/* LEFT — Visual */}
       <div className="hidden md:block md:w-1/2 flex-none relative">
         <Image
-          src="/joy-juncture-team.jpg"
-          alt="Joy Juncture Team"
+          src="/Joy_Juncture.webp"
+          alt="Joy Juncture "
           fill
           priority
           className="object-cover"

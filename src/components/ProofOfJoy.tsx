@@ -15,7 +15,7 @@ export default function ProofOfJoy() {
         </div>
 
         {/* Gallery Container */}
-        <div className="relative w-full h-[82vh] rounded-3xl overflow-hidden bg-white">
+        <div className="relative w-full h-[50vh] md:h-[82vh] rounded-3xl overflow-hidden bg-white">
           <DomeGallery
             fit={1.0}
             minRadius={900}

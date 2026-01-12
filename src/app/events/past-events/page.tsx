@@ -19,12 +19,12 @@ export default function PastEventsPage() {
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {[
-            "/images/past-1.jpg",
-            "/images/past-2.jpg",
-            "/images/past-3.jpg",
-            "/images/past-4.jpg",
-            "/images/past-5.jpg",
-            "/images/past-6.jpg",
+            "/blogs/UdaipurTrip.webp",
+            "/event1.jpg",
+            "/people_playing.jpg",
+            "/story_header.jpg",
+            "/event3.jpg",
+            "/founders.jpg",
           ].map((src, i) => (
             <div
               key={i}
