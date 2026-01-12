@@ -1,127 +1,108 @@
-import Image from "next/image";
+"use client";
 
-export default function GameNightsPage() {
+import { CalendarDays, MapPin, ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
+
+const events = [
+  {
+    title: "Friday Game Night 🎲",
+    date: "18 Jan 2026",
+    time: "7:00 PM – 10:00 PM",
+    location: "Joy Juncture Studio",
+    description:
+      "An energetic evening filled with board games, laughter, and friendly competition. Perfect for unwinding after a long week!",
+  },
+  {
+    title: "Deadman’s Deck Showdown 🃏",
+    date: "25 Jan 2026",
+    time: "6:30 PM – 9:30 PM",
+    location: "Community Hall",
+    description:
+      "Experience our signature game Deadman’s Deck in a thrilling live showdown. Prizes, strategy, and pure fun guaranteed.",
+  },
+  {
+    title: "Puzzle & Riddle Night 🧩",
+    date: "2 Feb 2026",
+    time: "7:00 PM – 9:00 PM",
+    location: "Online + Offline",
+    description:
+      "Team up or go solo to crack mind-bending puzzles and riddles. Earn JJ Points and bragging rights!",
+  },
+];
+
+export default function UpcomingEventsPage() {
   return (
-    <main className="bg-[#FFF4D6] text-[#2B2B2B]">
-      {/* HERO SECTION */}
-      <section className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-            Game Nights That <span className="text-[#E76F51]">Feel Like Home</span>
-          </h1>
-          <p className="mt-6 text-lg text-gray-700 max-w-xl">
-            Laughter. Friendly chaos. New people. Old-school fun.
-            Step into a night where phones go down and joy levels go up.
-          </p>
+    <div className="min-h-screen bg-[#FFF4D6] px-6 pt-28 pb-20">
+      {/* Header */}
+      <div className="max-w-5xl mx-auto text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-[#2E2A24] flex items-center justify-center gap-3">
+          Upcoming Events <Sparkles className="w-8 h-8 text-[#F4A300]" />
+        </h1>
+        <p className="mt-4 text-lg text-[#5A554B]">
+          Game nights, puzzles, laughter, and unforgettable experiences — join
+          the fun at Joy Juncture!
+        </p>
+      </div>
 
-          <button className="mt-8 px-8 py-4 rounded-full bg-black text-white font-semibold hover:scale-105 transition">
-            Join the Next Game Night 🎉
-          </button>
-        </div>
-
-        {/* VISUAL */}
-        <div className="relative w-full h-[320px] md:h-[420px] rounded-3xl overflow-hidden shadow-xl">
-          <Image
-            src="/images/game-night.jpg"
-            alt="Joy Juncture Game Night"
-            fill
-            className="object-cover"
-          />
-        </div>
-      </section>
-
-      {/* WHAT TO EXPECT */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center">
-          What Happens at Our Game Nights?
-        </h2>
-
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Easy-to-Learn Games",
-              desc: "No pressure. No experience needed. We explain everything.",
-              emoji: "🎲",
-            },
-            {
-              title: "Great People",
-              desc: "Come solo or with friends. Leave with new ones.",
-              emoji: "🤝",
-            },
-            {
-              title: "Pure Fun Energy",
-              desc: "Music, laughs, snacks, and zero awkwardness.",
-              emoji: "✨",
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition"
-            >
-              <div className="text-4xl">{item.emoji}</div>
-              <h3 className="mt-4 text-xl font-semibold">{item.title}</h3>
-              <p className="mt-2 text-gray-600">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* UPCOMING EVENTS */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-center">
-          Upcoming Game Nights
-        </h2>
-
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              date: "Feb 15, 2026",
-              title: "Board Games & Icebreakers",
-              location: "Joy Juncture HQ",
-            },
-            {
-              date: "Mar 01, 2026",
-              title: "Cards, Chaos & Comedy",
-              location: "Community Café",
-            },
-            {
-              date: "Mar 16, 2026",
-              title: "Strategy Night Special",
-              location: "Open Play Arena",
-            },
-          ].map((event, i) => (
-            <div
-              key={i}
-              className="bg-black text-white rounded-3xl p-8 flex flex-col justify-between hover:scale-105 transition"
-            >
+      {/* Events List */}
+      <div className="max-w-5xl mx-auto grid gap-10">
+        {events.map((event, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition-shadow duration-300"
+          >
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <p className="text-sm text-gray-300">{event.date}</p>
-                <h3 className="mt-2 text-xl font-semibold">{event.title}</h3>
-                <p className="mt-2 text-gray-400">{event.location}</p>
+                <h2 className="text-2xl font-bold text-[#2E2A24]">
+                  {event.title}
+                </h2>
+
+                <div className="mt-3 flex flex-wrap gap-6 text-sm text-[#6B655A]">
+                  <span className="flex items-center gap-2">
+                    <CalendarDays className="w-4 h-4" />
+                    {event.date} • {event.time}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    {event.location}
+                  </span>
+                </div>
+
+                <p className="mt-4 text-[#4B463D]">
+                  {event.description}
+                </p>
               </div>
 
-              <button className="mt-6 px-6 py-3 bg-[#E76F51] rounded-full font-semibold hover:bg-[#d45f44] transition">
-                Reserve My Spot →
-              </button>
+              {/* CTA */}
+              <div className="flex-shrink-0">
+                <Link
+                  href="/events/register"
+                  className="inline-flex items-center gap-2 bg-[#F4A300] text-[#2E2A24] font-semibold px-6 py-3 rounded-full hover:scale-105 transition-transform"
+                >
+                  Join Event <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        ))}
+      </div>
 
-      {/* FINAL CTA */}
-      <section className="text-center py-20 px-6">
-        <h2 className="text-3xl md:text-4xl font-bold">
-          One Night. Endless Memories.
-        </h2>
-        <p className="mt-4 text-gray-700 max-w-xl mx-auto">
-          If you’ve been waiting for a sign to step out, meet people,
-          and genuinely have fun — this is it.
+      {/* Footer CTA */}
+      <div className="max-w-4xl mx-auto text-center mt-20">
+        <h3 className="text-2xl font-bold text-[#2E2A24]">
+          Earn JJ Points by Participating 🎁
+        </h3>
+        <p className="mt-3 text-[#5A554B]">
+          Every event you attend brings you closer to rewards, discounts, and
+          exclusive games.
         </p>
-
-        <button className="mt-8 px-10 py-4 rounded-full bg-black text-white font-semibold hover:scale-105 transition">
-          I’m In 🎉
-        </button>
-      </section>
-    </main>
+        <Link
+          href="/wallet"
+          className="inline-block mt-6 bg-[#2E2A24] text-white px-8 py-3 rounded-full hover:opacity-90"
+        >
+          View My Wallet
+        </Link>
+      </div>
+    </div>
   );
 }
