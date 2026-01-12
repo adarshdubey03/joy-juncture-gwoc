@@ -14,6 +14,8 @@ import {
     Tag,
     FolderTree,
     HelpCircle,
+    MessageSquare,
+    FileText,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -21,6 +23,16 @@ const sidebarLinks = [
         title: "Dashboard",
         href: "/admin",
         icon: LayoutDashboard,
+    },
+    {
+        title: "Enquiries",
+        href: "/admin/enquiries",
+        icon: MessageSquare,
+    },
+    {
+        title: "Blogs",
+        href: "/admin/blogs",
+        icon: FileText,
     },
     {
         title: "Products",

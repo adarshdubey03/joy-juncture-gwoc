@@ -38,12 +38,17 @@ export const metadata: Metadata = {
 };
 
 import { CartProvider } from "@/context/CartContext";
+import HeroNavbar from "@/components/hero/HeroNavbar";
+import FooterWrapper from "@/components/FooterWrapper";
 
-export default function RootLayout({
+import { auth } from "@/auth";
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
     <html lang="en">
       <body
@@ -55,12 +60,20 @@ export default function RootLayout({
           ${fredoka.variable}
           antialiased
           bg-[#FFF4D6]
-          text-[#FFF4D6]
+          text-neutral-900
          
         `}
       >
-        <AuthSessionProvider>
-          <CartProvider>{children}</CartProvider>
+        <AuthSessionProvider session={session}>
+          <CartProvider>
+            <div className="flex flex-col min-h-screen">
+              <HeroNavbar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <FooterWrapper />
+            </div>
+          </CartProvider>
         </AuthSessionProvider>
       </body>
     </html>

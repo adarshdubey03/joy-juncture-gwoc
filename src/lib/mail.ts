@@ -13,38 +13,38 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Utility: Retry logic with exponential backoff
 async function sendWithRetry<T>(
-    fn: () => Promise<T>,
-    retries = RETRY_ATTEMPTS
+  fn: () => Promise<T>,
+  retries = RETRY_ATTEMPTS
 ): Promise<T> {
-    for (let attempt = 0; attempt < retries; attempt++) {
-        try {
-            return await fn();
-        } catch (error) {
-            const isLastAttempt = attempt === retries - 1;
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      const isLastAttempt = attempt === retries - 1;
 
-            if (isLastAttempt) {
-                throw error;
-            }
+      if (isLastAttempt) {
+        throw error;
+      }
 
-            // Exponential backoff: 1s, 2s, 4s
-            const delay = RETRY_DELAY_MS * Math.pow(2, attempt);
-            console.warn(`Email send attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
-            await sleep(delay);
-        }
+      // Exponential backoff: 1s, 2s, 4s
+      const delay = RETRY_DELAY_MS * Math.pow(2, attempt);
+      console.warn(`Email send attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
+      await sleep(delay);
     }
+  }
 
-    throw new Error('All retry attempts exhausted');
+  throw new Error('All retry attempts exhausted');
 }
 
 // Development mode fallback (logs OTP to console)
 function logOTPFallback(email: string, code: string, type: 'verification' | 'reset'): void {
-    if (process.env.NODE_ENV === 'development') {
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`📧 ${type === 'verification' ? 'VERIFICATION' : 'PASSWORD RESET'} OTP (DEV MODE)`);
-        console.log(`To: ${email}`);
-        console.log(`Code: ${code}`);
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    }
+  if (process.env.NODE_ENV === 'development') {
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`📧 ${type === 'verification' ? 'VERIFICATION' : 'PASSWORD RESET'} OTP (DEV MODE)`);
+    console.log(`To: ${email}`);
+    console.log(`Code: ${code}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  }
 }
 
 /**
@@ -53,23 +53,23 @@ function logOTPFallback(email: string, code: string, type: 'verification' | 'res
  * @param code - 6-digit OTP code
  */
 export const sendVerificationEmail = async (
-    email: string,
-    code: string
+  email: string,
+  code: string
 ): Promise<void> => {
-    // Fallback for missing API key
-    if (!process.env.RESEND_API_KEY) {
-        console.warn('⚠️ RESEND_API_KEY not configured, using development fallback');
-        logOTPFallback(email, code, 'verification');
-        return;
-    }
+  // Fallback for missing API key
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('⚠️ RESEND_API_KEY not configured, using development fallback');
+    logOTPFallback(email, code, 'verification');
+    return;
+  }
 
-    try {
-        await sendWithRetry(async () => {
-            const { data, error } = await resend.emails.send({
-                from: FROM_EMAIL,
-                to: email,
-                subject: 'Verify Your Joy Juncture Account',
-                html: `
+  try {
+    await sendWithRetry(async () => {
+      const { data, error } = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: 'Verify Your Joy Juncture Account',
+        html: `
           <!DOCTYPE html>
           <html>
             <head>
@@ -115,25 +115,26 @@ export const sendVerificationEmail = async (
             </body>
           </html>
         `,
-            });
+      });
 
-            if (error) {
-                throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
-            }
+      if (error) {
+        throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
+      }
 
-            console.log(`✅ Verification email sent successfully to ${email} (ID: ${data?.id})`);
-        });
-    } catch (error) {
-        console.error('❌ Failed to send verification email after retries:', error);
+      console.log(`✅ Verification email sent successfully to ${email} (ID: ${data?.id})`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to send verification email after retries:', error);
 
-        // Fallback in development
-        if (process.env.NODE_ENV === 'development') {
-            logOTPFallback(email, code, 'verification');
-        }
-
-        // Re-throw to let caller handle
-        throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    // Fallback in development
+    if (process.env.NODE_ENV === 'development') {
+      logOTPFallback(email, code, 'verification');
+      return; // Don't throw in development
     }
+
+    // Re-throw to let caller handle
+    throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 };
 
 /**
@@ -142,23 +143,23 @@ export const sendVerificationEmail = async (
  * @param code - 6-digit OTP code
  */
 export const sendPasswordResetEmail = async (
-    email: string,
-    code: string
+  email: string,
+  code: string
 ): Promise<void> => {
-    // Fallback for missing API key
-    if (!process.env.RESEND_API_KEY) {
-        console.warn('⚠️ RESEND_API_KEY not configured, using development fallback');
-        logOTPFallback(email, code, 'reset');
-        return;
-    }
+  // Fallback for missing API key
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('⚠️ RESEND_API_KEY not configured, using development fallback');
+    logOTPFallback(email, code, 'reset');
+    return;
+  }
 
-    try {
-        await sendWithRetry(async () => {
-            const { data, error } = await resend.emails.send({
-                from: FROM_EMAIL,
-                to: email,
-                subject: 'Reset Your Password - Joy Juncture',
-                html: `
+  try {
+    await sendWithRetry(async () => {
+      const { data, error } = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: 'Reset Your Password - Joy Juncture',
+        html: `
           <!DOCTYPE html>
           <html>
             <head>
@@ -209,23 +210,23 @@ export const sendPasswordResetEmail = async (
             </body>
           </html>
         `,
-            });
+      });
 
-            if (error) {
-                throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
-            }
+      if (error) {
+        throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
+      }
 
-            console.log(`✅ Password reset email sent successfully to ${email} (ID: ${data?.id})`);
-        });
-    } catch (error) {
-        console.error('❌ Failed to send password reset email after retries:', error);
+      console.log(`✅ Password reset email sent successfully to ${email} (ID: ${data?.id})`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to send password reset email after retries:', error);
 
-        // Fallback in development
-        if (process.env.NODE_ENV === 'development') {
-            logOTPFallback(email, code, 'reset');
-        }
-
-        // Re-throw to let caller handle
-        throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    // Fallback in development
+    if (process.env.NODE_ENV === 'development') {
+      logOTPFallback(email, code, 'reset');
     }
+
+    // Re-throw to let caller handle
+    throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 };

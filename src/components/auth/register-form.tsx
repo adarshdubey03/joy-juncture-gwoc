@@ -76,6 +76,7 @@ export const RegisterForm = () => {
                 w-full rounded-lg px-4 py-3 text-sm
                 bg-white border border-black/20
                 outline-none focus:border-black
+                placeholder-gray-500 text-black
               "
             />
             {errors.name && (
@@ -96,6 +97,7 @@ export const RegisterForm = () => {
                 w-full rounded-lg px-4 py-3 text-sm
                 bg-white border border-black/20
                 outline-none focus:border-black
+                placeholder-gray-500 text-black
               "
             />
             {errors.email && (
@@ -118,6 +120,7 @@ export const RegisterForm = () => {
                 w-full rounded-lg px-4 py-3 text-sm
                 bg-white border border-black/20
                 focus-within:border-black
+                [&_input]:text-black
               "
             />
             {errors.phoneNumber && (
@@ -138,6 +141,7 @@ export const RegisterForm = () => {
                 w-full rounded-lg px-4 py-3 text-sm
                 bg-white border border-black/20
                 outline-none focus:border-black
+                placeholder-gray-500 text-black
               "
             />
             {errors.password && (

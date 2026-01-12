@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import HeroNavbar from "./HeroNavbar";
+// import HeroNavbar from "./HeroNavbar";
 import Link from "next/link";
 
 export default function HeroSection() {
@@ -13,20 +13,9 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full bg-[#FFF4D6] overflow-hidden min-h-[70vh] md:min-h-screen">
-      {/* SINGLE NAVBAR INSTANCE */}
-      <HeroNavbar />
+      {/* SINGLE NAVBAR INSTANCE REMOVED - GLOBAL */}
 
-      {/* FLOATING LOGO — DESKTOP ONLY */}
-      <div className="hidden md:block fixed top-1 left-16 z-50">
-        <Image
-          src="/logo.png"
-          alt="Joy Juncture"
-          width={280}
-          height={56}
-          className="h-24 w-32"
-          priority
-        />
-      </div>
+      {/* FLOATING LOGO MOVED TO GLOBAL NAVBAR */}
 
       {/* VIDEO FRAME */}
       <div className="relative w-full p-4 md:p-5 pt-2">
@@ -45,17 +34,7 @@ export default function HeroSection() {
           {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-black/20" />
 
-          {/* TOP-LEFT WHITE EXCLUSION — DESKTOP ONLY */}
-          <div
-            className="
-              hidden md:block
-              fixed top-0 left-0
-              h-24 w-60
-              bg-[#FFF4D6]
-              rounded-br-4xl
-              z-40
-            "
-          />
+          {/* TOP-LEFT CUTOUT MOVED TO GLOBAL NAVBAR */}
 
           {/* BOTTOM-LEFT WHITE EXCLUSION — RESPONSIVE */}
           <div

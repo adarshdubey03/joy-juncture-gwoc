@@ -154,6 +154,7 @@ model User {
   refundRequests         RefundRequest[]
   createdCoupons         Coupon[]              @relation("CouponCreator")
   createdInventoryHolds  InventoryHold[]
+  experienceEnquiries    ExperienceEnquiry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -402,6 +403,7 @@ model GameplayInfo {
   // Setup & Learning
   setupTime     Int?
   learningCurve String?
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -671,6 +673,24 @@ model PuzzleAttempt {
 // BLOG & CONTENT
 // ==========================
 
+
+
+
+model Blog {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  subtitle    String?
+  excerpt     String
+  content     String   // Stores full HTML or Markdown content
+  image       String
+  author      String   @default("Joy Juncture")
+  
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Content {
   id    String        @id @default(cuid())
   title String
@@ -736,22 +756,24 @@ model ContentTag {
 // CORPORATE & ENQUIRIES
 // ==========================
 
-model CorporateEnquiry {
+model ExperienceEnquiry {
   id        String        @id @default(cuid())
   name      String
   email     String
   phone     String?
   company   String?
-  eventType String
+  type      String        // Corporate, Wedding, Birthday, Carnival
   message   String        @db.Text
   status    EnquiryStatus @default(NEW)
 
   // Additional Details
-  estimatedGuests Int?
-  preferredDate   DateTime?
-  budget          Decimal?  @db.Decimal(10, 2)
+  guestCount    String?   // "10-25", "100+"
+  preferredDate DateTime?
+  budget        Decimal?  @db.Decimal(10, 2)
 
   // Tracking
+  userId       String?
+  user         User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   assignedToId String?
   notes        String? @db.Text
   followUpDate DateTime?
@@ -762,7 +784,7 @@ model CorporateEnquiry {
   @@index([status])
   @@index([createdAt])
   @@index([email])
-  @@map("corporate_enquiries")
+  @@map("experience_enquiries")
 }
 
 // ==========================

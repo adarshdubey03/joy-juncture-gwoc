@@ -15,7 +15,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     try {
         // 1. IP Rate Limiting
         const ip = "127.0.0.1"; // TODO: get real IP in production
-        const isAllowed = await checkRateLimit(ip, "REGISTER_ATTEMPT", 3, 3600); // 3 attempts per hour per IP (strict)
+        const isAllowed = await checkRateLimit(ip, "REGISTER_ATTEMPT", 50, 3600); // 50 attempts per hour per IP (relaxed for dev)
         if (!isAllowed) return { error: "Too many registration attempts. Please try again later." };
 
         const validatedFields = RegisterSchema.safeParse(values);
@@ -64,6 +64,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         return { success: "Confirmation codes sent!", redirect: true };
     } catch (error) {
         console.error("REGISTER_ERROR", error);
-        return { error: "Something went wrong!" };
+        return { error: `Something went wrong: ${(error as Error).message}` };
     }
 };
