@@ -103,14 +103,14 @@ export default function HeroNavbar() {
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-start justify-between pointer-events-none">
 
         {/* LEFT — LOGO WITH CUTOUT BACKGROUND */}
-        <div className="bg-[#FFF4D6] rounded-br-[2rem] pl-6 pr-12 pb-7 pt-6 pointer-events-auto shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+        <div className="bg-[#FFF4D6] rounded-br-[2rem] pl-6 pr-12 pb-6 pt-5 pointer-events-auto shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
           <Link href="/" className="flex items-center">
             <Image
               src="/logo.png"
               alt="Joy Juncture"
-              width={160}
-              height={56}
-              className="h-20 w-auto object-contain"
+              width={240}
+              height={80}
+              className="w-48 h-auto object-contain"
               priority
             />
           </Link>
