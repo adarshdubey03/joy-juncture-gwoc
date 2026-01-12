@@ -5,7 +5,7 @@ import { authConfig } from "./auth.config"
 import Credentials from "next-auth/providers/credentials"
 import { LoginSchema } from "@/schemas"
 import { getUserById } from "@/data/user"
-import { UserRole } from "./generated/prisma/enums"
+import { UserRole } from "./generated/prisma"
 import bcrypt from "bcrypt"
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import { checkRateLimit } from "@/lib/rate-limit";
