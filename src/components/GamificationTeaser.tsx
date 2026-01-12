@@ -6,19 +6,19 @@ import { ShoppingBag, Calendar, Gamepad2, Ticket, Gift, Puzzle } from 'lucide-re
 
 const GamificationTeaser = () => {
   return (
-    <section className="relative w-full bg-[#FFF4D6] py-20 overflow-hidden font-sans">
+    <section className="relative w-full bg-[#FFF4D6] py-10 md:py-20 overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto px-4 relative z-10 flex flex-col items-center">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-5xl font-black text-[#4A3B32] mb-3 tracking-wide"
+            className="text-3xl md:text-5xl font-black text-[#4A3B32] mb-3 tracking-wide"
           >
             Play. Earn. Redeem
           </motion.h2>
-          <p className="text-[#8B7361] font-medium text-lg">Your Joy becomes JJ Points.</p>
+          <p className="text-[#8B7361] font-medium text-base md:text-lg">Your Joy becomes JJ Points.</p>
         </div>
 
         {/* Main Content Grid */}
@@ -43,43 +43,43 @@ const GamificationTeaser = () => {
           <div className="flex flex-col gap-10 lg:w-1/3 items-start lg:items-end z-10">
             {/* Purchases */}
             <div className="flex items-center gap-4 lg:flex-row-reverse text-right">
-              <div className="w-20 h-20 rounded-full bg-orange-100 border-4 border-orange-200 flex items-center justify-center shadow-sm">
-                <ShoppingBag className="w-8 h-8 text-orange-600" />
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-orange-100 border-4 border-orange-200 flex items-center justify-center shadow-sm">
+                <ShoppingBag className="w-6 h-6 md:w-8 md:h-8 text-orange-600" />
               </div>
-              <div className="lg:text-right">
-                <h3 className="font-bold text-[#4A3B32] text-xl">Purchases</h3>
-                <p className="font-bold text-[#5C4D42]">+120 JJ Points</p>
+              <div className="text-left lg:text-right">
+                <h3 className="font-bold text-[#4A3B32] text-lg md:text-xl">Purchases</h3>
+                <p className="font-bold text-[#5C4D42] text-sm md:text-base">+120 JJ Points</p>
               </div>
             </div>
 
             {/* Events */}
             <div className="flex items-center gap-4 lg:flex-row-reverse text-right">
-              <div className="w-20 h-20 rounded-full bg-blue-100 border-4 border-blue-200 flex items-center justify-center shadow-sm">
-                <Calendar className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-blue-100 border-4 border-blue-200 flex items-center justify-center shadow-sm">
+                <Calendar className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
               </div>
-              <div className="lg:text-right">
-                <h3 className="font-bold text-[#4A3B32] text-xl">Events</h3>
-                <p className="font-bold text-[#5C4D42]">+300 JJ Points</p>
+              <div className="text-left lg:text-right">
+                <h3 className="font-bold text-[#4A3B32] text-lg md:text-xl">Events</h3>
+                <p className="font-bold text-[#5C4D42] text-sm md:text-base">+300 JJ Points</p>
               </div>
             </div>
 
             {/* Play Games */}
             <div className="flex items-center gap-4 lg:flex-row-reverse text-right">
-              <div className="w-20 h-20 rounded-full bg-green-100 border-4 border-green-200 flex items-center justify-center shadow-sm">
-                <Puzzle className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-green-100 border-4 border-green-200 flex items-center justify-center shadow-sm">
+                <Puzzle className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
               </div>
-              <div className="lg:text-right">
-                <h3 className="font-bold text-[#4A3B32] text-xl">Play Games</h3>
-                <p className="font-bold text-[#5C4D42]">+50 JJ Points</p>
+              <div className="text-left lg:text-right">
+                <h3 className="font-bold text-[#4A3B32] text-lg md:text-xl">Play Games</h3>
+                <p className="font-bold text-[#5C4D42] text-sm md:text-base">+50 JJ Points</p>
               </div>
             </div>
           </div>
 
           {/* CENTER COLUMN: WALLET CARD */}
-          <div className="lg:w-1/3 flex justify-center z-20">
-            <Link href="/wallet" className="block transform transition-transform hover:scale-105 active:scale-95 duration-300">
-              <div className="relative bg-gradient-to-br from-[#FFF8E7] to-[#FFF0D0] rounded-[60px] p-2 shadow-2xl border-[8px] border-[#A5D8FF]/50 w-[380px] h-[260px] flex items-center justify-center">
-                <div className="absolute inset-0 rounded-[50px] border-4 border-white/60 pointer-events-none"></div>
+          <div className="lg:w-1/3 flex justify-center z-20 w-full px-4 md:px-0">
+            <Link href="/wallet" className="block transform transition-transform hover:scale-105 active:scale-95 duration-300 w-full max-w-[380px]">
+              <div className="relative bg-gradient-to-br from-[#FFF8E7] to-[#FFF0D0] rounded-[40px] md:rounded-[60px] p-2 shadow-2xl border-[4px] md:border-[8px] border-[#A5D8FF]/50 w-full h-[260px] flex items-center justify-center">
+                <div className="absolute inset-0 rounded-[30px] md:rounded-[50px] border-4 border-white/60 pointer-events-none"></div>
 
                 <div className="flex flex-col items-center w-full">
                   {/* Badge */}
