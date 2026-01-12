@@ -56,7 +56,7 @@ export const {
 
       const existingUser = await getUserById(token.sub);
 
-      if (!existingUser) return token;
+      if (!existingUser) return null;
 
       token.role = existingUser.role;
 
@@ -64,7 +64,22 @@ export const {
     }
   },
   adapter: PrismaAdapter(db as any) as any,
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours (default is 30 days)
+    updateAge: 60 * 60, // 1 hour (rotate session timestamp every hour)
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
   ...authConfig,
   providers: [
     ...authConfig.providers,
@@ -102,7 +117,7 @@ export const {
             user.password,
           );
 
-          if (passwordsMatch) return user;
+          if (passwordsMatch) return user as any;
         }
 
         return null;

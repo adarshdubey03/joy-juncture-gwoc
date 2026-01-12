@@ -15,8 +15,8 @@ function StarRating({ rating }: { rating: number }) {
         <svg
           key={i}
           className={`w-5 h-5 ${i < Math.floor(rating || 5) // Default to 5 if no rating
-              ? "fill-current"
-              : "text-neutral-300 fill-none"
+            ? "fill-current"
+            : "text-neutral-300 fill-none"
             }`}
           viewBox="0 0 24 24"
         >
@@ -62,23 +62,45 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = await db.product.findUnique({
+  const productData = await db.product.findUnique({
     where: { slug },
+    include: {
+      images: true,
+      categories: { include: { category: true } },
+      moods: { include: { mood: true } },
+      gameplayInfo: true,
+      badges: { include: { badge: true } },
+      keyFeatures: true,
+    },
   });
 
-  if (!product) {
+  if (!productData) {
     notFound();
   }
 
-  // Ensure these fields exist or provide defaults if DB is missing them
-  const badges = product.badges || [];
-  const images = product.images.length > 0 ? product.images : [product.image];
-  const reviews = 42; // Mock reviews count if not in DB
-  const rating = 4.8; // Mock rating if not in DB
+  const product = {
+    id: productData.id,
+    name: productData.name,
+    slug: productData.slug,
+    description: productData.description,
+    price: Number(productData.discountedPrice || productData.actualPrice),
+    image: productData.images.find((img) => img.isPrimary)?.url || productData.images[0]?.url || "/placeholder.png",
+    images: productData.images.map((img) => img.url),
+    category: productData.categories[0]?.category.name || "Game",
+    badges: productData.badges.map((b) => b.badge.name),
+    players: productData.gameplayInfo
+      ? `${productData.gameplayInfo.minPlayers}-${productData.gameplayInfo.maxPlayers}`
+      : "2-4",
+    duration: productData.gameplayInfo ? `${productData.gameplayInfo.avgPlayTime} mins` : "30 mins",
+    mood: productData.moods[0]?.mood.name || "Fun",
+    story: productData.description,
+    howToPlay: productData.keyFeatures.map((f) => f.title),
+    whatYoullLove: productData.keyFeatures.map((f) => f.description || f.title),
+  };
 
-  // Specs mapping
-  // We can add a "specifications" JSON field to the DB later if strictly needed,
-  // but for now we can map existing fields.
+  // Mock reviews count/rating for now as they are not aggregated in this query yet
+  const reviews = 42;
+  const rating = 4.8;
 
   return (
     <main className="bg-[#FFF4D6] min-h-screen relative">
@@ -102,9 +124,9 @@ export default async function ProductPage({
         {/* Hero */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start animate-fade-in">
           <ProductGallery
-            images={images}
+            images={product.images}
             name={product.name}
-            badges={badges}
+            badges={product.badges}
           />
 
           <div className="flex flex-col gap-6 pt-2">

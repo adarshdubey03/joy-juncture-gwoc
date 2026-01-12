@@ -4,11 +4,11 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
 
-const client = twilio(accountSid, authToken);
+const client = (accountSid && authToken) ? twilio(accountSid, authToken) : null;
 
 export const sendVerificationSMS = async (phone: string, token: string) => {
     // If we're missing credentials, log and return (for dev/partial setup safety)
-    if (!accountSid || !authToken || !twilioNumber) {
+    if (!client || !accountSid || !authToken || !twilioNumber) {
         console.error("❌ Twilio credentials missing in .env");
         console.log("----------------------------------------");
         console.log("📱 SMS Mock (Twilio not configured):");

@@ -1,5 +1,5 @@
 import { Clock, Users, Zap, UserCheck, Brain, Smile } from "lucide-react";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/types";
 
 interface BadgeProps {
     product: Product;

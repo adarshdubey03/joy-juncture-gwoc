@@ -31,3 +31,11 @@ export const NewPasswordSchema = z.object({
         .regex(/[0-9]/, { message: "Password must contain at least one number" })
         .regex(/[\W_]/, { message: "Password must contain at least one special character" }),
 });
+
+// Export Domains
+export * from "./user";
+export * from "./product"; // Includes ProductSchema
+export * from "./taxonomy";
+export * from "./order";
+export * from "./event";
+export * from "./gamification"; // Includes Content & Puzzles

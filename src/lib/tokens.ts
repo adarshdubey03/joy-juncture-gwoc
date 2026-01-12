@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
+import { randomInt } from "crypto";
 
 // ... existing exports ...
 
@@ -37,7 +38,8 @@ export const getPasswordResetTokenByPhone = async (phone: string) => {
 }
 
 export const generatePasswordResetToken = async (identifier: string, type: "email" | "phone" = "email") => {
-    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate 6 digit OTP (CSPRNG)
+    const token = randomInt(100_000, 1_000_000).toString();
     // Expiry: 10 minutes (600 seconds)
     const expires = new Date(new Date().getTime() + 600 * 1000);
 
@@ -148,8 +150,8 @@ export const generateVerificationToken = async (identifier: string, type: "email
 
     // const token = uuidv4(); 
 
-    // Generate 6 digit OTP
-    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate 6 digit OTP (CSPRNG)
+    const token = randomInt(100_000, 1_000_000).toString();
 
     const expires = new Date(new Date().getTime() + 3600 * 1000); // 1 hour
 

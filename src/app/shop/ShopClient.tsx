@@ -3,7 +3,7 @@
 import { useState } from "react";
 // import { motion, AnimatePresence } from "framer-motion"; // Removed framer-motion
 import { ProductCard } from "@/components/ProductCard";
-import type { Product } from "@/generated/prisma/client";
+import type { Product } from "@/types";
 
 const FILTERS = {
     "Game Type": ["Card Game", "Party Game", "Mystery", "Strategy", "Puzzle"],
@@ -49,7 +49,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
     return (
         <main className="bg-[#FFF4D6] min-h-screen relative">
             <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
-            <div className="max-w-7xl mx-auto px-4 py-24 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 py-32 relative z-10">
                 {/* Header */}
                 <header className="mb-16">
                     <h1 className="font-fredoka text-6xl text-black mb-6 tracking-tight">

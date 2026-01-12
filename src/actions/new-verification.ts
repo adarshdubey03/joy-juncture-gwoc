@@ -17,7 +17,7 @@ export const newVerification = async (token: string) => {
     }
 
     if (!existingToken.email) {
-        return { error: "Email does not exist!" };
+        return { error: "Email is missing from verification token" };
     }
 
     const existingUser = await db.user.findFirst({

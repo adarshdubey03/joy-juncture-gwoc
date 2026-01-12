@@ -1,0 +1,147 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import {
+    LayoutDashboard,
+    Package,
+    ShoppingCart,
+    Users,
+    Calendar,
+    Settings,
+    Gift,
+    Tag,
+    FolderTree,
+    HelpCircle,
+    MessageSquare,
+    FileText,
+} from "lucide-react";
+
+const sidebarLinks = [
+    {
+        title: "Dashboard",
+        href: "/admin",
+        icon: LayoutDashboard,
+    },
+    {
+        title: "Enquiries",
+        href: "/admin/enquiries",
+        icon: MessageSquare,
+    },
+    {
+        title: "Blogs",
+        href: "/admin/blogs",
+        icon: FileText,
+    },
+    {
+        title: "Products",
+        href: "/admin/products",
+        icon: Package,
+    },
+    {
+        title: "Orders",
+        href: "/admin/orders",
+        icon: ShoppingCart,
+    },
+    {
+        title: "Customers",
+        href: "/admin/customers",
+        icon: Users,
+    },
+    {
+        title: "Events",
+        href: "/admin/events",
+        icon: Calendar,
+    },
+    {
+        title: "Puzzles",
+        href: "/admin/puzzles",
+        icon: HelpCircle,
+    },
+    {
+        title: "Rewards",
+        href: "/admin/rewards",
+        icon: Gift,
+    },
+    {
+        title: "Categories",
+        href: "/admin/categories",
+        icon: FolderTree,
+    },
+    {
+        title: "Tags & Metadata",
+        href: "/admin/metadata",
+        icon: Tag,
+    },
+    {
+        title: "Settings",
+        href: "/admin/settings",
+        icon: Settings,
+    },
+];
+
+export function AdminSidebar() {
+    const pathname = usePathname();
+
+    return (
+        <div className="flex h-full max-h-screen flex-col gap-2">
+            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                <Link href="/admin" className="flex items-center gap-2 font-semibold">
+                    <Package className="h-6 w-6" />
+                    <span className="">JJ Admin</span>
+                </Link>
+            </div>
+            <div className="flex-1 overflow-auto py-2">
+                <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                    {sidebarLinks.map((link) => {
+                        const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                        const Icon = link.icon;
+
+                        return (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={cn(
+                                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
+                                    isActive
+                                        ? "bg-muted text-primary"
+                                        : "text-muted-foreground"
+                                )}
+                            >
+                                <Icon className="h-4 w-4" />
+                                {link.title}
+                            </Link>
+                        );
+                    })}
+                </nav>
+            </div>
+
+            {/* Logout Section */}
+            <div className="mt-auto border-t px-4 py-3">
+                <button
+                    onClick={() => {
+                        // Import and call logout action
+                        import("@/actions/logout").then(({ logout }) => logout());
+                    }}
+                    className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:bg-muted"
+                >
+                    <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        />
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    );
+}

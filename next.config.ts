@@ -2,8 +2,22 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 
-  /* config options here */
-  // Forced restart for Prisma changes
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'documents.iplt20.com',
+      }
+    ]
+  }
 };
 
 export default nextConfig;
