@@ -100,7 +100,7 @@ export default function HeroSection() {
             </Link>
 
             <Link
-              href="/play"
+              href="/games"
               className="
                 rounded-full bg-[#F4C752]
                 px-10 py-5
@@ -135,7 +135,7 @@ export default function HeroSection() {
         </Link>
 
         <Link
-          href="/play"
+          href="/games"
           className="
             flex-1
             flex items-center justify-center
