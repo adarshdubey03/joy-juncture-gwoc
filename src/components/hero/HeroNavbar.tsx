@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Instagram, ChevronDown, ShoppingCart, User } from "lucide-react";
+import { Instagram, ChevronDown, ShoppingCart, User, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ROUTE_MAP: Record<string, string> = {
   "All Games": "/shop",
@@ -57,6 +58,7 @@ import { usePathname } from "next/navigation";
 
 export default function HeroNavbar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const { cartCount } = useCart();
   const pathname = usePathname();
@@ -98,30 +100,33 @@ export default function HeroNavbar() {
       </div>
 
       {/* ================= MOBILE HEADER ================= */}
-      <div className="md:hidden flex items-center justify-between px-4 py-4">
-        {/* LEFT — LOGO */}
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="Joy Juncture"
-            width={96}
-            height={32}
-            className="h-15 w-25"
-            priority
-          />
-        </Link>
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-start justify-between pointer-events-none">
+
+        {/* LEFT — LOGO WITH CUTOUT BACKGROUND */}
+        <div className="bg-[#FFF4D6] rounded-br-[2rem] pl-6 pr-12 pb-6 pt-5 pointer-events-auto shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Joy Juncture"
+              width={840}
+              height={680}
+              className="w-16 h-10 object-contain"
+              priority
+            />
+          </Link>
+        </div>
 
         {/* RIGHT — ACTIONS */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 pr-4 pt-4 pointer-events-auto">
           {isLoggedIn && (
             <Link
               href="/cart"
               aria-label="Cart"
-              className="relative flex h-13 w-13 items-center justify-center  bg-[#F4C752] rounded-full border border-neutral-900/20 text-neutral-900"
+              className="relative flex h-12 w-12 items-center justify-center bg-[#F4C752] rounded-full border border-neutral-900/10 text-neutral-900 shadow-lg shadow-orange-500/10 hover:scale-105 transition-transform"
             >
               <ShoppingCart size={20} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-sm border border-white">
                   {cartCount}
                 </span>
               )}
@@ -129,17 +134,22 @@ export default function HeroNavbar() {
           )}
 
           <button
+            onClick={() => setMobileMenuOpen(true)}
             className="
-              h-13 
+              h-12
               rounded-full
               bg-[#F4C752]
               px-6
-              text-lg
-              font-medium
+              text-base
+              font-bold
               text-neutral-900
               flex
               items-center
               justify-center
+              shadow-lg
+              shadow-orange-500/10
+              border border-neutral-900/10
+              hover:scale-105 transition-transform
             "
           >
             Menu
@@ -233,6 +243,83 @@ export default function HeroNavbar() {
           </div>
         </div>
       </nav>
+
+      {/* ================= MOBILE MENU OVERLAY ================= */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[60] bg-[#FFF4D6] flex flex-col pointer-events-auto"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-6">
+              <Image
+                src="/logo.png"
+                alt="Joy Juncture"
+                width={120}
+                height={40}
+                className="h-12 w-auto object-contain"
+              />
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 bg-black/5 rounded-full hover:bg-black/10 transition-colors"
+              >
+                <X size={24} className="text-neutral-900" />
+              </button>
+            </div>
+
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-6 pb-10">
+              <div className="space-y-8">
+                {NAV_ITEMS.map((group) => (
+                  <div key={group.label}>
+                    <h3 className="text-sm font-bold text-neutral-400 uppercase tracking-wider mb-4 border-b border-neutral-900/5 pb-2">
+                      {group.label}
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item}
+                          href={ROUTE_MAP[item]}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="text-2xl font-fredoka text-neutral-900 hover:text-[#F4C752] transition-colors"
+                        >
+                          {item}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Mobile Specific Actions */}
+                <div className="pt-8 space-y-4">
+                  {!isLoggedIn && (
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block w-full text-center py-4 bg-neutral-900 text-white rounded-2xl font-bold text-lg"
+                    >
+                      Login / Sign Up
+                    </Link>
+                  )}
+                  {isLoggedIn && (
+                    <Link
+                      href="/profile"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block w-full text-center py-4 bg-white border border-neutral-200 text-neutral-900 rounded-2xl font-bold text-lg"
+                    >
+                      View Profile
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
