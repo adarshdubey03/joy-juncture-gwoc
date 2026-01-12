@@ -1,328 +1,213 @@
-"use client"
-import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
+import ExperienceHero from "@/components/experiences/ExperienceHero";
+import ProblemCards from "@/components/experiences/ProblemCards";
+import SolutionCards from "@/components/experiences/SolutionCards";
+import ExperienceFormats from "@/components/experiences/ExperienceFormats";
+import MomentsGallery from "@/components/experiences/MomentsGallery";
+import TrustSection from "@/components/experiences/TrustSection";
+import EnquiryForm from "@/components/experiences/EnquiryForm";
 
-export default function BirthdayExperiencesPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    celebrationType: "",
-    date: "",
-    guestCount: "",
-    message: "",
-  });
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function BirthdaysPage() {
+    const problemCards = [
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            ),
+            title: "Same old routine",
+            description: "Cake, candles, done. Nothing special or memorable.",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            ),
+            title: "Guests don't mix",
+            description: "Friends and family stay in separate groups",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ),
+            title: "Kids get bored fast",
+            description: "30 minutes of fun, then chaos",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            ),
+            title: "No standout moments",
+            description: "Generic party that looks like everyone else's",
+        },
+    ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    const solutionCards = [
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+            ),
+            title: "Non-Stop Fun",
+            highlight: "Energy All Day",
+            description:
+                "Keep the party alive from start to finish. Games that adapt to your crowd and keep everyone engaged, laughing, and making memories.",
+        },
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            ),
+            title: "Everyone Connects",
+            highlight: "Inclusive Play",
+            description:
+                "Break the ice naturally. Watch different friend groups and family members bond over shared fun and friendly competition.",
+        },
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+            ),
+            title: "Your Style, Your Way",
+            highlight: "Personalized",
+            description:
+                "From superhero themes to elegant adult celebrations, we customize everything to match your personality and vision.",
+        },
+    ];
 
-    try {
-      const combinedMessage = `Type: ${formData.celebrationType}\nDate: ${formData.date}\n\n${formData.message}`;
+    const formats = [
+        {
+            title: "Kids Birthday Parties",
+            whatItIs: "High-energy game zones designed for young adventurers",
+            whenItWorks: "Ages 5-15, home parties, venue celebrations",
+            whoItsFor: "Parents wanting stress-free, memorable kids' parties",
+            imagePath: "/birthdays/kids-party.jpg",
+        },
+        {
+            title: "Adult Celebrations",
+            whatItIs: "Sophisticated game experiences for grown-up gatherings",
+            whenItWorks: "Milestone birthdays, surprise parties, friend reunions",
+            whoItsFor: "Adults who want more than dinner and drinks",
+            imagePath: "/birthdays/adult-party.jpg",
+        },
+        {
+            title: "Family Gatherings",
+            whatItIs: "Multi-generational games everyone can enjoy together",
+            whenItWorks: "Big family birthdays, anniversary celebrations",
+            whoItsFor: "Families wanting quality time and togetherness",
+            imagePath: "/birthdays/family-party.jpg",
+        },
+    ];
 
-      const result = await submitExperienceEnquiry({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        type: "Birthday",
-        guestCount: formData.guestCount,
-        message: combinedMessage,
-        company: "N/A"
-      });
+    const galleryImages = [
+        "/people_playing.jpg",
+        "/peopleplaying.jpg",
+        "/gamenight1.jpg",
+        "/funatcafe.jpg",
+        "/event1.jpg",
+        "/mehfil2.jpg",
+        "/IMG_9307.jpg",
+        "/DMD.jpg",
+    ];
 
-      if (result.success) {
-        setFormSubmitted(true);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          celebrationType: "",
-          date: "",
-          guestCount: "",
-          message: "",
-        });
-        setTimeout(() => setFormSubmitted(false), 5000);
-      } else {
-        alert(result.error);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    const trustPoints = [
+        {
+            number: "01",
+            title: "Hassle-Free Hosting",
+            description: "We bring, set up, manage, and pack. You just enjoy.",
+        },
+        {
+            number: "02",
+            title: "Age-Appropriate Fun",
+            description: "Games tailored to your guest age range.",
+        },
+        {
+            number: "03",
+            title: "Flexible Packages",
+            description: "2 hours to full-day experiences. Your call.",
+        },
+        {
+            number: "04",
+            title: "Memory Makers",
+            description: "Parties people remember and talk about.",
+        },
+    ];
 
-  const handleScrollToForm = () => {
-    const form = document.getElementById("enquiry-form");
-    if (form) {
-      form.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+    return (
+        <>
+            <ExperienceHero
+                category="BIRTHDAY CELEBRATIONS"
+                headline="Birthdays Worth Remembering"
+                subheadline="Create moments of pure joy that your guests will cherish forever"
+                ctaText="Plan Your Party"
+                ctaHref="#enquiry"
+                backgroundGradient="from-[#FFF4D6] via-[#FFE8B3] to-[#F4C752]/40"
+                accentColor="#F4C752"
+                decorations={
+                    <>
+                        {/* Party Hat */}
+                        <svg className="absolute top-20 right-28 w-20 h-20 text-[#F4C752]/35" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L3 14h18L12 2zm0 4.5L17.5 13h-11L12 6.5z" />
+                            <circle cx="12" cy="4" r="1.5" />
+                            <rect x="2" y="20" width="20" height="2" rx="1" />
+                        </svg>
+                        {/* Birthday Cake */}
+                        <svg className="absolute bottom-32 left-24 w-24 h-24 text-[#F4C752]/30" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.74.74 2.03.74 2.77 0l2.14-2.13 2.13 2.13c.37.37.86.57 1.38.57 1.08 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z" />
+                        </svg>
+                        {/* Balloon */}
+                        <svg className="absolute top-1/3 right-1/4 w-16 h-16 text-[#F4C752]/28" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        {/* Gift */}
+                        <svg className="absolute top-1/2 left-1/3 w-18 h-18 text-[#F4C752]/25" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z" />
+                        </svg>
+                    </>
+                }
+            />
 
-  return (
-    <main className="bg-[#FFF4D6] min-h-screen relative">
-      /* ... existing render code up to form ... */
-      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
+            <ProblemCards
+                sectionTitle="Why Most Parties Fall Flat"
+                cards={problemCards}
+            />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#E8D5FF] via-[#FFE8A3] to-[#FF9B9B]" />
+            <SolutionCards
+                sectionTitle="How We Bring the Magic"
+                cards={solutionCards}
+            />
 
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-20 right-20 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ scale: [1.15, 1, 1.15], opacity: [0.5, 0.7, 0.5] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-20 left-20 w-80 h-80 bg-orange-200/30 rounded-full blur-3xl"
-        />
+            <ExperienceFormats
+                sectionTitle="Find Your Perfect Party"
+                formats={formats}
+            />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 py-32 text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-block mb-6 px-6 py-2 bg-purple-100/60 backdrop-blur-sm rounded-full"
-            >
-              <p className="text-purple-800 font-semibold text-sm uppercase tracking-wider">
-                Birthdays & Anniversary Experiences
-              </p>
-            </motion.div>
+            <MomentsGallery
+                sectionTitle="Pure Joy in Action"
+                images={galleryImages}
+            />
 
-            <h1 className="font-fredoka text-5xl md:text-7xl text-black mb-6 leading-tight tracking-tight">
-              Celebrate People, Not Just Parties
-            </h1>
-            <p className="text-black/80 text-xl md:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
-              Create celebrations filled with shared laughter, genuine connections,
-              and memories that last long after the candles are blown out.
-            </p>
+            <TrustSection
+                sectionTitle="Why Families Choose Us"
+                points={trustPoints}
+            />
 
-            <button
-              onClick={handleScrollToForm}
-              className="mt-10 px-10 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg shadow-lg hover:scale-105 transition-transform duration-300"
-            >
-              Plan a Celebration
-            </button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* The Problem Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-16 text-center">The Problem</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ProblemCard icon="🎭" title="Parties feel predictable" description="Same cake, same songs, same awkward small talk. Celebrations that feel like obligations rather than joy." />
-            <ProblemCard icon="🤐" title="Guests don't mingle naturally" description="People stick to their comfort zones, leaving new friendships and connections unexplored." />
-            <ProblemCard icon="😴" title="Entertainment lacks engagement" description="Generic activities that don't spark real participation or create memorable moments." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* What We Create Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">What We Create</h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Celebrations designed around people, not templates
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <SolutionCard icon="🎨" title="Theme-Based Games" description="Activities designed around interests, hobbies, and personalities—not generic party games." />
-            <SolutionCard icon="🎯" title="Age-Appropriate Play" description="From kids to seniors, everyone gets experiences that match their energy and interests." />
-            <SolutionCard icon="👥" title="Mixed-Group Friendly" description="Formats that work for friends, families, colleagues, or any combination of people." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Experience Types Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Experience Types</h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Celebrations for every milestone
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ExperienceCard image="/birthdays/adult-night.png" title="Adult Birthday Game Nights" when="Ages 21+" why="Create meaningful connections" forWhom="Friend groups, couples" description="Sophisticated game experiences with craft drinks, great conversation, and activities that bring out everyone's competitive and creative sides." />
-            <ExperienceCard image="/birthdays/kids-party.png" title="Kids & Teen Party Games" when="Ages 5-18" why="High energy, zero boredom" forWhom="Children and teenagers" description="Age-appropriate challenges and team games that keep kids engaged, active, and laughing throughout the celebration." />
-            <ExperienceCard image="/birthdays/milestone.png" title="Milestone Birthdays" when="30th, 40th, 50th+" why="Honor the journey" forWhom="Multi-generational gatherings" description="Elegant experiences that celebrate life stories, bringing together family and friends across all ages." />
-            <ExperienceCard image="/birthdays/anniversary.png" title="Anniversary Celebrations" when="1st to 50th+" why="Celebrate love and partnership" forWhom="Couples and their loved ones" description="Romantic and fun activities that honor the couple's journey while engaging all their guests." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Visual Proof Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Real Celebrations, Real Joy</h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Moments captured from celebrations we've designed
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ProofCard image="/birthdays/proof-1.png" caption="Small-group celebrations where everyone feels included and engaged" />
-            <ProofCard image="/birthdays/proof-2.png" caption="Home, café, and private venue setups that feel personal and special" />
-            <ProofCard image="/birthdays/proof-3.png" caption="High-energy moments where laughter and connection happen naturally" />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Why It's Loved Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-16 text-center">Why It's Loved</h2>
-          <div className="space-y-8 max-w-4xl mx-auto">
-            <WhyCard number="01" title="Easy to join, hard to forget" description="No complicated rules or forced participation. Just natural, engaging activities that people actually want to be part of." />
-            <WhyCard number="02" title="No awkward hosting pressure" description="We handle the flow, timing, and facilitation. You get to enjoy your own celebration without stress." />
-            <WhyCard number="03" title="Everyone participates at their comfort level" description="Introverts and extroverts both find their groove. No one feels left out or overwhelmed." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Enquiry Form Section */}
-      <section id="enquiry-form" className="relative z-10 max-w-4xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Make Your Celebration Memorable</h2>
-          <p className="text-neutral-700 text-xl text-center mb-12 leading-relaxed">
-            Tell us about your vision
-          </p>
-
-          {formSubmitted && (
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mb-8 p-6 bg-green-50 border-2 border-green-500 rounded-2xl text-center shadow-lg">
-              <p className="text-green-700 font-bold text-xl">✓ Thank you! We'll be in touch within 24 hours.</p>
-            </motion.div>
-          )}
-
-          <form onSubmit={handleSubmit} className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-neutral-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Your Name *</label>
-                <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors" placeholder="Full name" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Email *</label>
-                <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors" placeholder="you@example.com" />
-              </div>
+            <div id="enquiry">
+                <EnquiryForm
+                    headline="Let's Create Your Perfect Celebration"
+                    subtext="Tell us your vision and we'll make it unforgettable"
+                    ctaText="Book Your Birthday Experience"
+                    experienceType="birthday"
+                />
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Phone</label>
-                <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors" placeholder="+91 98765 43210" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Celebration Type *</label>
-                <select required value={formData.celebrationType} onChange={(e) => setFormData({ ...formData, celebrationType: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors">
-                  <option value="">Select type</option>
-                  <option value="adult-birthday">Adult Birthday</option>
-                  <option value="kids-birthday">Kids Birthday</option>
-                  <option value="milestone">Milestone Birthday</option>
-                  <option value="anniversary">Anniversary</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Date</label>
-                <input type="text" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors" placeholder="DD/MM/YYYY" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Guest Count *</label>
-                <select required value={formData.guestCount} onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors">
-                  <option value="">Select count</option>
-                  <option value="5-10">5-10 guests</option>
-                  <option value="10-20">10-20 guests</option>
-                  <option value="20-30">20-30 guests</option>
-                  <option value="30-50">30-50 guests</option>
-                  <option value="50+">50+ guests</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-neutral-700 mb-2">Tell us about your celebration</label>
-              <textarea rows={5} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors resize-none" placeholder="What kind of vibe are you going for? Any themes or special requests?" />
-            </div>
-
-            <button type="submit" disabled={isSubmitting} className="w-full md:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:hover:scale-100">
-              {isSubmitting ? "Sending..." : "Make My Celebration Memorable"}
-            </button>
-          </form>
-        </motion.div>
-      </section>
-
-      <div className="h-24" />
-    </main>
-  );
-}
-
-function ProblemCard({ icon, title, description }: { icon: string; title: string; description: string }) {
-  return (
-    <motion.div whileHover={{ y: -8, scale: 1.02 }} transition={{ duration: 0.3 }} className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 border-2 border-neutral-200 hover:border-purple-300 hover:shadow-xl transition-all">
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-      <p className="text-neutral-600 leading-relaxed">{description}</p>
-    </motion.div>
-  );
-}
-
-function SolutionCard({ icon, title, description }: { icon: string; title: string; description: string }) {
-  return (
-    <motion.div whileHover={{ y: -8, scale: 1.02 }} transition={{ duration: 0.3 }} className="bg-gradient-to-br from-purple-100/40 to-pink-100/40 backdrop-blur-sm rounded-2xl p-8 border-2 border-purple-200/50 hover:border-purple-300 hover:shadow-2xl transition-all">
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-      <p className="text-neutral-700 leading-relaxed">{description}</p>
-    </motion.div>
-  );
-}
-
-function ExperienceCard({ image, title, when, why, forWhom, description }: { image: string; title: string; when: string; why: string; forWhom: string; description: string }) {
-  return (
-    <motion.div whileHover={{ y: -8 }} transition={{ duration: 0.3 }} className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border-2 border-neutral-200 hover:border-purple-300">
-      <div className="relative h-64 overflow-hidden">
-        <Image src={image} alt={title} fill className="object-cover transition-transform duration-500 hover:scale-110" />
-      </div>
-      <div className="p-8">
-        <h3 className="font-fredoka text-2xl text-black mb-4">{title}</h3>
-        <div className="space-y-2 mb-4 text-sm">
-          <p className="text-neutral-600"><span className="font-semibold text-black">When:</span> {when}</p>
-          <p className="text-neutral-600"><span className="font-semibold text-black">Why:</span> {why}</p>
-          <p className="text-neutral-600"><span className="font-semibold text-black">For whom:</span> {forWhom}</p>
-        </div>
-        <p className="text-neutral-700 leading-relaxed">{description}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-function ProofCard({ image, caption }: { image: string; caption: string }) {
-  return (
-    <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl">
-      <Image src={image} alt={caption} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-        <p className="text-white font-medium leading-relaxed">{caption}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-function WhyCard({ number, title, description }: { number: string; title: string; description: string }) {
-  return (
-    <motion.div whileHover={{ x: 8 }} transition={{ duration: 0.3 }} className="flex gap-6 items-start bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-2 border-neutral-200 hover:border-purple-300 hover:shadow-lg transition-all">
-      <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-        <span className="font-fredoka text-2xl text-white">{number}</span>
-      </div>
-      <div>
-        <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-        <p className="text-neutral-700 leading-relaxed">{description}</p>
-      </div>
-    </motion.div>
-  );
+        </>
+    );
 }
