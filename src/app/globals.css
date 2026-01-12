@@ -11,6 +11,7 @@
     --font-mono: var(--font-geist-mono);
   }
 }
+
 html {
   scroll-behavior: smooth;
 }
@@ -129,14 +130,17 @@ html {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
 .hero-video-mask {
-  --radius: 28px;          /* OUTER rounding */
-  --cut-radius: 24px;      /* INNER rounding */
+  --radius: 28px;
+  /* OUTER rounding */
+  --cut-radius: 24px;
+  /* INNER rounding */
 
   mask:
     /* outer rounded rect */
@@ -169,6 +173,7 @@ html {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -177,6 +182,7 @@ html {
 .playstyle-marquee {
   animation: playstyle-scroll 35s linear infinite;
 }
+
 .direction-rtl {
   direction: rtl;
 }
