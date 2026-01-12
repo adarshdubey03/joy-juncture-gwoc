@@ -27,6 +27,9 @@ const ProductPage = async (props: ProductPageProps) => {
     const { data: moods } = await getMoods();
     const { data: products } = await getProducts();
 
+    const formattedProduct = product ? JSON.parse(JSON.stringify(product)) : null;
+    const formattedProducts = products ? JSON.parse(JSON.stringify(products)) : [];
+
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
@@ -36,13 +39,13 @@ const ProductPage = async (props: ProductPageProps) => {
                     </CardHeader>
                     <CardContent>
                         <ProductForm
-                            initialData={product}
+                            initialData={formattedProduct}
                             categories={categories || []}
                             badges={badges || []}
                             tags={tags || []}
                             occasions={occasions || []}
                             moods={moods || []}
-                            products={(products || []) as any[]}
+                            products={formattedProducts}
                         />
                     </CardContent>
                 </Card>
