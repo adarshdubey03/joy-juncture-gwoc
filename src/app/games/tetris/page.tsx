@@ -199,7 +199,7 @@ const TetrisGame = () => {
                 const points = [0, 100, 300, 500, 800][linesCleared] * level;
                 setScore((prev) => {
                     const newScore = prev + points;
-                    if (newScore > highScore) {
+                    if (newScore > (Number(highScore) || 0)) {
                         setHighScore(newScore);
                         localStorage.setItem("tetris-high-score", newScore.toString());
                     }
@@ -374,7 +374,7 @@ const TetrisGame = () => {
         // Draw Board
         board.forEach((row, i) => {
             row.forEach((cell, j) => {
-                if (cell !== 0) {
+                if (cell !== 0 as any) {
                     ctx.fillStyle = cell as string;
                     ctx.fillRect(j * CELL_SIZE + 1, i * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
                     ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
