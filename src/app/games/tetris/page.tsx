@@ -70,7 +70,7 @@ const PIECES: Record<PieceType, Omit<Piece, "type">> = {
 
 const TetrisGame = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [board, setBoard] = useState<string[][]>([]);
+    const [board, setBoard] = useState<(string | number)[][]>([]);
     const [currentPiece, setCurrentPiece] = useState<Piece | null>(null);
     const [nextPiece, setNextPiece] = useState<Piece | null>(null);
     const [holdPiece, setHoldPiece] = useState<Piece | null>(null);
