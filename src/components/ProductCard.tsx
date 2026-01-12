@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, ShoppingCart } from "lucide-react";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/types";
 import { ProductCardBadges } from "./ProductCardBadges";
 
 interface ProductCardProps {

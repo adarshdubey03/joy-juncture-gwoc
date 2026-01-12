@@ -63,10 +63,10 @@ export default function HeroNavbar() {
 
   const isLoggedIn = status === "authenticated";
 
-  // List of auth routes to hide navbar
-  const authRoutes = ["/login", "/register", "/verify", "/error", "/reset", "/new-password"];
+  // List of routes to hide navbar
+  const hiddenRoutes = ["/login", "/register", "/verify", "/error", "/reset", "/new-password", "/admin", "/profile"];
 
-  if (authRoutes.some(route => pathname.startsWith(route))) return null;
+  if (hiddenRoutes.some(route => pathname.startsWith(route))) return null;
 
   return (
     <>

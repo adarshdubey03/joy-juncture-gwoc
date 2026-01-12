@@ -60,7 +60,7 @@ export default async function RootLayout({
           ${fredoka.variable}
           antialiased
           bg-[#FFF4D6]
-          text-[#FFF4D6]
+          text-neutral-900
          
         `}
       >

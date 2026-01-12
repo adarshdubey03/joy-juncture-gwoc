@@ -1,5 +1,6 @@
-"use client";
 
+"use client";
+import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -15,21 +16,44 @@ export default function CorporateEngagementPage() {
     message: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormSubmitted(true);
-    // Clear the form
-    setFormData({
-      companyName: "",
-      contactName: "",
-      email: "",
-      phone: "",
-      teamSize: "",
-      message: "",
-    });
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setIsSubmitting(true);
+
+    try {
+      const result = await submitExperienceEnquiry({
+        name: formData.contactName,
+        company: formData.companyName,
+        email: formData.email,
+        phone: formData.phone,
+        type: "Corporate",
+        message: formData.message,
+        guestCount: formData.teamSize,
+      });
+
+      if (result.success) {
+        setFormSubmitted(true);
+        // Clear the form
+        setFormData({
+          companyName: "",
+          contactName: "",
+          email: "",
+          phone: "",
+          teamSize: "",
+          message: "",
+        });
+        setTimeout(() => setFormSubmitted(false), 5000);
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleScrollToForm = () => {
@@ -426,16 +450,17 @@ export default function CorporateEngagementPage() {
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="
                 w-full md:w-auto
                 px-12 py-4 rounded-full
                 bg-[#F4C752] text-black font-bold text-lg
                 shadow-[0_8px_24px_rgba(244,199,82,0.4)]
                 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(244,199,82,0.6)]
-                transition-all duration-300
+                transition-all duration-300 disabled:opacity-50 disabled:hover:translate-y-0
               "
             >
-              Build My Corporate Experience
+              {isSubmitting ? "Sending..." : "Build My Corporate Experience"}
             </button>
           </form>
         </motion.div>

@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
+import { OrderStatus, EnquiryStatus } from "@/generated/prisma";
 
 export async function getDashboardStats() {
     try {
@@ -12,10 +13,10 @@ export async function getDashboardStats() {
                 totalAmount: true,
             },
             where: {
-                status: "DELIVERED"
+                status: OrderStatus.DELIVERED
             }
         });
-        const totalRevenue = revenueAgg._sum.totalAmount ? revenueAgg._sum.totalAmount.toNumber() : 0;
+        const totalRevenue = revenueAgg._sum.totalAmount ? Number(revenueAgg._sum.totalAmount) : 0;
 
         // 2. Active Users (Total count for now, since we don't track 'lastLogin' strictly yet except failed/lockout)
         // Could infer 'Active' from orders or just total users. Let's use Total Users.
@@ -23,14 +24,14 @@ export async function getDashboardStats() {
 
         // 3. Sales Count (Total Completed Orders)
         const salesCount = await db.order.count({
-            where: { status: "DELIVERED" }
+            where: { status: OrderStatus.DELIVERED }
         });
 
         // 4. Recent Sales (Feed)
         const recentSalesRaw = await db.order.findMany({
             take: 5,
             orderBy: { createdAt: "desc" },
-            where: { status: "DELIVERED" },
+            where: { status: OrderStatus.DELIVERED },
             include: {
                 user: {
                     select: {
@@ -48,7 +49,7 @@ export async function getDashboardStats() {
             id: order.id,
             name: order.user.name || "Unknown",
             email: order.user.email,
-            amount: formatCurrency(order.totalAmount.toNumber()),
+            amount: formatCurrency(Number(order.totalAmount)),
             image: order.user.image,
         }));
 
@@ -62,7 +63,7 @@ export async function getDashboardStats() {
                 amount: { gt: 0 }
             }
         });
-        const pointsDistributed = pointsDistributedAgg._sum.amount ? pointsDistributedAgg._sum.amount.toNumber() : 0;
+        const pointsDistributed = pointsDistributedAgg._sum.amount ? Number(pointsDistributedAgg._sum.amount) : 0;
 
         // 6. Upcoming Events (Start time in future)
         const upcomingEventsCount = await db.event.count({
@@ -72,8 +73,9 @@ export async function getDashboardStats() {
         });
 
         // 7. Pending Actions (New Enquiries)
-        const pendingEnquiriesCount = await db.corporateEnquiry.count({
-            where: { status: "NEW" }
+        // 7. Pending Actions (New Enquiries)
+        const pendingEnquiriesCount = await db.experienceEnquiry.count({
+            where: { status: EnquiryStatus.NEW }
         });
 
         // 8. Recent Activities (Merge Orders and Registrations might be too complex for simple feed, stick to Orders+Registrations separate or just Orders for now to match "Recent Activity Feed")

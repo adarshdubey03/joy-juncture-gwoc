@@ -1,5 +1,5 @@
-"use client";
-
+"use client"
+import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -16,21 +16,46 @@ export default function WeddingExperiencesPage() {
     message: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormSubmitted(true);
-    setFormData({
-      coupleName: "",
-      email: "",
-      phone: "",
-      weddingDate: "",
-      functions: "",
-      guestCount: "",
-      message: "",
-    });
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setIsSubmitting(true);
+
+    try {
+      const combinedMessage = `Functions: ${formData.functions}\nWedding Date: ${formData.weddingDate}\n\n${formData.message}`;
+
+      const result = await submitExperienceEnquiry({
+        name: formData.coupleName,
+        email: formData.email,
+        phone: formData.phone,
+        type: "Wedding",
+        guestCount: formData.guestCount,
+        message: combinedMessage,
+        company: "N/A"
+      });
+
+      if (result.success) {
+        setFormSubmitted(true);
+        setFormData({
+          coupleName: "",
+          email: "",
+          phone: "",
+          weddingDate: "",
+          functions: "",
+          guestCount: "",
+          message: "",
+        });
+        setTimeout(() => setFormSubmitted(false), 5000);
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleScrollToForm = () => {
@@ -429,9 +454,10 @@ export default function WeddingExperiencesPage() {
 
             <button
               type="submit"
-              className="w-full md:w-auto px-12 py-4 rounded-full bg-rose-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300"
+              disabled={isSubmitting}
+              className="w-full md:w-auto px-12 py-4 rounded-full bg-rose-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:hover:scale-100"
             >
-              Create Our Wedding Play Experience
+              {isSubmitting ? "Sending..." : "Create Our Wedding Play Experience"}
             </button>
           </form>
         </motion.div>

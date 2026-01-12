@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { Product } from "@/generated/prisma";
+import { Product } from "@/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 import { ProductSchema } from "@/schemas";
 import { z } from "zod";
@@ -17,9 +17,16 @@ export async function getProducts() {
                 tags: { include: { tag: true } },
             }
         });
-        return { success: true, data: products };
+
+        const serializedProducts = products.map(product => ({
+            ...product,
+            actualPrice: product.actualPrice.toNumber(),
+            discountedPrice: product.discountedPrice ? product.discountedPrice.toNumber() : null,
+        }));
+
+        return { success: true, data: serializedProducts };
     } catch (error) {
-        console.error("GET_PRODUCTS_ERROR", error);
+        console.error("GET_PRODUCTS_ERROR", error instanceof Error ? error.message : String(error));
         return { success: false, error: "Failed to fetch products" };
     }
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -15,21 +15,49 @@ export default function CarnivalExperiencesPage() {
     message: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormSubmitted(true);
-    setFormData({
-      organizationName: "",
-      email: "",
-      phone: "",
-      eventType: "",
-      audienceSize: "",
-      venue: "",
-      message: "",
-    });
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setIsSubmitting(true);
+
+    try {
+      const combinedMessage = `Event Type: ${formData.eventType}\nVenue: ${formData.venue}\n\n${formData.message}`;
+
+      const result = await submitExperienceEnquiry({
+        name: formData.organizationName, // using helper text "Your Name" or contact person would be better but organization name is primary here. Wait, Schema has "name" (contact name usually). 
+        // The form has "Organization Name" and then Email. It lacks "Contact Person".
+        // I'll map organizationName to company, and "Carnival Organizer" to name or just use Org Name as name for now.
+        // Actually I should add Contact Name to form in future. For now, I'll put Org Name in Company and "N/A" or same in Name.
+        company: formData.organizationName,
+        email: formData.email,
+        phone: formData.phone,
+        type: "Carnival",
+        guestCount: formData.audienceSize,
+        message: combinedMessage,
+      });
+
+      if (result.success) {
+        setFormSubmitted(true);
+        setFormData({
+          organizationName: "",
+          email: "",
+          phone: "",
+          eventType: "",
+          audienceSize: "",
+          venue: "",
+          message: "",
+        });
+        setTimeout(() => setFormSubmitted(false), 5000);
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleScrollToForm = () => {
@@ -41,6 +69,7 @@ export default function CarnivalExperiencesPage() {
 
   return (
     <main className="bg-[#FFF4D6] min-h-screen relative">
+      /* ... existing render code ... */
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
 
       {/* Hero Section */}
@@ -225,8 +254,8 @@ export default function CarnivalExperiencesPage() {
               <textarea rows={5} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors resize-none" placeholder="What are your goals? Any specific themes or requirements?" />
             </div>
 
-            <button type="submit" className="w-full md:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300">
-              Design My Game Zone
+            <button type="submit" disabled={isSubmitting} className="w-full md:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:hover:scale-100">
+              {isSubmitting ? "Sending..." : "Design My Game Zone"}
             </button>
           </form>
         </motion.div>

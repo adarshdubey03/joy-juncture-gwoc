@@ -1,5 +1,5 @@
-"use client";
-
+"use client"
+import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -15,21 +15,46 @@ export default function BirthdayExperiencesPage() {
     message: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormSubmitted(true);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      celebrationType: "",
-      date: "",
-      guestCount: "",
-      message: "",
-    });
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setIsSubmitting(true);
+
+    try {
+      const combinedMessage = `Type: ${formData.celebrationType}\nDate: ${formData.date}\n\n${formData.message}`;
+
+      const result = await submitExperienceEnquiry({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        type: "Birthday",
+        guestCount: formData.guestCount,
+        message: combinedMessage,
+        company: "N/A"
+      });
+
+      if (result.success) {
+        setFormSubmitted(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          celebrationType: "",
+          date: "",
+          guestCount: "",
+          message: "",
+        });
+        setTimeout(() => setFormSubmitted(false), 5000);
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleScrollToForm = () => {
@@ -41,6 +66,7 @@ export default function BirthdayExperiencesPage() {
 
   return (
     <main className="bg-[#FFF4D6] min-h-screen relative">
+      /* ... existing render code up to form ... */
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
 
       {/* Hero Section */}
@@ -225,8 +251,8 @@ export default function BirthdayExperiencesPage() {
               <textarea rows={5} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-purple-400 focus:outline-none transition-colors resize-none" placeholder="What kind of vibe are you going for? Any themes or special requests?" />
             </div>
 
-            <button type="submit" className="w-full md:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300">
-              Make My Celebration Memorable
+            <button type="submit" disabled={isSubmitting} className="w-full md:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:hover:scale-100">
+              {isSubmitting ? "Sending..." : "Make My Celebration Memorable"}
             </button>
           </form>
         </motion.div>

@@ -8,16 +8,16 @@ export default async function AdminDashboard() {
     const stats = await getDashboardStats();
 
     return (
-        <div className="space-y-8 p-8 pt-6">
+        <div className="space-y-8 p-8 pt-6 bg-white min-h-screen">
             <div className="flex items-center justify-between space-y-2">
-                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                <h2 className="text-3xl font-bold tracking-tight text-black">Dashboard</h2>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
+                        <DollarSign className="h-4 w-4 text-gray-600" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.totalRevenue}</div>
@@ -26,7 +26,7 @@ export default async function AdminDashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <Users className="h-4 w-4 text-gray-600" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.activeUsers}</div>
@@ -35,7 +35,7 @@ export default async function AdminDashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-                        <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                        <ShoppingBag className="h-4 w-4 text-gray-600" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.salesCount}</div>
@@ -44,7 +44,7 @@ export default async function AdminDashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Points Distributed</CardTitle>
-                        <Gift className="h-4 w-4 text-muted-foreground" />
+                        <Gift className="h-4 w-4 text-gray-600" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.pointsDistributed}</div>
@@ -81,7 +81,7 @@ export default async function AdminDashboard() {
                                 </div>
                             </div>
 
-                            <div className="rounded-md border p-4 flex items-center justify-center h-[200px] text-muted-foreground bg-muted/50">
+                            <div className="rounded-md border p-4 flex items-center justify-center h-[200px] text-gray-600 bg-muted/50">
                                 Revenue Chart Placeholder (Add Recharts later)
                             </div>
                         </CardContent>
@@ -96,7 +96,7 @@ export default async function AdminDashboard() {
                     <CardContent>
                         <div className="space-y-8">
                             {stats.recentSales.length === 0 ? (
-                                <p className="text-sm text-muted-foreground">No recent sales.</p>
+                                <p className="text-sm text-gray-600">No recent sales.</p>
                             ) : (
                                 stats.recentSales.map((sale) => (
                                     <div key={sale.id} className="flex items-center">
@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
                                         </Avatar>
                                         <div className="ml-4 space-y-1">
                                             <p className="text-sm font-medium leading-none">{sale.name}</p>
-                                            <p className="text-sm text-muted-foreground">{sale.email}</p>
+                                            <p className="text-sm text-gray-600">{sale.email}</p>
                                         </div>
                                         <div className="ml-auto font-medium">{sale.amount}</div>
                                     </div>

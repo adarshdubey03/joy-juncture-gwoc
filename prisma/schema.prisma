@@ -154,6 +154,7 @@ model User {
   refundRequests         RefundRequest[]
   createdCoupons         Coupon[]              @relation("CouponCreator")
   createdInventoryHolds  InventoryHold[]
+  experienceEnquiries    ExperienceEnquiry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -402,28 +403,7 @@ model GameplayInfo {
   // Setup & Learning
   setupTime     Int?
   learningCurve String?
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  price       Int
-  image       String   @default("")
-  images      String[] // For walkthrough/gallery
-  category    String   @default("Game")
-  players     String   @default("2+ Players")
-  duration    String   @default("30 mins")
-  difficulty  String   @default("Medium")
-  mood        String   @default("Fun")
-  occasion    String[] 
-  
-  badges      String[]
-  story       String?
-  howToPlay   String[]
-  whatYoullLove String[] // Mapped from idealFor/whatYoullLove
 
-  isActive    Boolean  @default(true)
-
-  orderItems  OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -692,7 +672,7 @@ model PuzzleAttempt {
 // ==========================
 // BLOG & CONTENT
 // ==========================
-}
+
 
 
 
@@ -776,22 +756,24 @@ model ContentTag {
 // CORPORATE & ENQUIRIES
 // ==========================
 
-model CorporateEnquiry {
+model ExperienceEnquiry {
   id        String        @id @default(cuid())
   name      String
   email     String
   phone     String?
   company   String?
-  eventType String
+  type      String        // Corporate, Wedding, Birthday, Carnival
   message   String        @db.Text
   status    EnquiryStatus @default(NEW)
 
   // Additional Details
-  estimatedGuests Int?
-  preferredDate   DateTime?
-  budget          Decimal?  @db.Decimal(10, 2)
+  guestCount    String?   // "10-25", "100+"
+  preferredDate DateTime?
+  budget        Decimal?  @db.Decimal(10, 2)
 
   // Tracking
+  userId       String?
+  user         User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   assignedToId String?
   notes        String? @db.Text
   followUpDate DateTime?
@@ -802,7 +784,7 @@ model CorporateEnquiry {
   @@index([status])
   @@index([createdAt])
   @@index([email])
-  @@map("corporate_enquiries")
+  @@map("experience_enquiries")
 }
 
 // ==========================

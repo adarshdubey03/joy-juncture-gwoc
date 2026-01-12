@@ -3,7 +3,7 @@
 import { useState } from "react";
 // import { motion, AnimatePresence } from "framer-motion"; // Removed framer-motion
 import { ProductCard } from "@/components/ProductCard";
-import type { Product } from "@/generated/prisma/client";
+import type { Product } from "@/types";
 
 const FILTERS = {
     "Game Type": ["Card Game", "Party Game", "Mystery", "Strategy", "Puzzle"],
