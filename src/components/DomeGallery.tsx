@@ -35,16 +35,13 @@ type ItemDef = {
 };
 
 const DEFAULT_IMAGES: ImageItem[] = [
-  {
-    src: '/blogs/UdaipurTrip.webp',
-    alt: 'Udaipur Trip'
-  },
+
   {
     src: '/people_playing.jpg',
     alt: 'people playing happily'
   },
   {
-    src: '/blogs/MurderMysteryGameNight.jpg',
+    src: '/blogs/blog1.jpg',
     alt: 'Digital artwork'
   },
   {
@@ -59,6 +56,10 @@ const DEFAULT_IMAGES: ImageItem[] = [
     src: '/DMD.jpg',
     alt: 'Textured surface'
   },
+    {
+    src: '/blogs/UdaipurTrip.webp',
+    alt: 'Udaipur Trip'
+  },
   {
     src: 'testimonial2.png',
     alt: 'Social media image'
@@ -69,7 +70,11 @@ const DEFAULT_IMAGES: ImageItem[] = [
   },
    {
     src: 'funatcafe.jpg',
-    alt: 'Social media image'
+    alt: 'people playing at cafe '
+  },
+    {
+    src: 'peopleplaying.jpg',
+    alt: 'people playing cards'
   }
 ];
 
