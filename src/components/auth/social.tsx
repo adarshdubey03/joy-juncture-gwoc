@@ -5,11 +5,16 @@ import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const Social = () => {
-  const onClick = (provider: "google" | "github") => {
+  const onClick = (provider: "google") => {
     signIn(provider, {
       callbackUrl: DEFAULT_LOGIN_REDIRECT,
+      authorizationParams: {
+        prompt: "login",
+        access_type: "offline",
+        response_type: "code",
+      },
     }
-  );
+    );
   };
 
   return (
