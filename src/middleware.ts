@@ -5,6 +5,7 @@ import {
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
+  publicPrefixes,
 } from "@/routes";
 import { NextResponse } from "next/server";
 
@@ -15,7 +16,8 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname) ||
+    publicPrefixes.some(prefix => nextUrl.pathname.startsWith(prefix));
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   // Prepare response to attach headers to.
@@ -40,12 +42,12 @@ export default auth((req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      // response = NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     // If not logged in, we are on login/register page. Proceed with 'response' (NextResponse.next())
   } else if (!isLoggedIn && !isPublicRoute) {
     // Protected route, redirect to login
-    // response = NextResponse.redirect(new URL("/login", nextUrl));
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
   // Attach Secure Headers to the response we are about to return

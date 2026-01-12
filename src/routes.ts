@@ -5,8 +5,16 @@
  */
 export const publicRoutes = [
     "/",
-    "/new-verification",
-    "/admin",
+    "/games"
+];
+
+/**
+ * An array of route prefixes that are accessible to the public
+ * Any route starting with these prefixes will be public
+ * @type {string[]}
+ */
+export const publicPrefixes = [
+    "/games"
 ];
 
 /**
