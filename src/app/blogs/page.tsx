@@ -7,9 +7,20 @@ import { ArrowRight } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function BlogsPage() {
-  const blogs = await db.blog.findMany({
+  const contentItems = await db.content.findMany({
+    where: { status: 'PUBLISHED' },
     orderBy: { publishedAt: 'desc' },
   });
+
+  const blogs = contentItems.map(item => ({
+    id: item.id,
+    title: item.title,
+    slug: item.slug,
+    image: item.featuredImage || "/placeholder-blog.jpg",
+    publishedAt: item.publishedAt || item.createdAt,
+    subtitle: item.metaDescription, // Map metaDescription to subtitle
+    excerpt: item.excerpt || item.body.substring(0, 150) + "...",
+  }));
 
   return (
     <main className="min-h-screen bg-[#FFF4D6] relative">
