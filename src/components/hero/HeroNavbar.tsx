@@ -108,9 +108,9 @@ export default function HeroNavbar() {
             <Image
               src="/logo.png"
               alt="Joy Juncture"
-              width={240}
-              height={80}
-              className="w-48 h-auto object-contain"
+              width={840}
+              height={680}
+              className="w-16 h-10 object-contain"
               priority
             />
           </Link>
