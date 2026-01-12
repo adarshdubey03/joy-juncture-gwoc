@@ -1,5 +1,5 @@
 
-import { PrismaClient, Difficulty, ContentStatus, UserRole } from '../src/generated/prisma/client'
+import { PrismaClient, Difficulty, ContentStatus, UserRole } from '../src/generated/prisma'
 import { PrismaPg } from '@prisma/adapter-pg'
 import pg from 'pg'
 import 'dotenv/config'
