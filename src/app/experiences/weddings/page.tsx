@@ -96,7 +96,7 @@ export default function WeddingsPage() {
             whatItIs: "Full evening of interactive games woven into your celebration",
             whenItWorks: "Between dinner courses, after first dance, late night",
             whoItsFor: "Couples planning unforgettable receptions",
-            imagePath: "/weddings/reception.jpg",
+            imagePath: "/weddings/real-wedding-games.jpg",
         },
         {
             title: "Mehendi & Sangeet Specials",
@@ -108,13 +108,13 @@ export default function WeddingsPage() {
     ];
 
     const galleryImages = [
+        "/weddings/real-wedding-games.jpg",
         "/BrideGroom.png",
+        "/mehfil2.jpg",
+        "/event1.jpg",
         "/people_playing.jpg",
         "/peopleplaying.jpg",
-        "/gamenight1.jpg",
         "/funatcafe.jpg",
-        "/event1.jpg",
-        "/mehfil2.jpg",
         "/IMG_9307.jpg",
     ];
 

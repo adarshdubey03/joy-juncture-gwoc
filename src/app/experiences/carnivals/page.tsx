@@ -88,7 +88,7 @@ export default function CarnivalsPage() {
             whatItIs: "Large-scale game zones for public celebrations",
             whenItWorks: "City festivals, cultural events, holiday celebrations",
             whoItsFor: "Event organizers planning for 500+ attendees",
-            imagePath: "/carnivals/festival.jpg",
+            imagePath: "/carnivals/real-event.jpg",
         },
         {
             title: "College Fests",
@@ -107,6 +107,7 @@ export default function CarnivalsPage() {
     ];
 
     const galleryImages = [
+        "/carnivals/real-event.jpg",
         "/people_playing.jpg",
         "/peopleplaying.jpg",
         "/gamenight1.jpg",
@@ -114,7 +115,6 @@ export default function CarnivalsPage() {
         "/event1.jpg",
         "/mehfil2.jpg",
         "/IMG_9307.jpg",
-        "/DMD.jpg",
     ];
 
     const trustPoints = [
