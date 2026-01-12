@@ -88,33 +88,33 @@ export default function CorporatePage() {
       whatItIs: "Transform your workspace into an interactive play area",
       whenItWorks: "Team building days, quarterly celebrations, onboarding",
       whoItsFor: "Teams of 20-200 looking for ongoing engagement",
-      imagePath: "/corporate/office-games.jpg",
+      imagePath: "/corporate/real-office-session-1.jpg",
     },
     {
       title: "Offsite Experiences",
       whatItIs: "Full-day immersive game experiences at your venue",
       whenItWorks: "Annual retreats, leadership summits, milestone celebrations",
       whoItsFor: "Companies planning memorable offsite events",
-      imagePath: "/corporate/offsite.jpg",
+      imagePath: "/corporate/real-office-session-2.jpg",
     },
     {
       title: "Lunch & Play Sessions",
       whatItIs: "Quick 60-90 minute game sessions during work hours",
       whenItWorks: "Weekly team bonding, Friday fun, stress relief",
       whoItsFor: "Busy teams wanting regular, bite-sized engagement",
-      imagePath: "/corporate/lunch-play.jpg",
+      imagePath: "/corporate/real-team-games.jpg",
     },
   ];
 
   const galleryImages = [
+    "/corporate/real-office-session-1.jpg",
+    "/corporate/real-office-session-2.jpg",
+    "/corporate/real-team-games.jpg",
     "/people_playing.jpg",
     "/peopleplaying.jpg",
     "/gamenight1.jpg",
     "/funatcafe.jpg",
     "/event1.jpg",
-    "/mehfil2.jpg",
-    "/IMG_9307.jpg",
-    "/DMD.jpg",
   ];
 
   const trustPoints = [
