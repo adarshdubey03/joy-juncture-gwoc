@@ -1,331 +1,224 @@
-"use client";
-import { submitExperienceEnquiry } from "@/actions/enquiry-actions";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
+import ExperienceHero from "@/components/experiences/ExperienceHero";
+import ProblemCards from "@/components/experiences/ProblemCards";
+import SolutionCards from "@/components/experiences/SolutionCards";
+import ExperienceFormats from "@/components/experiences/ExperienceFormats";
+import MomentsGallery from "@/components/experiences/MomentsGallery";
+import TrustSection from "@/components/experiences/TrustSection";
+import EnquiryForm from "@/components/experiences/EnquiryForm";
 
-export default function CarnivalExperiencesPage() {
-  const [formData, setFormData] = useState({
-    organizationName: "",
-    email: "",
-    phone: "",
-    eventType: "",
-    audienceSize: "",
-    venue: "",
-    message: "",
-  });
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function CarnivalsPage() {
+    const problemCards = [
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            ),
+            title: "Crowd control chaos",
+            description: "Long lines, bottlenecks, frustrated attendees",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            ),
+            title: "Low engagement zones",
+            description: "Dead spots where energy drops and people leave",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            ),
+            title: "Safety concerns",
+            description: "Managing large crowds without proper flow",
+        },
+        {
+            icon: (
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                </svg>
+            ),
+            title: "Poor ROI",
+            description: "High costs but attendees don't stay or return",
+        },
+    ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    const solutionCards = [
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+            ),
+            title: "Scalable Systems",
+            highlight: "1000+ Capacity",
+            description:
+                "Proven infrastructure for massive crowds. Multiple game zones, optimized flow, and professional crowd management that keeps energy high.",
+        },
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            ),
+            title: "Non-Stop Energy",
+            highlight: "Zero Downtime",
+            description:
+                "Strategic game placement ensures constant engagement. No dead zones, no boredom. Every corner of your event buzzes with activity.",
+        },
+        {
+            icon: (
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            ),
+            title: "Safe & Smooth",
+            highlight: "Professional Ops",
+            description:
+                "Trained staff, safety protocols, and crowd flow design. We handle the logistics so you can focus on the big picture.",
+        },
+    ];
 
-    try {
-      const combinedMessage = `Event Type: ${formData.eventType}\nVenue: ${formData.venue}\n\n${formData.message}`;
+    const formats = [
+        {
+            title: "Community Festivals",
+            whatItIs: "Large-scale game zones for public celebrations",
+            whenItWorks: "City festivals, cultural events, holiday celebrations",
+            whoItsFor: "Event organizers planning for 500+ attendees",
+            imagePath: "/carnivals/festival.jpg",
+        },
+        {
+            title: "College Fests",
+            whatItIs: "High-energy game arenas for student events",
+            whenItWorks: "Annual fests, sports days, cultural weeks",
+            whoItsFor: "Universities and colleges wanting epic experiences",
+            imagePath: "/carnivals/college-fest.jpg",
+        },
+        {
+            title: "Corporate Mega Events",
+            whatItIs: "Enterprise-scale entertainment for massive gatherings",
+            whenItWorks: "Annual days, product launches, employee celebrations",
+            whoItsFor: "Large companies hosting 1000+ people",
+            imagePath: "/carnivals/corporate-mega.jpg",
+        },
+    ];
 
-      const result = await submitExperienceEnquiry({
-        name: formData.organizationName, // using helper text "Your Name" or contact person would be better but organization name is primary here. Wait, Schema has "name" (contact name usually). 
-        // The form has "Organization Name" and then Email. It lacks "Contact Person".
-        // I'll map organizationName to company, and "Carnival Organizer" to name or just use Org Name as name for now.
-        // Actually I should add Contact Name to form in future. For now, I'll put Org Name in Company and "N/A" or same in Name.
-        company: formData.organizationName,
-        email: formData.email,
-        phone: formData.phone,
-        type: "Carnival",
-        guestCount: formData.audienceSize,
-        message: combinedMessage,
-      });
+    const galleryImages = [
+        "/people_playing.jpg",
+        "/peopleplaying.jpg",
+        "/gamenight1.jpg",
+        "/funatcafe.jpg",
+        "/event1.jpg",
+        "/mehfil2.jpg",
+        "/IMG_9307.jpg",
+        "/DMD.jpg",
+    ];
 
-      if (result.success) {
-        setFormSubmitted(true);
-        setFormData({
-          organizationName: "",
-          email: "",
-          phone: "",
-          eventType: "",
-          audienceSize: "",
-          venue: "",
-          message: "",
-        });
-        setTimeout(() => setFormSubmitted(false), 5000);
-      } else {
-        alert(result.error);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    const trustPoints = [
+        {
+            number: "01",
+            title: "Proven at Scale",
+            description: "Successfully managed events with 5000+ attendees.",
+        },
+        {
+            number: "02",
+            title: "Turnkey Solutions",
+            description: "Complete setup, staffing, and breakdown included.",
+        },
+        {
+            number: "03",
+            title: "Flexible Configurations",
+            description: "Adapt to any venue size or layout.",
+        },
+        {
+            number: "04",
+            title: "Data & Insights",
+            description: "Post-event analytics on engagement and flow.",
+        },
+    ];
 
-  const handleScrollToForm = () => {
-    const form = document.getElementById("enquiry-form");
-    if (form) {
-      form.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+    return (
+        <>
+            <ExperienceHero
+                category="LARGE-SCALE EVENTS"
+                headline="Carnivals That Command Attention"
+                subheadline="Transform massive gatherings into unforgettable experiences with professional-grade entertainment"
+                ctaText="Scale Your Event"
+                ctaHref="#enquiry"
+                backgroundGradient="from-[#FFF4D6] via-[#FFE8B3] to-[#F4C752]/40"
+                accentColor="#F4C752"
+                decorations={
+                    <>
+                        {/* Ferris Wheel */}
+                        <svg className="absolute top-16 right-20 w-24 h-24 text-[#F4C752]/30" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                            <circle cx="12" cy="12" r="1.5" />
+                            <circle cx="12" cy="2" r="1.5" />
+                            <circle cx="12" cy="22" r="1.5" />
+                            <circle cx="2" cy="12" r="1.5" />
+                            <circle cx="22" cy="12" r="1.5" />
+                            <circle cx="5.5" cy="5.5" r="1.5" />
+                            <circle cx="18.5" cy="18.5" r="1.5" />
+                            <circle cx="18.5" cy="5.5" r="1.5" />
+                            <circle cx="5.5" cy="18.5" r="1.5" />
+                            <line x1="12" y1="12" x2="12" y2="2" stroke="currentColor" strokeWidth="1" />
+                            <line x1="12" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1" />
+                            <line x1="12" y1="12" x2="12" y2="22" stroke="currentColor" strokeWidth="1" />
+                            <line x1="12" y1="12" x2="2" y2="12" stroke="currentColor" strokeWidth="1" />
+                        </svg>
+                        {/* Carnival Tent */}
+                        <svg className="absolute bottom-28 left-16 w-20 h-20 text-[#F4C752]/35" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L2 22h20L12 2zm0 4l6 12H6l6-12z" />
+                            <path d="M12 6v12M8 14l8-4M8 10l8 4" stroke="currentColor" strokeWidth="0.5" fill="none" />
+                        </svg>
+                        {/* Flags */}
+                        <svg className="absolute top-1/3 right-1/3 w-16 h-16 text-[#F4C752]/28" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z" />
+                        </svg>
+                        {/* Ticket */}
+                        <svg className="absolute top-1/2 left-1/4 w-18 h-18 text-[#F4C752]/25" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22 10V6c0-1.11-.9-2-2-2H4c-1.1 0-1.99.89-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-9-1.5c0 .83-.67 1.5-1.5 1.5S10 9.33 10 8.5 10.67 7 11.5 7s1.5.67 1.5 1.5zm0 7c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM13 12c0 .83-.67 1.5-1.5 1.5S10 12.83 10 12s.67-1.5 1.5-1.5S13 11.17 13 12z" />
+                        </svg>
+                    </>
+                }
+            />
 
-  return (
-    <main className="bg-[#FFF4D6] min-h-screen relative">
-      /* ... existing render code ... */
-      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
+            <ProblemCards
+                sectionTitle="Why Large Events Struggle"
+                cards={problemCards}
+            />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#4ECDC4] via-[#FFE66D] to-[#FF6B6B]" />
+            <SolutionCards
+                sectionTitle="How We Handle the Crowds"
+                cards={solutionCards}
+            />
 
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-20 right-20 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ scale: [1.2, 1, 1.2], rotate: [0, -180, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-20 left-20 w-80 h-80 bg-red-400/20 rounded-full blur-3xl"
-        />
+            <ExperienceFormats
+                sectionTitle="Built for Scale"
+                formats={formats}
+            />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 py-32 text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-block mb-6 px-6 py-2 bg-cyan-100/60 backdrop-blur-sm rounded-full"
-            >
-              <p className="text-cyan-900 font-semibold text-sm uppercase tracking-wider">
-                Carnivals & Game Zones
-              </p>
-            </motion.div>
+            <MomentsGallery
+                sectionTitle="Epic Events in Action"
+                images={galleryImages}
+            />
 
-            <h1 className="font-fredoka text-5xl md:text-7xl text-black mb-6 leading-tight tracking-tight">
-              Large-Scale Play. Shared Energy.
-            </h1>
-            <p className="text-black/80 text-xl md:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
-              Walk-in, open participation experiences designed for crowds.
-              High engagement, smooth flow, unforgettable energy.
-            </p>
+            <TrustSection
+                sectionTitle="Why Organizers Trust Us"
+                points={trustPoints}
+            />
 
-            <button
-              onClick={handleScrollToForm}
-              className="mt-10 px-10 py-4 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold text-lg shadow-lg hover:scale-105 transition-transform duration-300"
-            >
-              Plan a Game Zone
-            </button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* The Challenge Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-16 text-center">The Challenge</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ProblemCard icon="👥" title="Managing large crowds" description="Keeping hundreds or thousands of participants engaged without chaos or long wait times." />
-            <ProblemCard icon="⚡" title="Keeping engagement high" description="Maintaining energy and excitement across multiple hours and diverse audience demographics." />
-            <ProblemCard icon="🎨" title="Visual appeal + functionality" description="Creating setups that look amazing for photos while being practical for high-volume participation." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Our Solution Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Our Solution</h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Designed for scale, built for flow
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <SolutionCard icon="🎯" title="Modular Game Zones" description="High-footfall stations that can handle volume while maintaining quality experience for each participant." />
-            <SolutionCard icon="⏱️" title="Quick-Play Formats" description="Easy-to-understand games with fast resets, ensuring minimal wait times and maximum throughput." />
-            <SolutionCard icon="🎭" title="Custom Branding & Themes" description="Fully customizable setups that align with your event's visual identity and messaging." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Zone Types Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Zone Types</h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Experiences for every scale
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ExperienceCard image="/carnivals/carnival-games.png" title="Carnival Games" when="Festivals, fairs, community events" why="Classic fun at scale" forWhom="All ages, walk-in crowds" description="Traditional and modern carnival-style games with vibrant setups, instant gratification, and photo-worthy moments." />
-            <ExperienceCard image="/carnivals/experience-zone.png" title="Experience Zones" when="Exhibitions, trade shows" why="Interactive brand engagement" forWhom="Targeted audiences" description="Immersive game zones that educate, entertain, and create memorable brand interactions." />
-            <ExperienceCard image="/carnivals/college-fest.png" title="College Fest Play Areas" when="Campus festivals, youth events" why="High-energy student engagement" forWhom="College students, young adults" description="Competitive, social, and Instagram-worthy game setups designed for the energy of college crowds." />
-            <ExperienceCard image="/carnivals/brand-activation.png" title="Brand Activation Games" when="Product launches, marketing events" why="Memorable brand experiences" forWhom="Target demographics" description="Custom-designed games that communicate brand values while creating shareable, engaging moments." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Visual Proof Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Designed for Scale</h2>
-          <p className="text-neutral-700 text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
-            Wide shots, crowd energy, branded setups
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ProofCard image="/carnivals/proof-1.png" caption="Wide zone layouts designed for smooth crowd flow and high participation" />
-            <ProofCard image="/carnivals/proof-2.png" caption="Crowd engagement moments captured at peak energy and excitement" />
-            <ProofCard image="/carnivals/proof-3.png" caption="Branded and themed setups that look professional and feel premium" />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Why It Works Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-16 text-center">Why It Works</h2>
-          <div className="space-y-8 max-w-4xl mx-auto">
-            <WhyCard number="01" title="Designed for scale" description="Every zone is built to handle high volume without compromising on experience quality or participant satisfaction." />
-            <WhyCard number="02" title="Smooth flow and quick resets" description="Strategic layouts and efficient game mechanics ensure minimal bottlenecks and maximum engagement time." />
-            <WhyCard number="03" title="Visually engaging without chaos" description="Professional setups that photograph beautifully while maintaining operational efficiency and crowd management." />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Enquiry Form Section */}
-      <section id="enquiry-form" className="relative z-10 max-w-4xl mx-auto px-4 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-fredoka text-4xl md:text-5xl text-black mb-6 text-center">Design Your Game Zone</h2>
-          <p className="text-neutral-700 text-xl text-center mb-12 leading-relaxed">
-            Let's create an unforgettable experience
-          </p>
-
-          {formSubmitted && (
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mb-8 p-6 bg-green-50 border-2 border-green-500 rounded-2xl text-center shadow-lg">
-              <p className="text-green-700 font-bold text-xl">✓ Thank you! We'll be in touch within 24 hours.</p>
-            </motion.div>
-          )}
-
-          <form onSubmit={handleSubmit} className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-neutral-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Organization Name *</label>
-                <input type="text" required value={formData.organizationName} onChange={(e) => setFormData({ ...formData, organizationName: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors" placeholder="Your organization" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Email *</label>
-                <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors" placeholder="you@example.com" />
-              </div>
+            <div id="enquiry">
+                <EnquiryForm
+                    headline="Let's Build Something Epic"
+                    subtext="Share your event details and we'll design the perfect large-scale experience"
+                    ctaText="Get Your Event Proposal"
+                    experienceType="carnival"
+                />
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Phone</label>
-                <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors" placeholder="+91 98765 43210" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Event Type *</label>
-                <select required value={formData.eventType} onChange={(e) => setFormData({ ...formData, eventType: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors">
-                  <option value="">Select type</option>
-                  <option value="carnival">Carnival/Fair</option>
-                  <option value="college-fest">College Fest</option>
-                  <option value="brand-activation">Brand Activation</option>
-                  <option value="exhibition">Exhibition/Trade Show</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Audience Size *</label>
-                <select required value={formData.audienceSize} onChange={(e) => setFormData({ ...formData, audienceSize: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors">
-                  <option value="">Select size</option>
-                  <option value="100-500">100-500 people</option>
-                  <option value="500-1000">500-1,000 people</option>
-                  <option value="1000-5000">1,000-5,000 people</option>
-                  <option value="5000+">5,000+ people</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Venue Type</label>
-                <input type="text" value={formData.venue} onChange={(e) => setFormData({ ...formData, venue: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors" placeholder="Indoor/Outdoor/Both" />
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-neutral-700 mb-2">Tell us about your event</label>
-              <textarea rows={5} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border-2 border-neutral-300 bg-white text-black focus:border-cyan-400 focus:outline-none transition-colors resize-none" placeholder="What are your goals? Any specific themes or requirements?" />
-            </div>
-
-            <button type="submit" disabled={isSubmitting} className="w-full md:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:hover:scale-100">
-              {isSubmitting ? "Sending..." : "Design My Game Zone"}
-            </button>
-          </form>
-        </motion.div>
-      </section>
-
-      <div className="h-24" />
-    </main>
-  );
-}
-
-function ProblemCard({ icon, title, description }: { icon: string; title: string; description: string }) {
-  return (
-    <motion.div whileHover={{ y: -8, scale: 1.02 }} transition={{ duration: 0.3 }} className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 border-2 border-neutral-200 hover:border-cyan-300 hover:shadow-xl transition-all">
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-      <p className="text-neutral-600 leading-relaxed">{description}</p>
-    </motion.div>
-  );
-}
-
-function SolutionCard({ icon, title, description }: { icon: string; title: string; description: string }) {
-  return (
-    <motion.div whileHover={{ y: -8, scale: 1.02 }} transition={{ duration: 0.3 }} className="bg-gradient-to-br from-cyan-100/40 to-blue-100/40 backdrop-blur-sm rounded-2xl p-8 border-2 border-cyan-200/50 hover:border-cyan-300 hover:shadow-2xl transition-all">
-      <div className="text-5xl mb-4">{icon}</div>
-      <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-      <p className="text-neutral-700 leading-relaxed">{description}</p>
-    </motion.div>
-  );
-}
-
-function ExperienceCard({ image, title, when, why, forWhom, description }: { image: string; title: string; when: string; why: string; forWhom: string; description: string }) {
-  return (
-    <motion.div whileHover={{ y: -8 }} transition={{ duration: 0.3 }} className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border-2 border-neutral-200 hover:border-cyan-300">
-      <div className="relative h-64 overflow-hidden">
-        <Image src={image} alt={title} fill className="object-cover transition-transform duration-500 hover:scale-110" />
-      </div>
-      <div className="p-8">
-        <h3 className="font-fredoka text-2xl text-black mb-4">{title}</h3>
-        <div className="space-y-2 mb-4 text-sm">
-          <p className="text-neutral-600"><span className="font-semibold text-black">When:</span> {when}</p>
-          <p className="text-neutral-600"><span className="font-semibold text-black">Why:</span> {why}</p>
-          <p className="text-neutral-600"><span className="font-semibold text-black">For whom:</span> {forWhom}</p>
-        </div>
-        <p className="text-neutral-700 leading-relaxed">{description}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-function ProofCard({ image, caption }: { image: string; caption: string }) {
-  return (
-    <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl">
-      <Image src={image} alt={caption} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-        <p className="text-white font-medium leading-relaxed">{caption}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-function WhyCard({ number, title, description }: { number: string; title: string; description: string }) {
-  return (
-    <motion.div whileHover={{ x: 8 }} transition={{ duration: 0.3 }} className="flex gap-6 items-start bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-2 border-neutral-200 hover:border-cyan-300 hover:shadow-lg transition-all">
-      <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
-        <span className="font-fredoka text-2xl text-white">{number}</span>
-      </div>
-      <div>
-        <h3 className="font-fredoka text-2xl text-black mb-3">{title}</h3>
-        <p className="text-neutral-700 leading-relaxed">{description}</p>
-      </div>
-    </motion.div>
-  );
+        </>
+    );
 }
