@@ -8,7 +8,8 @@ export const publicRoutes = [
     "/games",
     "/about",
     "/our_story",
-    "/cart"
+    "/cart",
+    "/profile"
 ];
 
 /**

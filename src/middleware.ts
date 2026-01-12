@@ -41,10 +41,10 @@ export default auth((req) => {
   }
 
   if (isAuthRoute) {
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-    }
-    // If not logged in, we are on login/register page. Proceed with 'response' (NextResponse.next())
+    // If logged in, we let them proceed to the auth page (e.g. login/register) 
+    // This fixes the issue where client-side might think they are logged out, but server side middleware redirects them home.
+    // Ideally, the auth page itself should handle redirection if the user is truly already authenticated.
+    return NextResponse.next();
   } else if (!isLoggedIn && !isPublicRoute) {
     // Protected route, redirect to login
     return NextResponse.redirect(new URL("/login", nextUrl));
