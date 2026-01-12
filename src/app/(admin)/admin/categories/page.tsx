@@ -24,14 +24,14 @@ export default function CategoriesPage() {
     const [newCategoryName, setNewCategoryName] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    useEffect(() => {
-        loadCategories();
-    }, []);
-
     const loadCategories = async () => {
         const { data } = await getCategories();
         if (data) setCategories(data);
     };
+
+    useEffect(() => {
+        loadCategories();
+    }, []);
 
     const handleCreate = () => {
         if (!newCategoryName.trim()) return;

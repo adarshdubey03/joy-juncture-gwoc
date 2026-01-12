@@ -5,7 +5,15 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache"; // Removed redirect from here, will handle in client/page
 import { PointTransactionReason } from "@/generated/prisma";
 
-export async function placeOrder(cartItems: any[], totalAmount: number) {
+interface CartItemInput {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image?: string;
+}
+
+export async function placeOrder(cartItems: CartItemInput[], totalAmount: number) {
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -13,6 +21,23 @@ export async function placeOrder(cartItems: any[], totalAmount: number) {
     }
 
     const userId = session.user.id;
+
+    // Validate Products Exist
+    const productIds = cartItems.map((item) => item.id);
+    const validProducts = await db.product.findMany({
+        where: {
+            id: { in: productIds },
+            isActive: true // Ensure they are active too
+        },
+        select: { id: true, name: true }
+    });
+
+    if (validProducts.length !== productIds.length) {
+        const validIds = new Set(validProducts.map(p => p.id));
+        const invalidItems = cartItems.filter((item) => !validIds.has(item.id));
+        const invalidNames = invalidItems.map((item) => item.name).join(", ");
+        return { error: `Some items are no longer available: ${invalidNames}. Please remove them from your cart.` };
+    }
 
     try {
         const result = await db.$transaction(async (tx) => {
@@ -43,7 +68,7 @@ export async function placeOrder(cartItems: any[], totalAmount: number) {
                     shippingCountry: "India",
 
                     items: {
-                        create: cartItems.map((item: any) => ({
+                        create: cartItems.map((item) => ({
                             productId: item.id,
                             productName: item.name,
                             productImage: item.image, // Save snapshot of image
@@ -87,8 +112,9 @@ export async function placeOrder(cartItems: any[], totalAmount: number) {
 
         return { success: true, orderId: result.orderId, pointsEarned: result.pointsEarned };
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("PLACE_ORDER_ERROR", error);
-        return { error: "Failed to place order. Please try again." };
+        const message = error instanceof Error ? error.message : "Failed to place order";
+        return { error: message || "Failed to place order. Please try again." };
     }
 }
