@@ -72,7 +72,7 @@ export default async function ProductPage({
       badges: { include: { badge: true } },
       keyFeatures: true,
     },
-  });
+  }) as any;
 
   if (!productData) {
     notFound();
@@ -84,18 +84,18 @@ export default async function ProductPage({
     slug: productData.slug,
     description: productData.description,
     price: Number(productData.discountedPrice || productData.actualPrice),
-    image: productData.images.find((img) => img.isPrimary)?.url || productData.images[0]?.url || "/placeholder.png",
-    images: productData.images.map((img) => img.url),
+    image: productData.images.find((img: any) => img.isPrimary)?.url || productData.images[0]?.url || "/placeholder.png",
+    images: productData.images.map((img: any) => img.url),
     category: productData.categories[0]?.category.name || "Game",
-    badges: productData.badges.map((b) => b.badge.name),
+    badges: productData.badges.map((b: any) => b.badge.name),
     players: productData.gameplayInfo
       ? `${productData.gameplayInfo.minPlayers}-${productData.gameplayInfo.maxPlayers}`
       : "2-4",
     duration: productData.gameplayInfo ? `${productData.gameplayInfo.avgPlayTime} mins` : "30 mins",
     mood: productData.moods[0]?.mood.name || "Fun",
     story: productData.description,
-    howToPlay: productData.keyFeatures.map((f) => f.title),
-    whatYoullLove: productData.keyFeatures.map((f) => f.description || f.title),
+    howToPlay: productData.keyFeatures.map((f: any) => f.title),
+    whatYoullLove: productData.keyFeatures.map((f: any) => f.description || f.title),
   };
 
   // Mock reviews count/rating for now as they are not aggregated in this query yet
@@ -223,7 +223,7 @@ export default async function ProductPage({
                 Perfect For...
               </h2>
               <ul className="space-y-4">
-                {product.whatYoullLove.map((item, i) => (
+                {product.whatYoullLove.map((item: any, i: any) => (
                   <li key={i} className="flex gap-4 items-start">
                     <div className="bg-[#F4C752] rounded-full p-1 mt-1 shrink-0">
                       <svg
@@ -257,7 +257,7 @@ export default async function ProductPage({
               How to Play
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {product.howToPlay.map((step, index) => (
+              {product.howToPlay.map((step: any, index: any) => (
                 <div
                   key={index}
                   className="bg-white p-8 rounded-3xl relative overflow-hidden shadow-sm group hover:-translate-y-2 transition-transform duration-300"

@@ -1,12 +1,19 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { placeOrder } from "@/actions/checkout-actions";
+import { placeOrder, verifyOrderPayment } from "@/actions/checkout-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2, Coins, CheckCircle, AlertCircle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link"; // Added import
+import Link from "next/link";
+import Script from "next/script";
+
+declare global {
+    interface Window {
+        Razorpay: any;
+    }
+}
 
 export default function CheckoutPage() {
     const { items, cartTotal, clearCart } = useCart();
@@ -22,19 +29,68 @@ export default function CheckoutPage() {
         setError(null);
 
         try {
+            // 1. Create Order
             const result = await placeOrder(items, cartTotal);
 
             if (result.error) {
                 setError(result.error);
-                // If not logged in, maybe redirect?
-                // router.push("/login");
-            } else if (result.success) {
-                clearCart();
-                router.push(`/profile`); // Redirect to profile to see points
+                setIsProcessing(false);
+                return;
             }
+
+            if (result.success && result.razorpayOrderId) {
+                // 2. Open Razorpay Modal
+                const options = {
+                    key: result.key,
+                    amount: result.amount,
+                    currency: result.currency,
+                    name: "Joy Juncture",
+                    description: "Order Payment",
+                    order_id: result.razorpayOrderId,
+                    handler: async function (response: any) {
+                        try {
+                            const verifyResult = await verifyOrderPayment(
+                                response.razorpay_order_id,
+                                response.razorpay_payment_id,
+                                response.razorpay_signature
+                            );
+
+                            if ('success' in verifyResult && verifyResult.success) {
+                                clearCart();
+                                router.push("/profile");
+                            } else {
+                                setError("Payment verification failed");
+                                setIsProcessing(false);
+                            }
+                        } catch (e) {
+                            console.error(e);
+                            setError("Payment verification error");
+                            setIsProcessing(false);
+                        }
+                    },
+                    prefill: {
+                        name: "Gamer", // We could pass user details if available in context
+                        email: "gamer@joyjuncture.com",
+                        contact: "9999999999",
+                    },
+                    theme: {
+                        color: "#F4C752",
+                    },
+                };
+
+                const rzp1 = new window.Razorpay(options);
+                rzp1.on("payment.failed", function (response: any) {
+                    setError(response.error.description || "Payment failed");
+                    setIsProcessing(false);
+                });
+                rzp1.open();
+            } else {
+                setError("Failed to initiate payment");
+                setIsProcessing(false);
+            }
+
         } catch (e) {
             setError("Something went wrong. Please try again.");
-        } finally {
             setIsProcessing(false);
         }
     };
@@ -52,6 +108,10 @@ export default function CheckoutPage() {
 
     return (
         <main className="min-h-screen bg-[#FFF4D6] py-24 px-4 sm:px-6 lg:px-8">
+            <Script
+                id="razorpay-checkout-js"
+                src="https://checkout.razorpay.com/v1/checkout.js"
+            />
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-4xl font-fredoka font-bold text-center mb-12 text-neutral-900">
                     Checkout
@@ -105,11 +165,11 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        {/* Mock Payment Form */}
+                        {/* Payment Selection */}
                         <div className="bg-white p-8 rounded-3xl shadow-sm border border-neutral-100">
                             <h2 className="text-xl font-bold mb-6 font-fredoka">Payment method</h2>
                             <p className="text-sm text-neutral-500 mb-6">
-                                For this demo, we use Cash on Delivery (COD) or Test Payment.
+                                Secure payment via Razorpay.
                             </p>
 
                             {error && (
@@ -130,7 +190,7 @@ export default function CheckoutPage() {
                                     </>
                                 ) : (
                                     <>
-                                        Place Order <CheckCircle size={18} />
+                                        Pay ₹{cartTotal} <CheckCircle size={18} />
                                     </>
                                 )}
                             </button>

@@ -83,10 +83,12 @@ export async function updateBlogPost(id: string, data: {
     }
 }
 
+// ... existing deleteBlogPost function ...
+
 export async function deleteBlogPost(id: string) {
     try {
         const session = await auth();
-        if (!session?.user?.id) return { error: "Unauthorized" }; // Add Admin check ideally
+        if (!session?.user?.id) return { error: "Unauthorized" };
 
         await db.content.delete({ where: { id } });
 
@@ -96,5 +98,102 @@ export async function deleteBlogPost(id: string) {
     } catch (error) {
         console.error("Delete Blog Error", error);
         return { error: "Failed to delete blog post" };
+    }
+}
+
+export async function getBlogDashboardStats() {
+    try {
+        const now = new Date();
+        const [
+            totalPosts,
+            published,
+            drafts,
+            scheduled,
+            viewsResult,
+            allContent
+        ] = await Promise.all([
+            db.content.count(),
+            db.content.count({ where: { status: "PUBLISHED", publishedAt: { lte: now } } }),
+            db.content.count({ where: { status: "DRAFT" } }),
+            db.content.count({ where: { publishedAt: { gt: now } } }),
+            db.content.aggregate({ _sum: { viewCount: true } }),
+            db.content.findMany({ select: { body: true } }) // For avg time calculation
+        ]);
+
+        // Calculate Average Read Time
+        // Approx 200 words per minute
+        let totalReadTimeSeconds = 0;
+        allContent.forEach(post => {
+            const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+            const readTimeSeconds = (wordCount / 200) * 60;
+            totalReadTimeSeconds += readTimeSeconds;
+        });
+        const avgReadTime = allContent.length > 0 ? Math.round(totalReadTimeSeconds / allContent.length) : 0;
+
+        // Note: Engagement and New Subs are not tracked in Content model yet. returning null or 0.
+
+        return {
+            totalPosts,
+            published,
+            drafts,
+            scheduled,
+            totalViews: viewsResult._sum.viewCount || 0,
+            avgReadTimeSeconds: avgReadTime,
+        };
+    } catch (error) {
+        console.error("Get Blog Stats Error", error);
+        return {
+            totalPosts: 0,
+            published: 0,
+            drafts: 0,
+            scheduled: 0,
+            totalViews: 0,
+            avgReadTimeSeconds: 0
+        };
+    }
+}
+
+export async function getTopPosts(limit = 5) {
+    try {
+        const posts = await db.content.findMany({
+            orderBy: { viewCount: "desc" },
+            take: limit,
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                viewCount: true,
+                publishedAt: true,
+            }
+        });
+        return posts;
+    } catch (error) {
+        console.error("Get Top Posts Error", error);
+        return [];
+    }
+}
+
+export async function getScheduledPosts() {
+    try {
+        const posts = await db.content.findMany({
+            where: {
+                publishedAt: {
+                    gt: new Date()
+                }
+            },
+            orderBy: { publishedAt: "asc" },
+            take: 5,
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                publishedAt: true,
+                status: true
+            }
+        });
+        return posts;
+    } catch (error) {
+        console.error("Get Scheduled Posts Error", error);
+        return [];
     }
 }

@@ -40,6 +40,7 @@ export const metadata: Metadata = {
 import { CartProvider } from "@/context/CartContext";
 import HeroNavbar from "@/components/hero/HeroNavbar";
 import FooterWrapper from "@/components/FooterWrapper";
+import { Toaster } from "@/components/ui/toaster";
 
 import { auth } from "@/auth";
 
@@ -74,6 +75,7 @@ export default async function RootLayout({
               <FooterWrapper />
             </div>
           </CartProvider>
+          <Toaster />
         </AuthSessionProvider>
       </body>
     </html>
