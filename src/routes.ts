@@ -10,6 +10,7 @@ export const publicRoutes = [
     "/our_story",
     "/cart",
     "/profile",
+    "/debug-auth",
 ];
 
 /**
