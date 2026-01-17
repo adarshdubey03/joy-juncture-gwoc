@@ -6,7 +6,11 @@
 export const publicRoutes = [
     "/",
     "/games",
-    '/admin'
+    "/about",
+    "/our_story",
+    "/cart",
+    "/profile",
+    "/admin"
 ];
 
 /**
@@ -15,7 +19,11 @@ export const publicRoutes = [
  * @type {string[]}
  */
 export const publicPrefixes = [
-    "/games"
+    "/games",
+    "/shop",
+    "/blogs",
+    "/events",
+    "/experiences"
 ];
 
 /**

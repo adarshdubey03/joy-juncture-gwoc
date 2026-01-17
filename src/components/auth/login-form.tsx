@@ -1,6 +1,10 @@
 "use client";
 
 import * as z from "zod";
+// ... imports
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -15,6 +19,8 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const { update } = useSession();
 
   const {
     register,
@@ -33,9 +39,16 @@ export const LoginForm = () => {
     setSuccess(undefined);
 
     startTransition(() => {
-      login(values).then((data) => {
-        if (data?.error) setError(data.error);
-        if (data?.success) setSuccess(data.success);
+      login(values).then(async (data) => {
+        if (data?.error) {
+          setError(data.error);
+        }
+        if (data?.success) {
+          setSuccess(data.success);
+          await update();
+          router.refresh();
+          router.push(DEFAULT_LOGIN_REDIRECT);
+        }
       });
     });
   };

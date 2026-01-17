@@ -39,7 +39,14 @@ export default async function ShopPage() {
     included: [],
     specifications: {},
     mood: p.moods[0]?.mood?.name || "Unknown",
-  }));
+  })).sort((a, b) => {
+    // Prioritize "Dead Man's Deck"
+    const isA = a.name.toLowerCase().includes("dead man");
+    const isB = b.name.toLowerCase().includes("dead man");
+    if (isA && !isB) return -1;
+    if (!isA && isB) return 1;
+    return 0;
+  });
 
   // @ts-ignore
   return <ShopClient products={products} />;

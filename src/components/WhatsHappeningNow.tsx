@@ -3,20 +3,20 @@ import { ArrowRight } from "lucide-react";
 
 export default function WhatsHappeningNow() {
   return (
-    <section className="w-full bg-[#FFF4D6] py-16 md:py-32">
-      <div className="mx-auto max-w-360 px-8">
+    <section className="w-full bg-[#FFF4D6] py-12 md:py-32">
+      <div className="mx-auto max-w-360 px-6 md:px-8">
         {/* Section Header */}
         <div className="mb-14 max-w-2xl">
-          <h2 className="text-4xl font-semibold text-neutral-900">
+          <h2 className="text-4xl md:text-5xl font-semibold text-neutral-900">
             What’s happening now
           </h2>
-          <p className="mt-3 text-neutral-600">
+          <p className="mt-3 text-lg text-neutral-600">
             Moments unfolding across play, puzzles, and people.
           </p>
         </div>
 
         {/* Cards Layout */}
-        <div className="grid grid-cols-12 gap-8">
+        <div className="grid grid-cols-12 gap-6 md:gap-8">
           {/* Left Large Card — 50% */}
           <div className="col-span-12 md:col-span-6">
             <Card
@@ -72,10 +72,13 @@ function Card({
   image: string;
   large?: boolean;
 }) {
+  const heightClass = large
+    ? "min-h-[380px] md:min-h-[440px]"
+    : "min-h-[240px] md:min-h-[212px]";
+
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl ${bg} p-8 text-white transition-transform duration-300 hover:-translate-y-1`}
-      style={{ minHeight: large ? "440px" : "212px" }}
+      className={`relative overflow-hidden rounded-3xl ${bg} p-8 text-white transition-transform duration-300 hover:-translate-y-1 ${heightClass}`}
     >
       {/* Top-left Content */}
       <div className="relative z-10 max-w-[85%]">
@@ -92,26 +95,16 @@ function Card({
 
       {/* Center Image */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        {large ? (
-          <Image
-            src={image}
-            alt={title}
-            width={800}
-            height={100}
-            className="opacity-90"
-          />
-        ) : (
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover opacity-90"
-          />
-        )}
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover opacity-90"
+        />
       </div>
 
       {/* Arrow CTA */}
-      <div className="absolute bottom-6 right-6">
+      <div className="absolute bottom-6 right-6 z-20">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-neutral-900 transition-transform duration-300 hover:scale-105">
           <ArrowRight size={20} />
         </div>

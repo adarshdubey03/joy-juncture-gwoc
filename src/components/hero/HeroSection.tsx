@@ -15,8 +15,8 @@ export default function HeroSection() {
     <section className="relative w-full bg-[#FFF4D6] overflow-hidden min-h-[70vh] md:min-h-screen flex flex-col md:block">
 
       {/* VIDEO FRAME WRAPPER */}
-      <div className="relative w-full p-4 pb-1 md:p-5 pt-2 flex-grow">
-        <div className="relative w-full overflow-hidden rounded-4xl rounded-tl-xs h-[50vh] md:h-[95vh] shadow-xl">
+      <div className="relative w-full p-4 pb-1 md:p-5 pt-[80px] flex-grow">
+        <div className="relative w-full overflow-hidden rounded-[2.5rem] md:rounded-4xl md:rounded-tl-xs h-[60vh] md:h-[95vh] shadow-xl">
           {/* VIDEO */}
           <video
             autoPlay
@@ -35,7 +35,7 @@ export default function HeroSection() {
           <div
             className="
               absolute bottom-0 left-0
-              h-32 w-72
+              h-40 w-72
               md:h-72 md:w-xl
               bg-[#FFF4D6]
               rounded-tr-4xl
@@ -51,11 +51,11 @@ export default function HeroSection() {
               z-20
               px-0 md:px-10
               flex flex-col justify-between
-              w-[60%] md:w-auto
+              w-[85%] md:w-auto
               text-left
             "
           >
-            <h1 className="text-[1.5rem] md:text-[2.75rem] font-black text-neutral-900 leading-tight max-w-md">
+            <h1 className="text-[1.65rem] md:text-[2.75rem] font-black text-neutral-900 leading-tight max-w-md">
               Discover joyful experiences that bring people together
             </h1>
 
@@ -100,7 +100,7 @@ export default function HeroSection() {
             </Link>
 
             <Link
-              href="/play"
+              href="/games"
               className="
                 rounded-full bg-[#F4C752]
                 px-10 py-5
@@ -119,7 +119,7 @@ export default function HeroSection() {
       </div>
 
       {/* MOBILE CTA BUTTONS — BELOW VIDEO */}
-      <div className="md:hidden flex items-center justify-center gap-4 px-4 pb-3 -mt-2 w-full">
+      <div className="md:hidden flex items-center justify-center gap-4 px-4 pb-3 mt-4 w-full">
         <Link
           href="/shop"
           className="
@@ -135,7 +135,7 @@ export default function HeroSection() {
         </Link>
 
         <Link
-          href="/play"
+          href="/games"
           className="
             flex-1
             flex items-center justify-center

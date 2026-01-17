@@ -78,9 +78,10 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         await signIn("credentials", {
             email,
             password,
-            redirectTo: DEFAULT_LOGIN_REDIRECT,
+            redirect: false,
         });
-        console.log(`[LOGIN] Expected redirect did not throw (unlikely for signIn)`);
+
+        return { success: "Login successful!" };
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {
