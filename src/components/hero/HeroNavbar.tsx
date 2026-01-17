@@ -234,7 +234,7 @@ export default function HeroNavbar() {
             )}
 
             <Link
-              href="#"
+              href="https://www.instagram.com/joy_juncture/"
               aria-label="Instagram"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-900/20 text-neutral-900 hover:bg-white/40 transition"
             >

@@ -56,13 +56,15 @@ const DEFAULT_IMAGES: ImageItem[] = [
     src: '/DMD.jpg',
     alt: 'Textured surface'
   },
-    {
-    src: '/blogs/UdaipurTrip.webp',
-    alt: 'Udaipur Trip'
-  },
+  
+
   {
     src: 'testimonial2.png',
     alt: 'Social media image'
+  },
+    {
+    src: '/blogs/UdaipurTrip.webp',
+    alt: 'Udaipur Trip'
   },
    {
     src: 'DMD2.jpg',
@@ -75,7 +77,8 @@ const DEFAULT_IMAGES: ImageItem[] = [
     {
     src: 'peopleplaying.jpg',
     alt: 'people playing cards'
-  }
+  },
+
 ];
 
 const DEFAULTS = {

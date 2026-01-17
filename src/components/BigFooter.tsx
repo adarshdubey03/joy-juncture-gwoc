@@ -91,8 +91,8 @@ export default function BigFooter() {
               {
                 title: "Contact",
                 items: [
-                  "hello@joyjuncture.com",
-                  "+91 9XXXX XXXXX",
+                  "joyjuncture@gmail.com",
+                  "+91 9662608227",
                   "Surat, India",
                   "Send an Enquiry",
                 ],
