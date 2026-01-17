@@ -81,7 +81,6 @@ export const {
     },
   },
   ...authConfig,
-  trustHost: true,
   providers: [
     ...authConfig.providers,
     Credentials({
