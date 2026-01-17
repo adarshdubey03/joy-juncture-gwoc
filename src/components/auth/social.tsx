@@ -8,13 +8,7 @@ export const Social = () => {
   const onClick = (provider: "google") => {
     signIn(provider, {
       callbackUrl: DEFAULT_LOGIN_REDIRECT,
-      authorizationParams: {
-        prompt: "login",
-        access_type: "offline",
-        response_type: "code",
-      },
-    }
-    );
+    });
   };
 
   return (
