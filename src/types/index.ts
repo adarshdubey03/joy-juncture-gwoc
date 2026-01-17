@@ -8,7 +8,7 @@ export interface Product {
     image: string;
     images: string[];
     category: string;
-    badges: string[];
+    badges?: string[];
     rating: number;
     reviews: number;
     features?: string[];

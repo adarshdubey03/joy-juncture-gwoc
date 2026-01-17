@@ -27,6 +27,9 @@ export const EventSchema = z.object({
     isActive: z.boolean().default(true),
     isFeatured: z.boolean().default(false),
     isCancelled: z.boolean().default(false),
+    isRegistrationOpen: z.boolean().default(true),
+
+    notificationTemplate: z.string().optional(),
 });
 
 export const EventRegistrationSchema = z.object({

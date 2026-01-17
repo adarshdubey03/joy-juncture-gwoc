@@ -34,3 +34,37 @@ export const sendVerificationSMS = async (phone: string, token: string) => {
         console.log("----------------------------------------");
     }
 };
+
+export const sendTicketSMS = async (phone: string, eventName: string, ticketCode: string) => {
+    if (!client) {
+        console.log(`📱 SMS Mock: Ticket for ${eventName}: ${ticketCode} sent to ${phone}`);
+        return;
+    }
+
+    try {
+        await client.messages.create({
+            body: `Your ticket for ${eventName} is confirmed! Code: ${ticketCode}. See you there! - Joy Juncture`,
+            from: twilioNumber,
+            to: phone
+        });
+    } catch (error) {
+        console.error("❌ Failed to send Ticket SMS:", error);
+    }
+};
+
+export const sendEventUpdateSMS = async (phone: string, eventName: string, message: string) => {
+    if (!client) {
+        console.log(`📱 SMS Mock: Update for ${eventName}: "${message}" sent to ${phone}`);
+        return;
+    }
+
+    try {
+        await client.messages.create({
+            body: `Update for ${eventName}: ${message}`,
+            from: twilioNumber,
+            to: phone
+        });
+    } catch (error) {
+        console.error("❌ Failed to send Update SMS:", error);
+    }
+};

@@ -283,11 +283,27 @@ CREATE TABLE "events" (
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,
     "isCancelled" BOOLEAN NOT NULL DEFAULT false,
+    "isRegistrationOpen" BOOLEAN NOT NULL DEFAULT true,
+    "notificationTemplate" TEXT,
     "createdById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "events_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "event_reviews" (
+    "id" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL DEFAULT 5,
+    "comment" TEXT,
+    "eventId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "isPublic" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "event_reviews_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -298,6 +314,10 @@ CREATE TABLE "event_registrations" (
     "ticketPrice" DECIMAL(10,2),
     "paymentId" TEXT,
     "paymentStatus" "PaymentStatus" DEFAULT 'PENDING',
+    "razorpayOrderId" TEXT,
+    "razorpayPaymentId" TEXT,
+    "paymentSignature" TEXT,
+    "ticketCode" TEXT,
     "attended" BOOLEAN NOT NULL DEFAULT false,
     "attendedAt" TIMESTAMP(3),
     "isCancelled" BOOLEAN NOT NULL DEFAULT false,
@@ -349,6 +369,23 @@ CREATE TABLE "puzzle_attempts" (
 );
 
 -- CreateTable
+CREATE TABLE "Blog" (
+    "id" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "subtitle" TEXT,
+    "excerpt" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "author" TEXT NOT NULL DEFAULT 'Joy Juncture',
+    "publishedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Blog_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "contents" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -387,25 +424,26 @@ CREATE TABLE "content_tags" (
 );
 
 -- CreateTable
-CREATE TABLE "corporate_enquiries" (
+CREATE TABLE "experience_enquiries" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "company" TEXT,
-    "eventType" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "status" "EnquiryStatus" NOT NULL DEFAULT 'NEW',
-    "estimatedGuests" INTEGER,
+    "guestCount" TEXT,
     "preferredDate" TIMESTAMP(3),
     "budget" DECIMAL(10,2),
+    "userId" TEXT,
     "assignedToId" TEXT,
     "notes" TEXT,
     "followUpDate" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "corporate_enquiries_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "experience_enquiries_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -965,6 +1003,15 @@ CREATE INDEX "events_isActive_startTime_idx" ON "events"("isActive", "startTime"
 CREATE INDEX "events_isFeatured_isActive_idx" ON "events"("isFeatured", "isActive");
 
 -- CreateIndex
+CREATE INDEX "event_reviews_eventId_idx" ON "event_reviews"("eventId");
+
+-- CreateIndex
+CREATE INDEX "event_reviews_userId_idx" ON "event_reviews"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "event_registrations_ticketCode_key" ON "event_registrations"("ticketCode");
+
+-- CreateIndex
 CREATE INDEX "event_registrations_userId_idx" ON "event_registrations"("userId");
 
 -- CreateIndex
@@ -1004,6 +1051,9 @@ CREATE INDEX "puzzle_attempts_puzzleId_isCorrect_idx" ON "puzzle_attempts"("puzz
 CREATE UNIQUE INDEX "puzzle_attempts_userId_puzzleId_key" ON "puzzle_attempts"("userId", "puzzleId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Blog_slug_key" ON "Blog"("slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "contents_slug_key" ON "contents"("slug");
 
 -- CreateIndex
@@ -1028,13 +1078,13 @@ CREATE INDEX "content_tags_contentId_idx" ON "content_tags"("contentId");
 CREATE UNIQUE INDEX "content_tags_contentId_name_key" ON "content_tags"("contentId", "name");
 
 -- CreateIndex
-CREATE INDEX "corporate_enquiries_status_idx" ON "corporate_enquiries"("status");
+CREATE INDEX "experience_enquiries_status_idx" ON "experience_enquiries"("status");
 
 -- CreateIndex
-CREATE INDEX "corporate_enquiries_createdAt_idx" ON "corporate_enquiries"("createdAt");
+CREATE INDEX "experience_enquiries_createdAt_idx" ON "experience_enquiries"("createdAt");
 
 -- CreateIndex
-CREATE INDEX "corporate_enquiries_email_idx" ON "corporate_enquiries"("email");
+CREATE INDEX "experience_enquiries_email_idx" ON "experience_enquiries"("email");
 
 -- CreateIndex
 CREATE INDEX "rate_limits_expiresAt_idx" ON "rate_limits"("expiresAt");
@@ -1346,6 +1396,12 @@ ALTER TABLE "review_helpful" ADD CONSTRAINT "review_helpful_userId_fkey" FOREIGN
 ALTER TABLE "events" ADD CONSTRAINT "events_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "event_reviews" ADD CONSTRAINT "event_reviews_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "event_reviews" ADD CONSTRAINT "event_reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "event_registrations" ADD CONSTRAINT "event_registrations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1368,6 +1424,9 @@ ALTER TABLE "content_categories" ADD CONSTRAINT "content_categories_contentId_fk
 
 -- AddForeignKey
 ALTER TABLE "content_tags" ADD CONSTRAINT "content_tags_contentId_fkey" FOREIGN KEY ("contentId") REFERENCES "contents"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "experience_enquiries" ADD CONSTRAINT "experience_enquiries_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "store_info" ADD CONSTRAINT "store_info_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

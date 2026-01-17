@@ -230,3 +230,58 @@ export const sendPasswordResetEmail = async (
     throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };
+
+export const sendTicketEmail = async (email: string, userName: string, event: any, ticketCode: string): Promise<void> => {
+  if (!process.env.RESEND_API_KEY) {
+    console.log(`📧 Email Mock: Ticket ${ticketCode} for ${event.title} sent to ${email}`);
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: email,
+      subject: `Your Ticket for ${event.title} - Joy Juncture`,
+      html: `
+                <h1>Ticket Confirmed!</h1>
+                <p>Hi ${userName},</p>
+                <p>You are registered for <strong>${event.title}</strong>.</p>
+                <p><strong>Date:</strong> ${new Date(event.startTime).toLocaleString()}</p>
+                <p><strong>Venue:</strong> ${event.venue || event.location || 'TBA'}</p>
+                <div style="border: 2px dashed #000; padding: 20px; margin: 20px 0; text-align: center; background: #f9f9f9;">
+                    <h2>Ticket Code</h2>
+                    <h1 style="letter-spacing: 5px; color: #F4C752;">${ticketCode}</h1>
+                </div>
+                <p>Show this code at the entry.</p>
+            `
+    });
+  } catch (error) {
+    console.error("Failed to send ticket email", error);
+  }
+};
+
+export const sendEventUpdateEmail = async (email: string, userName: string, eventName: string, message: string): Promise<void> => {
+  if (!process.env.RESEND_API_KEY) {
+    console.log(`📧 Email Mock: Update for ${eventName} sent to ${email}`);
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: email,
+      subject: `Update regarding ${eventName}`,
+      html: `
+                <h1>Event Update</h1>
+                <p>Hi ${userName},</p>
+                <p>We have an update for <strong>${eventName}</strong>:</p>
+                <blockquote style="border-left: 4px solid #F4C752; padding-left: 15px; margin: 20px 0; font-style: italic;">
+                    ${message}
+                </blockquote>
+                <p>See you there!</p>
+            `
+    });
+  } catch (error) {
+    console.error("Failed to send update email", error);
+  }
+};

@@ -41,11 +41,14 @@ interface ProfileContentProps {
     }>;
     events: Array<{
         id: string;
+        ticketCode?: string | null;
         event: {
             title: string;
             description: string | null;
             type: string;
             startTime: Date;
+            slug: string;
+            image: string | null;
         };
     }>;
     puzzles: Array<{
@@ -340,25 +343,34 @@ export default function ProfileContent({
                                 <div className="space-y-4">
                                     {events.length === 0 ? (
                                         <div className="text-center py-8">
-                                            <p className="text-neutral-400 text-sm mb-4">No upcoming events.</p>
+                                            <p className="text-neutral-400 text-sm mb-4">No registered events.</p>
                                             <Link href="/events" className="text-sm font-bold bg-neutral-900 text-white px-4 py-2 rounded-xl hover:bg-neutral-800 transition-colors">
-                                                Find Events
+                                                Browse Events
                                             </Link>
                                         </div>
                                     ) : (
                                         events.map((reg) => (
-                                            <div key={reg.id} className="bg-neutral-50 p-4 rounded-2xl flex items-start gap-3 border border-neutral-100">
-                                                <div className="bg-white rounded-xl p-2 text-center min-w-[50px] shadow-sm">
-                                                    <span className="block text-xs font-bold text-purple-600 uppercase">{format(reg.event.startTime, 'MMM')}</span>
-                                                    <span className="block text-lg font-black text-neutral-900">{format(reg.event.startTime, 'd')}</span>
+                                            <Link key={reg.id} href={`/events/${reg.event.slug}`} className="block group">
+                                                <div className="bg-neutral-50 p-4 rounded-2xl flex items-start gap-3 border border-neutral-100 group-hover:bg-white group-hover:shadow-md transition-all">
+                                                    <div className="bg-white rounded-xl p-2 text-center min-w-[50px] shadow-sm group-hover:bg-purple-50 transition-colors">
+                                                        <span className="block text-xs font-bold text-purple-600 uppercase">{format(reg.event.startTime, 'MMM')}</span>
+                                                        <span className="block text-lg font-black text-neutral-900">{format(reg.event.startTime, 'd')}</span>
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-bold text-neutral-900 line-clamp-1 group-hover:text-purple-600 transition-colors">{reg.event.title}</h4>
+                                                        <div className="flex flex-wrap gap-2 mt-1">
+                                                            <span className="inline-block px-2 py-0.5 bg-white border border-neutral-200 rounded text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                                                                {reg.event.type.replace('_', ' ')}
+                                                            </span>
+                                                            {reg.ticketCode && (
+                                                                <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase tracking-wider">
+                                                                    Ticket: {reg.ticketCode}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h4 className="font-bold text-neutral-900 line-clamp-1">{reg.event.title}</h4>
-                                                    <span className="inline-block px-2 py-0.5 bg-white border border-neutral-200 rounded text-[10px] font-bold uppercase tracking-wider text-neutral-500 mt-1">
-                                                        {reg.event.type}
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            </Link>
                                         ))
                                     )}
                                 </div>
