@@ -29,26 +29,26 @@ export default auth((req) => {
   const response = NextResponse.next();
 
   // Logic for redirection
-  if (isApiAuthRoute) {
-    // For API auth routes, we usually just return null to let NextAuth handle it, 
-    // OR we can return a passed-through response. 
-    // Returning undefined/null in auth wrapper usually means "allow".
-    // But if we want headers, we should return the response.
-    // Let's rely on NextAuth handling this internally if we return simply.
-    // But to be safe and stricter with headers, let's try to wrap it.
-    // actually for api/auth, we shouldn't interfere too much.
-    return NextResponse.next();
-  }
+  // if (isApiAuthRoute) {
+  //   // For API auth routes, we usually just return null to let NextAuth handle it, 
+  //   // OR we can return a passed-through response. 
+  //   // Returning undefined/null in auth wrapper usually means "allow".
+  //   // But if we want headers, we should return the response.
+  //   // Let's rely on NextAuth handling this internally if we return simply.
+  //   // But to be safe and stricter with headers, let's try to wrap it.
+  //   // actually for api/auth, we shouldn't interfere too much.
+  //   return NextResponse.next();
+  // }
 
-  if (isAuthRoute) {
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-    }
-    // If not logged in, we are on login/register page. Proceed with 'response' (NextResponse.next())
-  } else if (!isLoggedIn && !isPublicRoute) {
-    // Protected route, redirect to login
-    return NextResponse.redirect(new URL("/login", nextUrl));
-  }
+  // if (isAuthRoute) {
+  //   if (isLoggedIn) {
+  //     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  //   }
+  //   // If not logged in, we are on login/register page. Proceed with 'response' (NextResponse.next())
+  // } else if (!isLoggedIn && !isPublicRoute) {
+  //   // Protected route, redirect to login
+  //   return NextResponse.redirect(new URL("/login", nextUrl));
+  // }
 
   // Attach Secure Headers to the response we are about to return
   // Note: If we created a Redirect response above, we attach headers to THAT.

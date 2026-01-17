@@ -23,8 +23,8 @@ const ROUTE_MAP: Record<string, string> = {
   "Free Online Games": "/play/free",
   "How JJ Games Work": "/play/how-it-works",
 
-  "Upcoming Game Nights": "/events/upcoming-events",
-  "Past Events": "/events/past-events",
+  "Upcoming Game Nights": "/events",
+  "Past Events": "/events",
 
   "Blog": "/blogs",
   "Wallet & Points": "/wallet",

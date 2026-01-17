@@ -46,21 +46,29 @@ function CustomersContent() {
     // Fetch customers whenever filters change
     useEffect(() => {
         const fetchCustomers = async () => {
-            setLoading(true);
-            const backendFilters: BackendFilters = {
-                search: filters.search,
-                role: filters.role as any[],
-                verified: filters.verified,
-                dateFrom: filters.dateFrom,
-                dateTo: filters.dateTo,
-                page: currentPage,
-                limit: 15,
-                sortBy,
-                sortOrder,
-            };
+            try {
+                setLoading(true);
+                const backendFilters: BackendFilters = {
+                    search: filters.search,
+                    role: filters.role as any[],
+                    verified: filters.verified,
+                    dateFrom: filters.dateFrom,
+                    dateTo: filters.dateTo,
+                    page: currentPage,
+                    limit: 15,
+                    sortBy,
+                    sortOrder,
+                };
 
-            const data = await getCustomers(backendFilters);
-            setCustomersData(data);
+                const data = await getCustomers(backendFilters);
+                if (!data) {
+                    console.log("No data found");
+                }
+                setCustomersData(data);
+            }
+            catch (error) {
+                console.log("Error fetching customers", error);
+            }
             setLoading(false);
         };
 
@@ -213,8 +221,10 @@ function CustomersContent() {
                                                     />
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    <Button variant="ghost" size="sm">
-                                                        <Eye className="h-4 w-4" />
+                                                    <Button variant="ghost" size="sm" asChild>
+                                                        <Link href={`/admin/customers/${customer.id}`}>
+                                                            <Eye className="h-4 w-4" />
+                                                        </Link>
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>

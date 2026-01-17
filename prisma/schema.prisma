@@ -1,8 +1,3 @@
-// ==========================================
-// Prisma Schema — Joy Juncture (CORRECTED)
-// Production-Ready E-Commerce & Gamification
-// ==========================================
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -12,10 +7,6 @@ datasource db {
   provider = "postgresql"
   // url      = env("DATABASE_URL") // Moved to prisma.config.ts
 }
-
-// ==========================
-// ENUMS
-// ==========================
 
 enum UserRole {
   USER
@@ -132,35 +123,37 @@ model User {
   lockoutUntil        DateTime?
 
   // Relations
-  accounts               Account[]
-  wallet                 Wallet?
-  receivedPoints         PointTransaction[]    @relation("RecipientTransactions")
-  actedTransactions      PointTransaction[]    @relation("ActorTransactions")
-  orders                 Order[]
-  cartItems              CartItem[]
-  wishlistItems          WishlistItem[]
-  eventRegistrations     EventRegistration[]
-  puzzleAttempts         PuzzleAttempt[]
-  reviews                ProductReview[]
-  helpfulReviews         ReviewHelpful[]
-  contents               Content[]
-  inventoryLogs          InventoryLog[]
-  createdProducts        Product[]             @relation("ProductCreator")
-  updatedProducts        Product[]             @relation("ProductUpdater")
-  approvedReviews        ProductReview[]       @relation("ReviewApprover")
-  orderStatusChanges     OrderStatusChange[]   @relation("StatusChanger")
-  createdEvents          Event[]               @relation("EventCreator")
-  couponUsages           CouponUsage[]
-  refundRequests         RefundRequest[]
-  createdCoupons         Coupon[]              @relation("CouponCreator")
-  createdInventoryHolds  InventoryHold[]
-  experienceEnquiries    ExperienceEnquiry[]
+  accounts              Account[]
+  wallet                Wallet?
+  receivedPoints        PointTransaction[]  @relation("RecipientTransactions")
+  actedTransactions     PointTransaction[]  @relation("ActorTransactions")
+  orders                Order[]
+  cartItems             CartItem[]
+  wishlistItems         WishlistItem[]
+  eventRegistrations    EventRegistration[]
+  puzzleAttempts        PuzzleAttempt[]
+  reviews               ProductReview[]
+  helpfulReviews        ReviewHelpful[]
+  contents              Content[]
+  inventoryLogs         InventoryLog[]
+  createdProducts       Product[]           @relation("ProductCreator")
+  updatedProducts       Product[]           @relation("ProductUpdater")
+  approvedReviews       ProductReview[]     @relation("ReviewApprover")
+  orderStatusChanges    OrderStatusChange[] @relation("StatusChanger")
+  createdEvents         Event[]             @relation("EventCreator")
+  couponUsages          CouponUsage[]
+  refundRequests        RefundRequest[]
+  createdCoupons        Coupon[]            @relation("CouponCreator")
+  createdInventoryHolds InventoryHold[]
+  experienceEnquiries   ExperienceEnquiry[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  eventReviews EventReview[]
 
   @@index([phoneNumber])
   @@index([role])
+  @@index([name])
   @@map("users")
 }
 
@@ -201,13 +194,13 @@ model VerificationToken {
 }
 
 model PasswordResetToken {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   email     String?
   phone     String?
-  token     String   @unique
+  token     String    @unique
   expires   DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   @@unique([email, token])
   @@unique([phone, token])
@@ -326,14 +319,14 @@ model Product {
   badges ProductBadge[]
 
   // Relations
-  orderItems      OrderItem[]
-  cartItems       CartItem[]
-  wishlistItems   WishlistItem[]
-  inventoryLogs   InventoryLog[]
-  inventoryHolds  InventoryHold[]
-  couponProducts  CouponProduct[]
-  relatedTo       Product[]             @relation("RelatedProducts")
-  relatedFrom     Product[]             @relation("RelatedProducts")
+  orderItems     OrderItem[]
+  cartItems      CartItem[]
+  wishlistItems  WishlistItem[]
+  inventoryLogs  InventoryLog[]
+  inventoryHolds InventoryHold[]
+  couponProducts CouponProduct[]
+  relatedTo      Product[]       @relation("RelatedProducts")
+  relatedFrom    Product[]       @relation("RelatedProducts")
 
   // Analytics
   viewCount     Int @default(0)
@@ -341,9 +334,9 @@ model Product {
 
   // Audit
   createdById String?
-  createdBy   User?    @relation("ProductCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?     @relation("ProductCreator", fields: [createdById], references: [id], onDelete: SetNull)
   updatedById String?
-  updatedBy   User?    @relation("ProductUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
+  updatedBy   User?     @relation("ProductUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
   deletedAt   DateTime? // Soft delete
   deletedById String?
 
@@ -403,7 +396,6 @@ model GameplayInfo {
   // Setup & Learning
   setupTime     Int?
   learningCurve String?
-
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -466,10 +458,10 @@ model ProductReview {
   orderId            String? // Link to order for verification
 
   // Moderation
-  isApproved  Boolean   @default(false)
+  isApproved   Boolean   @default(false)
   approvedById String?
-  approvedBy  User?     @relation("ReviewApprover", fields: [approvedById], references: [id], onDelete: SetNull)
-  approvedAt  DateTime?
+  approvedBy   User?     @relation("ReviewApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  approvedAt   DateTime?
 
   // Helpfulness
   helpfulVotes ReviewHelpful[]
@@ -537,26 +529,31 @@ model Event {
   pointReward Decimal? @db.Decimal(10, 2)
 
   // Pricing
-  ticketPrice     Decimal? @db.Decimal(10, 2)
-  earlyBirdPrice  Decimal? @db.Decimal(10, 2)
+  ticketPrice     Decimal?  @db.Decimal(10, 2)
+  earlyBirdPrice  Decimal?  @db.Decimal(10, 2)
   earlyBirdExpiry DateTime?
 
   // Media
-  image        String?
-  bannerImage  String?
+  image         String?
+  bannerImage   String?
   galleryImages String[] // Array of image URLs
 
   // Status
-  isActive    Boolean @default(true)
-  isFeatured  Boolean @default(false)
-  isCancelled Boolean @default(false)
+  isActive           Boolean @default(true)
+  isFeatured         Boolean @default(false)
+  isCancelled        Boolean @default(false)
+  isRegistrationOpen Boolean @default(true)
+
+  // Notifications
+  notificationTemplate String? @db.Text
 
   // Relations
   registrations EventRegistration[]
+  reviews       EventReview[]
 
   // Audit
   createdById String?
-  createdBy   User?    @relation("EventCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("EventCreator", fields: [createdById], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -568,6 +565,26 @@ model Event {
   @@map("events")
 }
 
+model EventReview {
+  id      String  @id @default(cuid())
+  rating  Int     @default(5) // 1-5
+  comment String? @db.Text
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([userId])
+  @@map("event_reviews")
+}
+
 model EventRegistration {
   id      String @id @default(cuid())
   userId  String
@@ -577,9 +594,15 @@ model EventRegistration {
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   // Payment
-  ticketPrice  Decimal?        @db.Decimal(10, 2)
-  paymentId    String?
-  paymentStatus PaymentStatus? @default(PENDING)
+  ticketPrice       Decimal?       @db.Decimal(10, 2)
+  paymentId         String? // Internal or legacy
+  paymentStatus     PaymentStatus? @default(PENDING)
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  paymentSignature  String?
+
+  // Ticket
+  ticketCode String? @unique
 
   // Attendance
   attended   Boolean   @default(false)
@@ -618,18 +641,18 @@ model EventAttendance {
 // ==========================
 
 model Puzzle {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  type        PuzzleType
-  difficulty  Difficulty?
+  id         String      @id @default(cuid())
+  title      String
+  slug       String      @unique
+  type       PuzzleType
+  difficulty Difficulty?
 
-  prompt      String    @db.Text
-  answer      String // Store hashed/encrypted for security
-  hints       String[] // Array of hints
+  prompt String   @db.Text
+  answer String // Store hashed/encrypted for security
+  hints  String[] // Array of hints
 
-  pointReward Decimal   @db.Decimal(10, 2)
-  isActive    Boolean   @default(true)
+  pointReward Decimal @db.Decimal(10, 2)
+  isActive    Boolean @default(true)
 
   // Scheduling
   publishedAt DateTime?
@@ -647,7 +670,7 @@ model Puzzle {
 }
 
 model PuzzleAttempt {
-  id       String  @id @default(cuid())
+  id       String @id @default(cuid())
   userId   String
   puzzleId String
 
@@ -673,31 +696,28 @@ model PuzzleAttempt {
 // BLOG & CONTENT
 // ==========================
 
-
-
-
 model Blog {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  subtitle    String?
-  excerpt     String
-  content     String   // Stores full HTML or Markdown content
-  image       String
-  author      String   @default("Joy Juncture")
-  
+  id       String  @id @default(cuid())
+  slug     String  @unique
+  title    String
+  subtitle String?
+  excerpt  String
+  content  String // Stores full HTML or Markdown content
+  image    String
+  author   String  @default("Joy Juncture")
+
   publishedAt DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Content {
-  id    String        @id @default(cuid())
+  id    String @id @default(cuid())
   title String
-  slug  String        @unique
-  body  String        @db.Text
+  slug  String @unique
+  body  String @db.Text
 
-  excerpt String? @db.Text
+  excerpt String?       @db.Text
   status  ContentStatus @default(DRAFT)
 
   // Media
@@ -757,25 +777,25 @@ model ContentTag {
 // ==========================
 
 model ExperienceEnquiry {
-  id        String        @id @default(cuid())
-  name      String
-  email     String
-  phone     String?
-  company   String?
-  type      String        // Corporate, Wedding, Birthday, Carnival
-  message   String        @db.Text
-  status    EnquiryStatus @default(NEW)
+  id      String        @id @default(cuid())
+  name    String
+  email   String
+  phone   String?
+  company String?
+  type    String // Corporate, Wedding, Birthday, Carnival
+  message String        @db.Text
+  status  EnquiryStatus @default(NEW)
 
   // Additional Details
-  guestCount    String?   // "10-25", "100+"
+  guestCount    String? // "10-25", "100+"
   preferredDate DateTime?
   budget        Decimal?  @db.Decimal(10, 2)
 
   // Tracking
   userId       String?
-  user         User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   assignedToId String?
-  notes        String? @db.Text
+  notes        String?   @db.Text
   followUpDate DateTime?
 
   createdAt DateTime @default(now())
@@ -827,10 +847,10 @@ model ProductView {
 }
 
 model SearchQuery {
-  id       String  @id @default(cuid())
-  query    String
-  userId   String?
-  results  Int     @default(0)
+  id      String  @id @default(cuid())
+  query   String
+  userId  String?
+  results Int     @default(0)
 
   ipAddress String?
 
@@ -840,8 +860,6 @@ model SearchQuery {
   @@index([searchedAt])
   @@map("search_queries")
 }
-
-
 
 model StoreInfo {
   id        String  @id @default(cuid())
@@ -1119,11 +1137,11 @@ model Order {
   items OrderItem[]
 
   // Pricing
-  subtotal    Decimal @db.Decimal(10, 2)
-  discount    Decimal @default(0) @db.Decimal(10, 2)
-  taxAmount   Decimal @default(0) @db.Decimal(10, 2)
+  subtotal     Decimal @db.Decimal(10, 2)
+  discount     Decimal @default(0) @db.Decimal(10, 2)
+  taxAmount    Decimal @default(0) @db.Decimal(10, 2)
   shippingCost Decimal @default(0) @db.Decimal(10, 2)
-  totalAmount Decimal @db.Decimal(10, 2)
+  totalAmount  Decimal @db.Decimal(10, 2)
 
   // Status
   status        OrderStatus   @default(PENDING)
@@ -1135,7 +1153,7 @@ model Order {
   paidAt        DateTime?
 
   // Refund Details
-  refundAmount  Decimal?  @db.Decimal(10, 2)
+  refundAmount  Decimal?       @db.Decimal(10, 2)
   refundReason  String?
   refundedAt    DateTime?
   refundRequest RefundRequest?
@@ -1168,7 +1186,7 @@ model Order {
   // Discounts & Coupons
   couponCode  String?
   couponId    String?
-  coupon      Coupon?       @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  coupon      Coupon?      @relation(fields: [couponId], references: [id], onDelete: SetNull)
   couponUsage CouponUsage?
 
   // Order Metadata
@@ -1203,6 +1221,8 @@ model Order {
   @@index([trackingNumber])
   @@index([userId, status])
   @@index([status, createdAt])
+  @@index([shippingName])
+  @@index([totalAmount])
   @@map("orders")
 }
 
@@ -1240,7 +1260,7 @@ model OrderStatusChange {
   changedBy   User   @relation("StatusChanger", fields: [changedById], references: [id], onDelete: Restrict)
 
   reason    String?
-  notes     String? @db.Text
+  notes     String?  @db.Text
   timestamp DateTime @default(now())
 
   @@index([orderId])
@@ -1256,12 +1276,12 @@ model RefundRequest {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  amount      Decimal @db.Decimal(10, 2)
-  reason      String  @db.Text
-  status      String  @default("PENDING") // PENDING, APPROVED, REJECTED, PROCESSED
-  adminNotes  String? @db.Text
+  amount     Decimal @db.Decimal(10, 2)
+  reason     String  @db.Text
+  status     String  @default("PENDING") // PENDING, APPROVED, REJECTED, PROCESSED
+  adminNotes String? @db.Text
 
-  requestedAt DateTime @default(now())
+  requestedAt DateTime  @default(now())
   processedAt DateTime?
 
   @@index([orderId])
@@ -1350,15 +1370,15 @@ model Coupon {
   type CouponType
 
   // Discount Value
-  amount      Decimal @db.Decimal(10, 2) // Percentage (0-100) or Fixed Amount
+  amount      Decimal  @db.Decimal(10, 2) // Percentage (0-100) or Fixed Amount
   maxDiscount Decimal? @db.Decimal(10, 2) // Cap for percentage discounts
 
   // Usage Constraints
-  minPurchase    Decimal?  @db.Decimal(10, 2)
+  minPurchase    Decimal? @db.Decimal(10, 2)
   maxUses        Int? // Global limit
-  usedCount      Int       @default(0)
+  usedCount      Int      @default(0)
   maxUsesPerUser Int? // Per-user limit
-  firstOrderOnly Boolean   @default(false)
+  firstOrderOnly Boolean  @default(false)
 
   // Validity
   startsAt  DateTime?
@@ -1375,7 +1395,7 @@ model Coupon {
 
   // Audit
   createdById String?
-  createdBy   User?    @relation("CouponCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("CouponCreator", fields: [createdById], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

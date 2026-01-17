@@ -32,7 +32,7 @@ export default async function ProfilePage() {
     }),
     db.eventRegistration.findMany({
       where: { userId: session.user.id },
-      take: 3,
+      take: 5, // Increased limit
       orderBy: { registeredAt: 'desc' },
       include: { event: true }
     }),
@@ -81,11 +81,14 @@ export default async function ProfilePage() {
 
   const formattedEvents = eventRegistrations.map(reg => ({
     id: reg.id,
+    ticketCode: reg.ticketCode, // Include ticket code
     event: {
       title: reg.event.title,
       description: reg.event.description,
       type: reg.event.type,
-      startTime: reg.event.startTime
+      startTime: reg.event.startTime,
+      slug: reg.event.slug, // Include slug for linking
+      image: reg.event.image // Include image
     }
   }));
 

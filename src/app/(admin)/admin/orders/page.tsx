@@ -48,6 +48,7 @@ function OrdersContent() {
     // Fetch orders whenever filters change
     useEffect(() => {
         const fetchOrders = async () => {
+            try {
             setLoading(true);
             const backendFilters: BackendFilters = {
                 search: filters.search,
@@ -65,10 +66,17 @@ function OrdersContent() {
             };
 
             const data = await getOrders(backendFilters);
+            if (data.error) {
+            console.error(data.error);
+            // Handle specific backend error here
+        }
             setOrdersData(data);
-            setLoading(false);
-        };
-
+   } catch (err) {
+        console.error("CRITICAL_FETCH_ERROR:", err);
+    } finally {
+        setLoading(false); // This MUST run to hide the spinner
+    }
+};
         // Debounce search
         const timeoutId = setTimeout(() => {
             fetchOrders();

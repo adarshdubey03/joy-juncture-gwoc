@@ -30,20 +30,20 @@ export default async function ProductsPage() {
                 </Button>
             </div>
 
-            <Card>
+            <Card className="rounded-3xl border-none shadow-xl bg-white">
                 <CardHeader>
-                    <CardTitle>Product Catalog</CardTitle>
+                    <CardTitle className="text-xl text-[#2E2A24]">Product Catalog</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
-                            <TableRow>
-                                <TableHead>Product</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Price</TableHead>
-                                <TableHead>Stock</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="font-bold text-[#5A554B]">Product</TableHead>
+                                <TableHead className="font-bold text-[#5A554B]">Category</TableHead>
+                                <TableHead className="font-bold text-[#5A554B]">Price</TableHead>
+                                <TableHead className="font-bold text-[#5A554B]">Stock</TableHead>
+                                <TableHead className="font-bold text-[#5A554B]">Status</TableHead>
+                                <TableHead className="text-right font-bold text-[#5A554B]">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -55,9 +55,9 @@ export default async function ProductsPage() {
                                 </TableRow>
                             )}
                             {products?.map((product) => (
-                                <TableRow key={product.id}>
+                                <TableRow key={product.id} className="hover:bg-gray-50 border-gray-100">
                                     <TableCell className="font-medium">
-                                        <div>{product.name}</div>
+                                        <div className="text-[#2E2A24]">{product.name}</div>
                                         <div className="text-xs text-muted-foreground">{product.sku || "No SKU"}</div>
                                     </TableCell>
                                     <TableCell>
@@ -68,16 +68,16 @@ export default async function ProductsPage() {
                                     <TableCell>
                                         {product.stockQuantity}
                                         {product.stockQuantity < product.lowStockAlert && (
-                                            <span className="ml-2 text-red-500 text-xs">(Low)</span>
+                                            <span className="ml-2 text-red-500 text-xs font-bold">(Low)</span>
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant={product.isActive ? "default" : "secondary"}>
+                                        <Badge variant={product.isActive ? "default" : "secondary"} className={product.isActive ? "bg-green-100 text-green-800 hover:bg-green-200 border-none" : ""}>
                                             {product.isActive ? "Active" : "Inactive"}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <Button variant="ghost" size="sm" asChild>
+                                        <Button variant="ghost" size="sm" asChild className="hover:bg-amber-100 hover:text-amber-900">
                                             <Link href={`/admin/products/${product.id}`}>Edit</Link>
                                         </Button>
                                     </TableCell>

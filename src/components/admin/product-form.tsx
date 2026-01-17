@@ -135,7 +135,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
 
                     {/* BASIC INFO TAB */}
                     <TabsContent value="basic" className="space-y-6 mt-6">
-                        <Card>
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>Product Identity</CardTitle>
                                 <CardDescription>Essential product information and pricing</CardDescription>
@@ -290,7 +290,9 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                             </CardContent>
                         </Card>
 
-                        <Card>
+
+
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>Visibility & Features</CardTitle>
                                 <CardDescription>Control how this product appears on your store</CardDescription>
@@ -333,7 +335,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
 
                     {/* GAMEPLAY TAB */}
                     <TabsContent value="gameplay" className="space-y-6 mt-6">
-                        <Card>
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>Gameplay Specifications</CardTitle>
                                 <CardDescription>Key gameplay details for board games and activities</CardDescription>
@@ -407,7 +409,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
 
                     {/* MEDIA TAB */}
                     <TabsContent value="media" className="space-y-6 mt-6">
-                        <Card>
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>Product Images</CardTitle>
                                 <CardDescription>Upload high-quality product photos (first image is the primary)</CardDescription>
@@ -431,7 +433,9 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                             </CardContent>
                         </Card>
 
-                        <Card>
+
+
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>How to Play Video</CardTitle>
                                 <CardDescription>Optional instructional video URL</CardDescription>
@@ -451,7 +455,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
 
                     {/* CATEGORIZATION TAB */}
                     <TabsContent value="categorization" className="space-y-6 mt-6">
-                        <Card>
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>Categories & Tags</CardTitle>
                                 <CardDescription>Help customers discover this product</CardDescription>
@@ -580,7 +584,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
 
                     {/* INVENTORY TAB */}
                     <TabsContent value="inventory" className="space-y-6 mt-6">
-                        <Card>
+                        <Card className="rounded-3xl border-none shadow-xl">
                             <CardHeader>
                                 <CardTitle>Stock Management</CardTitle>
                                 <CardDescription>Manage product availability and inventory</CardDescription>
@@ -639,7 +643,7 @@ export const ProductForm = ({ initialData, categories, badges = [], tags = [], o
                     </Button>
                     {isPending && <span className="text-sm text-muted-foreground">Saving...</span>}
                 </div>
-            </form>
-        </Form>
+            </form >
+        </Form >
     );
 };
