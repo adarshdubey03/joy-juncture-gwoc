@@ -100,53 +100,59 @@ export default function HeroNavbar() {
       </div>
 
       {/* ================= MOBILE HEADER ================= */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-start justify-between pointer-events-none">
-
-        {/* LEFT — LOGO WITH CUTOUT BACKGROUND */}
-        <div className="bg-[#FFF4D6] rounded-br-[2rem] pl-6 pr-12 pb-6 pt-5 pointer-events-auto shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.png"
-              alt="Joy Juncture"
-              width={840}
-              height={680}
-              className="w-16 h-10 object-contain"
-              priority
-            />
-          </Link>
-        </div>
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-[#FFF4D6] px-4 py-0.5">
+        {/* LEFT — LOGO */}
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.png"
+            alt="Joy Juncture"
+            width={840}
+            height={680}
+            className="w-18 h-auto object-contain"
+            priority
+          />
+        </Link>
 
         {/* RIGHT — ACTIONS */}
-        <div className="flex items-center gap-3 pr-4 pt-4 pointer-events-auto">
-          {isLoggedIn && (
+        <div className="flex items-center gap-2">
+          {isLoggedIn ? (
             <Link
               href="/cart"
               aria-label="Cart"
-              className="relative flex h-12 w-12 items-center justify-center bg-[#F4C752] rounded-full border border-neutral-900/10 text-neutral-900 shadow-lg shadow-orange-500/10 hover:scale-105 transition-transform"
+              className="relative flex h-9 w-9 items-center justify-center bg-[#F4C752] rounded-full border border-neutral-900/10 text-neutral-900 shadow-sm hover:scale-105 transition-transform"
             >
-              <ShoppingCart size={20} />
+              <ShoppingCart size={16} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-sm border border-white">
+                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-sm border border-white">
                   {cartCount}
                 </span>
               )}
+            </Link>
+          ) : (
+            <Link
+              href="https://instagram.com"
+              target="_blank"
+              aria-label="Instagram"
+              className="relative flex h-9 w-9 items-center justify-center bg-[#F4C752] rounded-full border border-neutral-900/10 text-neutral-900 shadow-sm hover:scale-105 transition-transform"
+            >
+              <Instagram size={16} />
             </Link>
           )}
 
           <button
             onClick={() => setMobileMenuOpen(true)}
             className="
-              h-12
+              h-9
               rounded-full
               bg-[#F4C752]
-              px-6
-              text-base
+              px-4
+              text-xs
               font-bold
               text-neutral-900
               flex
               items-center
               justify-center
-              shadow-lg
+              shadow-sm
               shadow-orange-500/10
               border border-neutral-900/10
               hover:scale-105 transition-transform

@@ -1,5 +1,5 @@
 
-"use client";  
+"use client";
 import { useEffect, useMemo, useRef, useCallback } from 'react';
 import { useGesture } from '@use-gesture/react';
 
@@ -56,7 +56,7 @@ const DEFAULT_IMAGES: ImageItem[] = [
     src: '/DMD.jpg',
     alt: 'Textured surface'
   },
-    {
+  {
     src: '/blogs/UdaipurTrip.webp',
     alt: 'Udaipur Trip'
   },
@@ -64,15 +64,15 @@ const DEFAULT_IMAGES: ImageItem[] = [
     src: 'testimonial2.png',
     alt: 'Social media image'
   },
-   {
+  {
     src: 'DMD2.jpg',
     alt: 'Social media image'
   },
-   {
+  {
     src: 'funatcafe.jpg',
     alt: 'people playing at cafe '
   },
-    {
+  {
     src: 'peopleplaying.jpg',
     alt: 'people playing cards'
   }
@@ -878,34 +878,7 @@ export default function DomeGallery({
             </div>
           </div>
 
-          <div
-            className="absolute inset-0 m-auto z-3 pointer-events-none"
-            style={{
-              backgroundImage: `radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`
-            }}
-          />
 
-          <div
-            className="absolute inset-0 m-auto z-3 pointer-events-none"
-            style={{
-              WebkitMaskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              maskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              backdropFilter: 'blur(3px)'
-            }}
-          />
-
-          <div
-            className="absolute left-0 right-0 top-0 h-30 z-5 pointer-events-none rotate-180"
-            style={{
-              background: `linear-gradient(to bottom, transparent, var(--overlay-blur-color, ${overlayBlurColor}))`
-            }}
-          />
-          <div
-            className="absolute left-0 right-0 bottom-0 h-30 z-5 pointer-events-none"
-            style={{
-              background: `linear-gradient(to bottom, transparent, var(--overlay-blur-color, ${overlayBlurColor}))`
-            }}
-          />
 
           <div
             ref={viewerRef}

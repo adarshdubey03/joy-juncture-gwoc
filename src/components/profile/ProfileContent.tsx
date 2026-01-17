@@ -87,7 +87,7 @@ export default function ProfileContent({
             <div className="fixed -top-40 -right-40 w-96 h-96 bg-[#F4C752] rounded-full blur-[128px] opacity-20 pointer-events-none" />
             <div className="fixed top-1/2 -left-40 w-80 h-80 bg-orange-300 rounded-full blur-[128px] opacity-20 pointer-events-none" />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 lg:py-16 relative z-10">
 
                 {/* Navigation */}
                 <motion.div
@@ -113,12 +113,12 @@ export default function ProfileContent({
                     <div className="lg:col-span-4 space-y-6">
 
                         {/* User Profile Card */}
-                        <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-[#F4C752]/10 border border-white/60 relative overflow-hidden">
+                        <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-6 lg:p-8 shadow-xl shadow-[#F4C752]/10 border border-white/60 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-[#FFF4D6] to-transparent opacity-50" />
 
                             <div className="relative flex flex-col items-center text-center">
                                 <div className="relative mb-6 group cursor-pointer">
-                                    <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden relative z-10 bg-neutral-100">
+                                    <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white shadow-lg overflow-hidden relative z-10 bg-neutral-100">
                                         <Image
                                             src={user.image || `https://api.dicebear.com/7.x/notionists/png?seed=${user.email}`}
                                             alt={user.name || "User"}
@@ -129,7 +129,7 @@ export default function ProfileContent({
                                     <div className="absolute inset-0 rounded-full bg-[#F4C752] blur-xl opacity-40 group-hover:opacity-60 transition-opacity" />
                                 </div>
 
-                                <h1 className="text-3xl font-fredoka font-bold text-neutral-900 mb-1">
+                                <h1 className="text-2xl lg:text-3xl font-fredoka font-bold text-neutral-900 mb-1">
                                     {user.name || "Joy Seeker"}
                                 </h1>
                                 <p className="text-neutral-500 font-medium mb-6 flex items-center gap-2">
@@ -170,9 +170,9 @@ export default function ProfileContent({
                         </motion.div>
 
                         {/* Wallet Card */}
-                        <motion.div variants={itemVariants} className="bg-gradient-to-br from-[#111] to-[#333] rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <CreditCard size={120} />
+                        <motion.div variants={itemVariants} className="bg-gradient-to-br from-[#111] to-[#333] rounded-[2.5rem] p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-6 lg:p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <CreditCard className="w-20 h-20 lg:w-32 lg:h-32" />
                             </div>
 
                             <div className="relative z-10">
@@ -200,21 +200,21 @@ export default function ProfileContent({
 
                         {/* Stat Row */}
                         <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform">
+                            <div className="bg-white p-4 lg:p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform">
                                 <div className="bg-blue-50 text-blue-600 p-3 rounded-2xl mb-1">
                                     <Package size={24} />
                                 </div>
                                 <h3 className="font-bold text-2xl text-neutral-900">{orders.length}</h3>
                                 <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Orders</p>
                             </div>
-                            <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform">
+                            <div className="bg-white p-4 lg:p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform">
                                 <div className="bg-purple-50 text-purple-600 p-3 rounded-2xl mb-1">
                                     <Puzzle size={24} />
                                 </div>
                                 <h3 className="font-bold text-2xl text-neutral-900">{puzzles.length}</h3>
                                 <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Puzzles</p>
                             </div>
-                            <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform col-span-2 md:col-span-1">
+                            <div className="bg-white p-4 lg:p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform col-span-2 md:col-span-1">
                                 <div className="bg-green-50 text-green-600 p-3 rounded-2xl mb-1">
                                     <Calendar size={24} />
                                 </div>
@@ -293,7 +293,7 @@ export default function ProfileContent({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                             {/* Points List */}
-                            <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-neutral-100/50">
+                            <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-6 lg:p-8 shadow-sm border border-neutral-100/50">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="p-2 bg-green-100 rounded-xl text-green-600">
                                         <TrendingUp size={20} />
@@ -329,7 +329,7 @@ export default function ProfileContent({
                             </motion.div>
 
                             {/* Events List */}
-                            <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-neutral-100/50">
+                            <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-6 lg:p-8 shadow-sm border border-neutral-100/50">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="p-2 bg-purple-100 rounded-xl text-purple-600">
                                         <Calendar size={20} />

@@ -107,9 +107,9 @@ export default async function ProductPage({
       {/* Texture Overlay */}
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('/contour-pattern.svg')] bg-repeat bg-[length:600px_auto] mix-blend-multiply" />
 
-      <div className="max-w-6xl mx-auto px-4 py-24 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 pt-24 pb-12 lg:py-24 relative z-10">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm font-medium mb-8 text-neutral-500">
+        <div className="flex items-center gap-2 text-sm font-medium mb-4 lg:mb-8 text-neutral-500">
           <Link href="/" className="hover:text-black transition-colors">
             Home
           </Link>
@@ -131,7 +131,7 @@ export default async function ProductPage({
 
           <div className="flex flex-col gap-6 pt-2">
             <div>
-              <h1 className="font-fredoka text-5xl lg:text-6xl text-black mb-2 leading-[1.1]">
+              <h1 className="font-fredoka text-4xl lg:text-6xl text-black mb-2 leading-[1.1]">
                 {product.name}
               </h1>
 
@@ -182,7 +182,7 @@ export default async function ProductPage({
         </section>
 
         {/* Specifications Grid */}
-        <section className="mt-24">
+        <section className="mt-16 lg:mt-24">
           <h2 className="font-fredoka text-3xl text-black mb-8 text-center">
             Game Specs
           </h2>
@@ -203,10 +203,10 @@ export default async function ProductPage({
           </div>
         </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-16 lg:mt-28">
           {/* Story */}
           {product.story && (
-            <section className="lg:col-span-7 bg-white rounded-3xl p-10 shadow-sm border border-neutral-100">
+            <section className="lg:col-span-7 bg-white rounded-3xl p-6 lg:p-10 shadow-sm border border-neutral-100">
               <h2 className="font-fredoka text-3xl text-black mb-6">
                 The Story
               </h2>
@@ -218,7 +218,7 @@ export default async function ProductPage({
 
           {/* Ideal For */}
           {product.whatYoullLove.length > 0 && (
-            <section className="lg:col-span-5 bg-[#F4C752]/10 rounded-3xl p-10 border border-[#F4C752]/20">
+            <section className="lg:col-span-5 bg-[#F4C752]/10 rounded-3xl p-6 lg:p-10 border border-[#F4C752]/20">
               <h2 className="font-fredoka text-3xl text-black mb-6">
                 Perfect For...
               </h2>
@@ -252,7 +252,7 @@ export default async function ProductPage({
 
         {/* How to Play - Visual Steps */}
         {product.howToPlay.length > 0 && (
-          <section className="mt-28">
+          <section className="mt-16 lg:mt-28">
             <h2 className="font-fredoka text-4xl text-black mb-12 text-center">
               How to Play
             </h2>
