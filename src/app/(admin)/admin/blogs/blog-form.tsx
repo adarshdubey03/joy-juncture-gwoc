@@ -7,6 +7,7 @@ import { ContentStatus } from "@/generated/prisma"; // Adjust import
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
 import Image from "next/image";
+import { AdvancedEditor } from "@/components/admin/blogs/editor";
 
 type BlogData = {
     id?: string;
@@ -119,18 +120,21 @@ export function BlogForm({ initialData }: { initialData?: BlogData }) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Content (HTML allowed)</label>
-                    <textarea
-                        rows={15}
-                        required
-                        value={formData.content}
-                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                        className="w-full border rounded-md px-3 py-2 font-mono text-sm"
-                        placeholder="# Write your content here..."
+                    <label className="block text-sm font-medium mb-1">Content</label>
+                    <AdvancedEditor
+                        content={formData.content}
+                        onChange={(html) => setFormData({ ...formData, content: html })}
+                        title={formData.title}
                     />
-                    <p className="text-xs text-gray-500 mt-1">Supports basic HTML or Markdown if you render it so.</p>
                 </div>
             </div>
         </form>
     );
+}
+
+// Helper to remove HTML tags for excerpt generation if needed
+function stripHtml(html: string) {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
 }

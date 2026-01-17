@@ -60,7 +60,7 @@ const sidebarLinks = [
         icon: HelpCircle,
     },
     {
-        title: "Rewards",
+        title: "Gamification",
         href: "/admin/rewards",
         icon: Gift,
     },
@@ -85,15 +85,15 @@ export function AdminSidebar() {
     const pathname = usePathname();
 
     return (
-        <div className="flex h-full max-h-screen flex-col gap-2">
-            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-                <Link href="/admin" className="flex items-center gap-2 font-semibold">
+        <div className="flex h-full max-h-screen flex-col gap-2 m-4 rounded-3xl bg-white shadow-xl overflow-hidden w-64 border-none">
+            <div className="flex h-16 items-center border-b border-orange-100 px-6 bg-gradient-to-r from-yellow-400 to-orange-400">
+                <Link href="/admin" className="flex items-center gap-3 font-bold text-white text-xl">
                     <Package className="h-6 w-6" />
-                    <span className="">JJ Admin</span>
+                    <span className="tracking-wide">JJ Admin</span>
                 </Link>
             </div>
-            <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+            <div className="flex-1 overflow-auto py-4 px-3 custom-scrollbar">
+                <nav className="space-y-1">
                     {sidebarLinks.map((link) => {
                         const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
                         const Icon = link.icon;
@@ -103,13 +103,13 @@ export function AdminSidebar() {
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
+                                    "flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 font-medium",
                                     isActive
-                                        ? "bg-muted text-primary"
-                                        : "text-muted-foreground"
+                                        ? "bg-[#FFF4D6] text-[#2E2A24] shadow-sm ml-2"
+                                        : "text-[#5A554B] hover:bg-gray-50 hover:ml-1"
                                 )}
                             >
-                                <Icon className="h-4 w-4" />
+                                <Icon className={cn("h-5 w-5", isActive ? "text-[#F4A300]" : "text-gray-400")} />
                                 {link.title}
                             </Link>
                         );
@@ -118,16 +118,15 @@ export function AdminSidebar() {
             </div>
 
             {/* Logout Section */}
-            <div className="mt-auto border-t px-4 py-3">
+            <div className="mt-auto border-t border-gray-100 px-4 py-4 bg-gray-50">
                 <button
                     onClick={() => {
-                        // Import and call logout action
                         import("@/actions/logout").then(({ logout }) => logout());
                     }}
-                    className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:bg-muted"
+                    className="flex items-center gap-3 w-full rounded-2xl px-4 py-3 text-sm font-medium text-red-500 transition-all hover:bg-red-50 hover:text-red-600"
                 >
                     <svg
-                        className="h-4 w-4"
+                        className="h-5 w-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"

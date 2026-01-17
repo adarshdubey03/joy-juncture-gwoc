@@ -94,7 +94,9 @@ export async function createEvent(values: z.infer<typeof EventSchema>) {
 
     const data = validatedFields.data;
     let slug = data.slug;
-    if (!slug) {
+    if (slug) {
+        slug = slug.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+    } else {
         slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
     }
 

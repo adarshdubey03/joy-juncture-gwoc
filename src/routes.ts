@@ -9,7 +9,7 @@ export const publicRoutes = [
     "/about",
     "/our_story",
     "/cart",
-    "/profile"
+    "/profile",
 ];
 
 /**
