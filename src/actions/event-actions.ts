@@ -116,3 +116,37 @@ export async function markEventAttendance(registrationId: string) {
         return { error: "Failed to mark attendance" };
     }
 }
+
+// 3. Get Upcoming Events (Public)
+// 3. Get Upcoming Events (Public)
+export async function getUpcomingEvents() {
+    try {
+        console.log("DEBUG: Fetching events. Server Time:", new Date().toISOString());
+
+        const events = await db.event.findMany({
+            where: {
+                isActive: true,
+                // startTime: {
+                //     gte: new Date(),
+                // },
+            },
+            orderBy: {
+                startTime: "asc",
+            },
+        });
+
+        console.log("DEBUG: Found events:", events.length);
+
+        const serializedEvents = events.map(event => ({
+            ...event,
+            pointReward: event.pointReward ? Number(event.pointReward) : null,
+            ticketPrice: event.ticketPrice ? Number(event.ticketPrice) : null,
+            earlyBirdPrice: event.earlyBirdPrice ? Number(event.earlyBirdPrice) : null,
+        }));
+
+        return { success: true, data: serializedEvents };
+    } catch (error) {
+        console.error("GET_UPCOMING_EVENTS_ERROR", error);
+        return { error: "Failed to fetch events", data: [] };
+    }
+}

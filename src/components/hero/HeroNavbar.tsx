@@ -130,7 +130,7 @@ export default function HeroNavbar() {
             </Link>
           ) : (
             <Link
-              href="https://instagram.com"
+              href="https://www.instagram.com/joy_juncture/"
               target="_blank"
               aria-label="Instagram"
               className="relative flex h-9 w-9 items-center justify-center bg-[#F4C752] rounded-full border border-neutral-900/10 text-neutral-900 shadow-sm hover:scale-105 transition-transform"
@@ -240,7 +240,7 @@ export default function HeroNavbar() {
             )}
 
             <Link
-              href="#"
+              href="https://www.instagram.com/joy_juncture/"
               aria-label="Instagram"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-900/20 text-neutral-900 hover:bg-white/40 transition"
             >

@@ -7,6 +7,17 @@ import { UserRole, EventType } from "@/generated/prisma";
 import { EventSchema } from "@/schemas";
 import * as z from "zod";
 
+const serializeEvent = (event: any) => {
+    if (!event) return null;
+    return {
+        ...event,
+        pointReward: event.pointReward ? Number(event.pointReward) : null,
+        ticketPrice: event.ticketPrice ? Number(event.ticketPrice) : null,
+        earlyBirdPrice: event.earlyBirdPrice ? Number(event.earlyBirdPrice) : null,
+        // Also handle potential nested decimals if any, but main ones are these
+    };
+};
+
 // Get all events with filters
 export async function getEvents() {
     try {
@@ -27,7 +38,9 @@ export async function getEvents() {
             }
         });
 
-        return { success: true, data: events };
+        const serialized = events.map(serializeEvent);
+
+        return { success: true, data: serialized };
     } catch (error) {
         console.error("GET_EVENTS_ERROR", error);
         return { success: false, error: "Failed to fetch events" };
@@ -60,7 +73,7 @@ export async function getEvent(id: string) {
                 }
             }
         });
-        return { success: true, data: event };
+        return { success: true, data: serializeEvent(event) };
     } catch (error) {
         console.error("GET_EVENT_ERROR", error);
         return { success: false, error: "Failed to fetch event" };
@@ -95,7 +108,7 @@ export async function createEvent(values: z.infer<typeof EventSchema>) {
         });
 
         revalidatePath("/admin/events");
-        return { success: "Event created!", data: event };
+        return { success: "Event created!", data: serializeEvent(event) };
     } catch (error) {
         console.error("CREATE_EVENT_ERROR", error);
         return { error: "Failed to create event" };
@@ -117,7 +130,7 @@ export async function updateEvent(id: string, values: z.infer<typeof EventSchema
 
         revalidatePath("/admin/events");
         revalidatePath(`/admin/events/${id}`);
-        return { success: "Event updated!", data: event };
+        return { success: "Event updated!", data: serializeEvent(event) };
     } catch (error) {
         console.error("UPDATE_EVENT_ERROR", error);
         return { error: "Failed to update event" };
