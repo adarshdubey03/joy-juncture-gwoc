@@ -82,6 +82,8 @@ The result is a calm, thoughtful, and scalable platform that prioritizes **exper
 
 ---
 
+---
+
 ## 🧩 Architecture & Code Structure
 
 The project follows **separation of concerns**, ensuring:
