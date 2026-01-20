@@ -80,114 +80,116 @@ The result is a calm, thoughtful, and scalable platform that prioritizes **exper
 ├── styles/             # Global styles
 └── README.md
 
-The structure follows separation of concerns, ensuring:
+---
 
-Clean imports
+## 🧩 Architecture & Code Structure
 
-Maintainable code
+The project follows **separation of concerns**, ensuring:
 
-Easy scalability
+- Clean and predictable imports  
+- Maintainable and readable codebase  
+- Easy scalability as the project grows  
 
-🛢️ Database Design
+Each layer of the application has a clearly defined responsibility, making the system easier to reason about and extend.
 
-The database schema is designed with:
+---
 
-Clear relationships
+## 🛢️ Database Design
 
-Future extensibility
+The database schema is designed with the following goals:
 
-Data integrity
+- Clear relationships between entities  
+- Future extensibility without schema rewrites  
+- Strong data integrity  
 
-Key design principles:
+### Key Design Principles
 
-All relations are explicit
+- All relations are explicit and well-defined  
+- Business logic stays strictly on the server  
+- Prisma ensures end-to-end type safety across the stack  
 
-Business logic stays on the server
+---
 
-Prisma ensures type safety across the stack
+## 🔐 Security Practices
 
-🔐 Security Practices
+Security is handled with a **server-first mindset**:
 
-Authentication handled securely on the server
+- Authentication is managed securely on the server  
+- Sensitive logic is never exposed to the client  
+- Environment variables are protected using `.env` files  
+- Prisma helps prevent unsafe or malformed queries  
 
-Sensitive logic never exposed to the client
+---
 
-Environment variables protected via .env
+## ⚙️ Environment Variables
 
-Prisma prevents unsafe queries
+Create a `.env` file in the root directory and add the following:
 
-⚙️ Environment Variables
-
-Create a .env file in the root directory with the following:
-
+```env
 DATABASE_URL=postgresql://...
 AUTH_SECRET=your_auth_secret
 NEXTAUTH_URL=http://localhost:3000
 
 
-⚠️ Never commit .env files to version control.
+---
 
-🧪 Local Development
+## 🧪 Local Development
 
-Clone the repository:
+### Clone the Repository
 
+```bash
 git clone https://github.com/your-username/joy-juncture-gwoc.git
 cd joy-juncture-gwoc
 
-
-Install dependencies:
-
 npm install
-
-
-Run database migrations:
 
 npx prisma migrate dev
 
-
-Start the development server:
-
 npm run dev
 
-🌱 Learnings from GWOC
+---
+
+## 🌱 Learnings from GWOC
 
 This project helped me deeply understand:
 
-Design-led development
+- Design-led development  
+- Writing less but higher-quality code  
+- Balancing UX and engineering decisions  
+- Building production-ready full-stack applications  
 
-Writing less but higher-quality code
+### Key Takeaway
 
-Balancing UX and engineering decisions
+> **Good software is not about how much you build —  
+> it’s about how intentional every decision is.**
 
-Building production-ready full-stack applications
+---
 
-The biggest takeaway:
-
-Good software is not about how much you build —
-it’s about how intentional every decision is.
-
-🔮 Future Scope
+## 🔮 Future Scope
 
 Possible future enhancements include:
 
-Advanced personalization
-
-Community-based interactions
-
-Analytics-driven insights
-
-Performance and accessibility improvements
+- Advanced personalization  
+- Community-based interactions  
+- Analytics-driven insights  
+- Performance and accessibility improvements  
 
 The foundation is intentionally solid to support growth.
 
-👨‍💻 Team
+---
 
-Adarsh Dubey
-Rohit Prajapat
-Raunak Kumar
-Shree Pastagia
+## 👨‍💻 Team
 
-📜 License
+- **Adarsh Dubey**  
+- **Rohit Prajapat**  
+- **Raunak Kumar**  
+- **Shree Pastagia**
 
-This project is created as part of Google Winter of Code (GWOC)
+---
+
+## 📜 License
+
+This project is created as part of **Google Winter of Code (GWOC)**  
 and is intended for educational and demonstrational purposes.
+
+---
