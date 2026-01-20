@@ -1,36 +1,193 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌸 Joy Juncture — GWOC Final Project
 
-## Getting Started
+Joy Juncture is a **design-first, experience-driven web platform** built as part of **Google Winter of Code (GWOC)**.  
+The project focuses on *moments, emotions, and shared joy*, rather than traditional transaction-heavy or feature-bloated web applications.
 
-First, run the development server:
+This repository contains the **complete frontend and backend implementation**, built using modern, production-grade technologies.
+
+---
+
+## ✨ Project Philosophy
+
+Most web platforms optimize for:
+- clicks  
+- conversions  
+- speed at the cost of clarity  
+
+Joy Juncture intentionally takes a different path.
+
+> **Joy Juncture is about slowing down the user experience and making interactions feel human.**
+
+Every design and technical decision was guided by:
+- Minimalism over clutter  
+- Clarity over cleverness  
+- Completion over over-engineering  
+
+The result is a calm, thoughtful, and scalable platform that prioritizes **experience first**.
+
+---
+
+## 🚀 Features
+
+- 🔐 **Authentication System**
+  - Secure user authentication and session handling
+  - Server-side protection for sensitive routes
+
+- 👤 **User Profiles**
+  - Personalized user profiles
+  - Structured backend models for scalability
+
+- 💰 **Points / Wallet Logic**
+  - Backend-driven points system
+  - Clean separation between UI and business logic
+
+- 🎨 **Design-First UI**
+  - Minimal layouts
+  - Consistent spacing, typography, and color usage
+  - Reusable and modular components
+
+- 📱 **Fully Responsive**
+  - Optimized for mobile, tablet, and desktop
+  - Tailwind-powered responsive design
+
+---
+
+## 🧠 Tech Stack
+
+### Frontend
+- **Next.js (App Router)** – Routing, SSR, and performance
+- **TypeScript** – Type safety and maintainability
+- **Tailwind CSS** – Utility-first styling and responsive design
+- **Lucide Icons** – Clean and modern iconography
+
+### Backend
+- **Next.js Server Actions & API Routes**
+- **Prisma ORM** – Type-safe database access
+- **PostgreSQL** – Relational database
+- **Auth.js / NextAuth** – Authentication and session management
+
+---
+
+## 🗂️ Project Structure
 
 ```bash
+.
+├── app/                # Next.js App Router
+├── components/         # Reusable UI components
+├── lib/                # Utility functions and DB config
+├── prisma/             # Prisma schema and migrations
+├── public/             # Static assets
+├── styles/             # Global styles
+└── README.md
+
+The structure follows separation of concerns, ensuring:
+
+Clean imports
+
+Maintainable code
+
+Easy scalability
+
+🛢️ Database Design
+
+The database schema is designed with:
+
+Clear relationships
+
+Future extensibility
+
+Data integrity
+
+Key design principles:
+
+All relations are explicit
+
+Business logic stays on the server
+
+Prisma ensures type safety across the stack
+
+🔐 Security Practices
+
+Authentication handled securely on the server
+
+Sensitive logic never exposed to the client
+
+Environment variables protected via .env
+
+Prisma prevents unsafe queries
+
+⚙️ Environment Variables
+
+Create a .env file in the root directory with the following:
+
+DATABASE_URL=postgresql://...
+AUTH_SECRET=your_auth_secret
+NEXTAUTH_URL=http://localhost:3000
+
+
+⚠️ Never commit .env files to version control.
+
+🧪 Local Development
+
+Clone the repository:
+
+git clone https://github.com/your-username/joy-juncture-gwoc.git
+cd joy-juncture-gwoc
+
+
+Install dependencies:
+
+npm install
+
+
+Run database migrations:
+
+npx prisma migrate dev
+
+
+Start the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🌱 Learnings from GWOC
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project helped me deeply understand:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Design-led development
 
-## Learn More
+Writing less but higher-quality code
 
-To learn more about Next.js, take a look at the following resources:
+Balancing UX and engineering decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Building production-ready full-stack applications
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The biggest takeaway:
 
-## Deploy on Vercel
+Good software is not about how much you build —
+it’s about how intentional every decision is.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🔮 Future Scope
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Possible future enhancements include:
+
+Advanced personalization
+
+Community-based interactions
+
+Analytics-driven insights
+
+Performance and accessibility improvements
+
+The foundation is intentionally solid to support growth.
+
+👨‍💻 Team
+
+Adarsh Dubey
+Rohit Prajapat
+Raunak Kumar
+Shree Pastagia
+
+📜 License
+
+This project is created as part of Google Winter of Code (GWOC)
+and is intended for educational and demonstrational purposes.
