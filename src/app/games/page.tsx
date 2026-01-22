@@ -1,12 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Gamepad2, Grid3X3, Calculator, Rocket, Ghost, Sword } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Gamepad2, Grid3X3, Calculator, Rocket, Ghost, Trophy, PlayCircle, Lock } from "lucide-react";
 
+// --- Types ---
 interface Game {
   id: string;
   name: string;
@@ -15,130 +15,222 @@ interface Game {
   category: string;
   href: string;
   isReady: boolean;
+  color: string;
 }
 
-export default function GamesLibrary() {
-  const games: Game[] = [
-    {
-      id: "sudoku",
-      name: "Sudoku",
-      description: "Classic number puzzle logic game.",
-      icon: <Grid3X3 className="w-12 h-12 text-primary" />,
-      category: "Puzzle",
-      href: "/games/sudoku",
-      isReady: true,
-    },
-    {
-      id: "tetris",
-      name: "Tetris",
-      description: "Stack falling blocks to clear lines.",
-      icon: <Gamepad2 className="w-12 h-12 text-blue-500" />,
-      category: "Arcade",
-      href: "/games/tetris",
-      isReady: true,
-    },
-    {
-      id: "2048",
-      name: "2048",
-      description: "Merge tiles to reach the number 2048.",
-      icon: <Calculator className="w-12 h-12 text-yellow-500" />,
-      category: "Puzzle",
-      href: "/games/2024", // Folder is currently named 2024
-      isReady: true,
-    },
-    {
-      id: "snake",
-      name: "Snake",
-      description: "Eat apples and grow your snake.",
-      icon: <Ghost className="w-12 h-12 text-green-500" />,
-      category: "Arcade",
-      href: "/games/snake",
-      isReady: false,
-    },
-    {
-      id: "pacman",
-      name: "Pac-Man",
-      description: "Navigate the maze and avoid ghosts.",
-      icon: <Ghost className="w-12 h-12 text-yellow-400" />,
-      category: "Arcade",
-      href: "/games/pacman",
-      isReady: false,
-    },
-    {
-      id: "defender",
-      name: "Defender",
-      description: "Defend your ship in deep space.",
-      icon: <Rocket className="w-12 h-12 text-red-500" />,
-      category: "Shooter",
-      href: "/games/defender",
-      isReady: false,
-    },
-  ];
+// --- Data ---
+const GAMES: Game[] = [
+  {
+    id: "sudoku",
+    name: "Sudoku",
+    description: "Challenge your logic with the classic number puzzle.",
+    icon: <Grid3X3 size={32} className="text-white" />,
+    category: "Puzzle",
+    href: "/games/sudoku",
+    isReady: true,
+    color: "bg-blue-500",
+  },
+  {
+    id: "tetris",
+    name: "Tetris",
+    description: "The timeless block-stacking arcade phenomenon.",
+    icon: <Gamepad2 size={32} className="text-white" />,
+    category: "Arcade",
+    href: "/games/tetris",
+    isReady: true,
+    color: "bg-purple-500",
+  },
+  {
+    id: "2048",
+    name: "2048",
+    description: "Slide and merge tiles to reach the legendary number.",
+    icon: <Calculator size={32} className="text-white" />,
+    category: "Puzzle",
+    href: "/games/2024", // Folder is currently named 2024 as per existing code
+    isReady: true,
+    color: "bg-orange-500",
+  },
+  {
+    id: "snake",
+    name: "Snake",
+    description: "Grow endlessly without biting your own tail.",
+    icon: <Ghost size={32} className="text-white" />,
+    category: "Arcade",
+    href: "/games/snake",
+    isReady: false,
+    color: "bg-green-500",
+  },
+  {
+    id: "pacman",
+    name: "Pac-Man",
+    description: "Chomp dots and dodge ghosts in the maze.",
+    icon: <Ghost size={32} className="text-white" />,
+    category: "Arcade",
+    href: "/games/pacman",
+    isReady: false,
+    color: "bg-yellow-500",
+  },
+  {
+    id: "defender",
+    name: "Defender",
+    description: "Defend humanity against waves of alien invaders.",
+    icon: <Rocket size={32} className="text-white" />,
+    category: "Shooter",
+    href: "/games/defender",
+    isReady: false,
+    color: "bg-red-500",
+  },
+];
 
+const CATEGORIES = ["All", "Arcade", "Puzzle", "Shooter"];
+
+export default function GamesLibrary() {
   const [filter, setFilter] = useState("All");
-  const categories = ["All", "Arcade", "Puzzle", "Shooter"];
 
   const filteredGames =
-    filter === "All" ? games : games.filter((game) => game.category === filter);
+    filter === "All" ? GAMES : GAMES.filter((game) => game.category === filter);
 
   return (
-    <div className="container mx-auto px-4 py-12 pt-32">
-      {/* Header */}
-      <div className="text-center mb-12 space-y-4">
-        <h1 className="text-5xl font-black tracking-tight text-primary">
-          🕹️ Game Arcade
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Play classic games right in your browser. No downloads required.
-        </p>
-      </div>
+    <main className="w-full bg-[#FFF4D6] text-[#2D2D2D] min-h-screen">
 
-      {/* Category Filter */}
-      <div className="flex justify-center gap-2 mb-8 flex-wrap">
-        {categories.map((cat) => (
-          <Button
-            key={cat}
-            onClick={() => setFilter(cat)}
-            variant={filter === cat ? "default" : "secondary"}
-            className="rounded-full px-6"
+      {/* HERO SECTION */}
+      <section className="px-8 md:px-16 py-28 md:py-36 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+        <div className="flex-1 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="inline-flex items-center gap-2 bg-[#F4C752]/20 px-4 py-2 rounded-full text-[#2D2D2D] font-bold text-sm tracking-wide"
           >
-            {cat}
-          </Button>
-        ))}
-      </div>
+            <Trophy size={16} className="text-orange-500" />
+            <span>FREE ONLINE ARCADE</span>
+          </motion.div>
 
-      {/* Games Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredGames.map((game) => (
-          <Link
-            href={game.isReady ? game.href : "#"}
-            key={game.id}
-            className={!game.isReady ? "cursor-not-allowed opacity-80" : ""}
-            aria-disabled={!game.isReady}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="font-fredoka text-5xl md:text-7xl leading-tight"
           >
-            <Card className="h-full hover:shadow-lg transition-all hover:scale-105 border-border bg-card">
-              <CardHeader className="text-center pb-2">
-                <div className="mx-auto mb-4 bg-secondary/30 p-4 rounded-full w-fit">
-                  {game.icon}
-                </div>
-                <CardTitle className="text-2xl font-bold">{game.name}</CardTitle>
-                <div className="flex justify-center gap-2 mt-2">
-                  <Badge variant="outline">{game.category}</Badge>
-                  {!game.isReady && <Badge variant="destructive">Coming Soon</Badge>}
-                </div>
-              </CardHeader>
-              <CardContent className="text-center">
-                <CardDescription className="text-base">
-                  {game.description}
-                </CardDescription>
-                {game.isReady && (
-                  <Button className="mt-4 w-full" variant="secondary">Play Now</Button>
-                )}
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
-    </div>
+            Play to Pause. <br />
+            <span className="text-[#F4C752] drop-shadow-sm">Play to Connect.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="font-geist text-xl text-[#2D2D2D]/80 max-w-lg"
+          >
+            Dive into our collection of browser-based classics. Whether you have 5 minutes or an hour, we've got a game for you.
+          </motion.p>
+        </div>
+
+        <div className="flex-1 w-full flex justify-center md:justify-end">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", bounce: 0.4 }}
+            className="relative w-full max-w-lg aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-2xl border-[6px] border-white rotate-2 hover:rotate-0 transition-transform duration-500"
+          >
+            <Image
+              src="/play/games-hero.png"
+              alt="Retro modern game arcade"
+              fill
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* GAMES LIBRARY SECTION */}
+      <section className="px-4 md:px-8 max-w-7xl mx-auto pb-24">
+
+        {/* FILTERS */}
+        <div className="flex justify-center gap-3 mb-12 flex-wrap">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              className={`
+                px-6 py-2.5 rounded-full font-bold text-sm tracking-wide transition-all duration-300
+                ${filter === cat
+                  ? "bg-[#2D2D2D] text-white shadow-lg scale-105"
+                  : "bg-white text-[#2D2D2D] hover:bg-[#F4C752]/20 hover:scale-105 border border-[#2D2D2D]/5"
+                }
+              `}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* GRID */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredGames.map((game) => (
+              <motion.div
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                key={game.id}
+              >
+                <Link
+                  href={game.isReady ? game.href : "#"}
+                  className={`
+                    group relative block h-full bg-white rounded-[2rem] p-2 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-[#2D2D2D]/5
+                    ${!game.isReady ? "cursor-not-allowed opacity-80 grayscale-[0.5]" : "hover:-translate-y-2"}
+                  `}
+                >
+                  {/* Card Body */}
+                  <div className="relative h-full flex flex-col items-center text-center p-8 pt-12 rounded-[1.5rem] bg-[#FFF9E5] group-hover:bg-[#FFF4D6] transition-colors">
+
+                    {/* Icon Circle */}
+                    <div className={`
+                      w-20 h-20 rounded-2xl ${game.color} flex items-center justify-center shadow-inner mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300
+                    `}>
+                      {game.icon}
+                    </div>
+
+                    <h3 className="font-fredoka text-2xl mb-3 text-[#2D2D2D]">{game.name}</h3>
+                    <p className="font-geist text-sm text-[#2D2D2D]/60 mb-8 line-clamp-2">
+                      {game.description}
+                    </p>
+
+                    {/* Action Area */}
+                    <div className="mt-auto">
+                      {game.isReady ? (
+                        <span className="inline-flex items-center gap-2 text-[#2D2D2D] font-bold text-sm group-hover:text-orange-600 transition-colors">
+                          <PlayCircle size={20} />
+                          Play Now
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-2 text-[#2D2D2D]/40 font-bold text-sm">
+                          <Lock size={18} />
+                          Coming Soon
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {filteredGames.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-2xl font-fredoka text-[#2D2D2D]/40">No games found in this category yet!</p>
+          </div>
+        )}
+
+      </section>
+
+    </main>
   );
 }
