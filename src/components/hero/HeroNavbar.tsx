@@ -20,7 +20,7 @@ const ROUTE_MAP: Record<string, string> = {
   "Carnivals": "/experiences/carnivals",
 
   "The Showdown": "/play/showdown",
-  "Free Online Games": "/play/free",
+  "Free Online Games": "/games",
   "How JJ Games Work": "/play/how-it-works",
 
   "Upcoming Game Nights": "/events",
