@@ -1,287 +1,186 @@
-import { Resend } from "resend";
+import { google } from 'googleapis';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// 1. CONFIGURATION
+const CONFIG = {
+  baseUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  redirectUri: process.env.GOOGLE_REDIRECT_URI || 'https://developers.google.com/oauthplayground',
+  refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+  emailUser: process.env.GMAIL_USER,
+};
 
-// Configuration
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-const FROM_EMAIL = process.env.EMAIL_FROM || 'onboarding@resend.dev';
-const RETRY_ATTEMPTS = parseInt(process.env.EMAIL_RETRY_ATTEMPTS || '3');
-const RETRY_DELAY_MS = parseInt(process.env.EMAIL_RETRY_DELAY_MS || '1000');
-
-// Utility: Sleep function for retry delays
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Utility: Retry logic with exponential backoff
-async function sendWithRetry<T>(
-  fn: () => Promise<T>,
-  retries = RETRY_ATTEMPTS
-): Promise<T> {
-  for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      const isLastAttempt = attempt === retries - 1;
-
-      if (isLastAttempt) {
-        throw error;
-      }
-
-      // Exponential backoff: 1s, 2s, 4s
-      const delay = RETRY_DELAY_MS * Math.pow(2, attempt);
-      console.warn(`Email send attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
-      await sleep(delay);
-    }
-  }
-
-  throw new Error('All retry attempts exhausted');
+interface JoyEvent {
+  title?: string;
+  name?: string;
+  startTime: string | Date;
+  venue?: string;
+  location?: string;
+  [key: string]: any;
 }
 
-// Development mode fallback (logs OTP to console)
-function logOTPFallback(email: string, code: string, type: 'verification' | 'reset'): void {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log(`📧 ${type === 'verification' ? 'VERIFICATION' : 'PASSWORD RESET'} OTP (DEV MODE)`);
-    console.log(`To: ${email}`);
-    console.log(`Code: ${code}`);
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  }
+// 2. GMAIL CLIENT SETUP
+const oauth2Client = new google.auth.OAuth2(
+  CONFIG.clientId,
+  CONFIG.clientSecret,
+  CONFIG.redirectUri
+);
+
+if (CONFIG.refreshToken) {
+  oauth2Client.setCredentials({ refresh_token: CONFIG.refreshToken });
 }
 
-/**
- * Send verification OTP email
- * @param email - Recipient email address
- * @param code - 6-digit OTP code
- */
-export const sendVerificationEmail = async (
+const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+
+// 3. INTERNAL HELPERS
+const generateHtml = (title: string, content: string): string => {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #F4C752; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background-color: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
+          .code-box { background-color: #f5f5f5; border: 2px dashed #F4C752; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }
+          .code { font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #000; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          .alert { padding: 12px; margin: 20px 0; border-left: 4px solid; }
+          .warning { background-color: #fff3cd; border-color: #ffc107; }
+          .danger { background-color: #f8d7da; border-color: #dc3545; }
+          h1 { margin: 0; color: #000; }
+          a { color: #F4C752; text-decoration: none; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header"><h1>Joy Juncture</h1></div>
+          <div class="content">
+            <h2>${title}</h2>
+            ${content}
+          </div>
+          <div class="footer">
+            <p>© ${new Date().getFullYear()} Joy Juncture. All rights reserved.</p>
+            <p>Moments of Joy, One Game at a Time</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+};
+
+const makeRawEmail = (to: string, from: string, subject: string, htmlBody: string) => {
+  const str = [
+    `To: ${to}`,
+    `From: ${from}`,
+    `Subject: ${subject}`,
+    `Content-Type: text/html; charset=utf-8`,
+    '',
+    htmlBody,
+  ].join('\n');
+
+  return Buffer.from(str)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+};
+
+const dispatchEmail = async (
   email: string,
-  code: string
-): Promise<void> => {
-  // Fallback for missing API key
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('⚠️ RESEND_API_KEY not configured, using development fallback');
-    logOTPFallback(email, code, 'verification');
+  subject: string,
+  htmlContent: string,
+  logFallbackFn: () => void
+) => {
+  const isConfigured = CONFIG.clientId && CONFIG.clientSecret && CONFIG.refreshToken && CONFIG.emailUser;
+
+  if (!isConfigured) {
+    console.warn("⚠️ [Email] Missing credentials. Check .env variables.");
+    // Force fallback to print so you can see what's happening
+    logFallbackFn(); 
     return;
   }
 
   try {
-    await sendWithRetry(async () => {
-      const { data, error } = await resend.emails.send({
-        from: FROM_EMAIL,
-        to: email,
-        subject: 'Verify Your Joy Juncture Account',
-        html: `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background-color: #F4C752; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-                .content { background-color: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
-                .code-box { background-color: #f5f5f5; border: 2px dashed #F4C752; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }
-                .code { font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #000; }
-                .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-                .warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 20px 0; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1 style="margin: 0; color: #000;">Joy Juncture</h1>
-                </div>
-                <div class="content">
-                  <h2>Verify Your Account</h2>
-                  <p>Thank you for joining Joy Juncture! To complete your registration, please use the verification code below:</p>
-                  
-                  <div class="code-box">
-                    <div class="code">${code}</div>
-                  </div>
-                  
-                  <p>This code will expire in <strong>10 minutes</strong>.</p>
-                  
-                  <div class="warning">
-                    <strong>Security Tip:</strong> Never share this code with anyone. Joy Juncture will never ask for your verification code.
-                  </div>
-                  
-                  <p>If you didn't request this code, please ignore this email or <a href="${BASE_URL}/contact">contact support</a>.</p>
-                </div>
-                <div class="footer">
-                  <p>© ${new Date().getFullYear()} Joy Juncture. All rights reserved.</p>
-                  <p>Moments of Joy, One Game at a Time</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `,
-      });
-
-      if (error) {
-        throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
-      }
-
-      console.log(`✅ Verification email sent successfully to ${email} (ID: ${data?.id})`);
+    const raw = makeRawEmail(email, CONFIG.emailUser!, subject, htmlContent);
+    const res = await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: { raw },
     });
-  } catch (error) {
-    console.error('❌ Failed to send verification email after retries:', error);
-
-    // Fallback in development
-    if (process.env.NODE_ENV === 'development') {
-      logOTPFallback(email, code, 'verification');
-      return; // Don't throw in development
-    }
-
-    // Re-throw to let caller handle
-    throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.log(`✅ Email sent to ${email} (ID: ${res.data.id})`);
+  } catch (error: any) {
+    console.error('❌ [Email] API Failed:', error.message);
+    logFallbackFn();
   }
 };
 
-/**
- * Send password reset OTP email
- * @param email - Recipient email address
- * @param code - 6-digit OTP code
- */
-export const sendPasswordResetEmail = async (
-  email: string,
-  code: string
-): Promise<void> => {
-  // Fallback for missing API key
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('⚠️ RESEND_API_KEY not configured, using development fallback');
-    logOTPFallback(email, code, 'reset');
-    return;
-  }
+// 4. EXPORTED FUNCTIONS
+export const sendVerificationEmail = async (email: string, code: string): Promise<void> => {
+  const subject = 'Verify Your Joy Juncture Account';
+  const html = generateHtml('Verify Your Account', `
+    <p>Thank you for joining Joy Juncture! To complete your registration, please use the verification code below:</p>
+    <div class="code-box"><div class="code">${code}</div></div>
+    <p>This code will expire in <strong>10 minutes</strong>.</p>
+    <div class="alert warning">
+      <strong>Security Tip:</strong> Never share this code with anyone.
+    </div>
+    <p>If you didn't request this code, please ignore this email.</p>
+  `);
 
-  try {
-    await sendWithRetry(async () => {
-      const { data, error } = await resend.emails.send({
-        from: FROM_EMAIL,
-        to: email,
-        subject: 'Reset Your Password - Joy Juncture',
-        html: `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background-color: #F4C752; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-                .content { background-color: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
-                .code-box { background-color: #f5f5f5; border: 2px dashed #F4C752; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }
-                .code { font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #000; }
-                .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-                .warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 20px 0; }
-                .danger { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 20px 0; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1 style="margin: 0; color: #000;">Joy Juncture</h1>
-                </div>
-                <div class="content">
-                  <h2>Reset Your Password</h2>
-                  <p>We received a request to reset your password. Use the code below to proceed:</p>
-                  
-                  <div class="code-box">
-                    <div class="code">${code}</div>
-                  </div>
-                  
-                  <p>This code will expire in <strong>10 minutes</strong>.</p>
-                  
-                  <div class="danger">
-                    <strong>⚠️ Security Alert:</strong> If you didn't request a password reset, please ignore this email and consider changing your password immediately.
-                  </div>
-                  
-                  <div class="warning">
-                    <strong>Never share this code</strong> with anyone, including Joy Juncture staff. We will never ask for your reset code.
-                  </div>
-                  
-                  <p>Need help? <a href="${BASE_URL}/contact">Contact our support team</a>.</p>
-                </div>
-                <div class="footer">
-                  <p>© ${new Date().getFullYear()} Joy Juncture. All rights reserved.</p>
-                  <p>Moments of Joy, One Game at a Time</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `,
-      });
-
-      if (error) {
-        throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
-      }
-
-      console.log(`✅ Password reset email sent successfully to ${email} (ID: ${data?.id})`);
-    });
-  } catch (error) {
-    console.error('❌ Failed to send password reset email after retries:', error);
-
-    // Fallback in development
-    if (process.env.NODE_ENV === 'development') {
-      logOTPFallback(email, code, 'reset');
-    }
-
-    // Re-throw to let caller handle
-    throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-  }
+  await dispatchEmail(email, subject, html, () => {
+    console.log(`📧 [DEV] VERIFICATION -> To: ${email} | Code: ${code}`);
+  });
 };
 
-export const sendTicketEmail = async (email: string, userName: string, event: any, ticketCode: string): Promise<void> => {
-  if (!process.env.RESEND_API_KEY) {
-    console.log(`📧 Email Mock: Ticket ${ticketCode} for ${event.title} sent to ${email}`);
-    return;
-  }
+export const sendPasswordResetEmail = async (email: string, code: string): Promise<void> => {
+  const subject = 'Reset Your Password - Joy Juncture';
+  const html = generateHtml('Reset Your Password', `
+    <p>We received a request to reset your password. Use the code below to proceed:</p>
+    <div class="code-box"><div class="code">${code}</div></div>
+    <p>This code will expire in <strong>10 minutes</strong>.</p>
+    <div class="alert danger">
+      <strong>⚠️ Security Alert:</strong> If you didn't request a password reset, ignore this email.
+    </div>
+  `);
 
-  try {
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject: `Your Ticket for ${event.title} - Joy Juncture`,
-      html: `
-                <h1>Ticket Confirmed!</h1>
-                <p>Hi ${userName},</p>
-                <p>You are registered for <strong>${event.title}</strong>.</p>
-                <p><strong>Date:</strong> ${new Date(event.startTime).toLocaleString()}</p>
-                <p><strong>Venue:</strong> ${event.venue || event.location || 'TBA'}</p>
-                <div style="border: 2px dashed #000; padding: 20px; margin: 20px 0; text-align: center; background: #f9f9f9;">
-                    <h2>Ticket Code</h2>
-                    <h1 style="letter-spacing: 5px; color: #F4C752;">${ticketCode}</h1>
-                </div>
-                <p>Show this code at the entry.</p>
-            `
-    });
-  } catch (error) {
-    console.error("Failed to send ticket email", error);
-  }
+  await dispatchEmail(email, subject, html, () => {
+    console.log(`📧 [DEV] RESET -> To: ${email} | Code: ${code}`);
+  });
+};
+
+export const sendTicketEmail = async (email: string, userName: string, event: JoyEvent, ticketCode: string): Promise<void> => {
+  const eventTitle = event.title || event.name || 'Event';
+  const subject = `Your Ticket for ${eventTitle}`;
+  const html = generateHtml('Ticket Confirmed!', `
+    <p>Hi ${userName},</p>
+    <p>You are registered for <strong>${eventTitle}</strong>.</p>
+    <p><strong>Date:</strong> ${new Date(event.startTime).toLocaleString()}</p>
+    <p><strong>Venue:</strong> ${event.venue || event.location || 'TBA'}</p>
+    <div class="code-box">
+        <div style="font-size: 14px; color: #666;">TICKET CODE</div>
+        <div class="code" style="font-size: 24px;">${ticketCode}</div>
+    </div>
+  `);
+
+  await dispatchEmail(email, subject, html, () => {
+    console.log(`📧 [DEV] TICKET -> To: ${email} | Event: ${eventTitle}`);
+  });
 };
 
 export const sendEventUpdateEmail = async (email: string, userName: string, eventName: string, message: string): Promise<void> => {
-  if (!process.env.RESEND_API_KEY) {
-    console.log(`📧 Email Mock: Update for ${eventName} sent to ${email}`);
-    return;
-  }
+  const subject = `Update regarding ${eventName}`;
+  const html = generateHtml('Event Update', `
+    <p>Hi ${userName},</p>
+    <p>We have an update for <strong>${eventName}</strong>:</p>
+    <blockquote style="border-left: 4px solid #F4C752; padding-left: 15px; margin: 20px 0; font-style: italic; background: #f9f9f9; padding: 15px;">
+        ${message}
+    </blockquote>
+  `);
 
-  try {
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject: `Update regarding ${eventName}`,
-      html: `
-                <h1>Event Update</h1>
-                <p>Hi ${userName},</p>
-                <p>We have an update for <strong>${eventName}</strong>:</p>
-                <blockquote style="border-left: 4px solid #F4C752; padding-left: 15px; margin: 20px 0; font-style: italic;">
-                    ${message}
-                </blockquote>
-                <p>See you there!</p>
-            `
-    });
-  } catch (error) {
-    console.error("Failed to send update email", error);
-  }
+  await dispatchEmail(email, subject, html, () => {
+    console.log(`📧 [DEV] UPDATE -> To: ${email} | Event: ${eventName}`);
+  });
 };
