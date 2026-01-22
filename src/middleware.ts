@@ -28,9 +28,9 @@ export default auth((req) => {
   // We will attach headers to this response.
   const response = NextResponse.next();
 
-  // Logic for redirection
+
   if (isApiAuthRoute) {
-    return NextResponse.next();
+    return null;
   }
 
   if (isAuthRoute) {

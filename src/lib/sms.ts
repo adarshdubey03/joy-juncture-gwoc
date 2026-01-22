@@ -1,70 +1,47 @@
-import twilio from "twilio";
+import axios from "axios";
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
+// Configuration
+const MACRODROID_URL = process.env.MACRODROID_URL; // e.g. https://trigger.macrodroid.com/.../send_sms
 
-const client = (accountSid && authToken) ? twilio(accountSid, authToken) : null;
-
-export const sendVerificationSMS = async (phone: string, token: string) => {
-    // If we're missing credentials, log and return (for dev/partial setup safety)
-    if (!client || !accountSid || !authToken || !twilioNumber) {
-        console.error("❌ Twilio credentials missing in .env");
-        console.log("----------------------------------------");
-        console.log("📱 SMS Mock (Twilio not configured):");
-        console.log(`To: ${phone}, Token: ${token}`);
-        console.log("----------------------------------------");
-        return;
+/**
+ * Core function to trigger MacroDroid Webhook
+ */
+const triggerMacroDroid = async (phone: string, fullMessageText: string) => {
+    if (!MACRODROID_URL) {
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`📱 [DEV Mock] To: ${phone} | Msg: ${fullMessageText}`);
+        }
+        return false;
     }
 
     try {
-        const message = await client.messages.create({
-            body: `Your verification code is: ${token}`,
-            from: twilioNumber,
-            to: phone
-        });
+const params = new URLSearchParams();
+params.append('phone', phone);
+params.append('message', fullMessageText);
 
-        console.log(`✅ SMS sent to ${phone}. SID: ${message.sid}`);
-    } catch (error) {
-        console.error("❌ Failed to send SMS:", error);
-        // Fallback log for dev awareness
-        console.log("----------------------------------------");
-        console.log("📱 SMS Mock (Fallback):");
-        console.log(`To: ${phone}, Token: ${token}`);
-        console.log("----------------------------------------");
+        const fullUrl = `${MACRODROID_URL}?${params.toString()}`;
+
+        await axios.get(fullUrl);
+        console.log(`✅ SMS sent via Phone to ${phone}`);
+        return true;
+    } catch (error: any) {
+        console.error("❌ Failed to trigger MacroDroid:", error.message);
+        return false;
     }
+};
+
+export const sendVerificationSMS = async (phone: string, token: string) => {
+    // We construct the FULL message here
+    const message = `Your Joy Juncture verification code is: ${token}. Do not share this.`;
+    await triggerMacroDroid(phone, message);
 };
 
 export const sendTicketSMS = async (phone: string, eventName: string, ticketCode: string) => {
-    if (!client) {
-        console.log(`📱 SMS Mock: Ticket for ${eventName}: ${ticketCode} sent to ${phone}`);
-        return;
-    }
-
-    try {
-        await client.messages.create({
-            body: `Your ticket for ${eventName} is confirmed! Code: ${ticketCode}. See you there! - Joy Juncture`,
-            from: twilioNumber,
-            to: phone
-        });
-    } catch (error) {
-        console.error("❌ Failed to send Ticket SMS:", error);
-    }
+    const message = `Ticket Confirmed! Event: ${eventName}. Entry Code: ${ticketCode}. Enjoy!`;
+    await triggerMacroDroid(phone, message);
 };
 
-export const sendEventUpdateSMS = async (phone: string, eventName: string, message: string) => {
-    if (!client) {
-        console.log(`📱 SMS Mock: Update for ${eventName}: "${message}" sent to ${phone}`);
-        return;
-    }
-
-    try {
-        await client.messages.create({
-            body: `Update for ${eventName}: ${message}`,
-            from: twilioNumber,
-            to: phone
-        });
-    } catch (error) {
-        console.error("❌ Failed to send Update SMS:", error);
-    }
+export const sendEventUpdateSMS = async (phone: string, eventName: string, updateMsg: string) => {
+    const message = `Update for ${eventName}: ${updateMsg}`;
+    await triggerMacroDroid(phone, message);
 };
