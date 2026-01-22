@@ -69,17 +69,6 @@ export const {
     maxAge: 24 * 60 * 60, // 24 hours (default is 30 days)
     updateAge: 60 * 60, // 1 hour (rotate session timestamp every hour)
   },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
-  },
   ...authConfig,
   providers: [
     ...authConfig.providers,

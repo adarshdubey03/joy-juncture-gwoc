@@ -8,7 +8,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
-import { OrderStatus } from "@/generated/prisma";
+import { OrderStatus, PaymentStatus } from "@/generated/prisma";
 
 // Define strict types for the props based on what we fetch
 interface ProfileContentProps {
@@ -23,6 +23,7 @@ interface ProfileContentProps {
     orders: Array<{
         id: string;
         status: OrderStatus;
+        paymentStatus: PaymentStatus;
         totalAmount: number;
         createdAt: Date;
         items: Array<{
@@ -58,11 +59,12 @@ interface ProfileContentProps {
             title: string;
         };
     }>;
+    totalOrders: number;
     onSignOut: () => Promise<void>;
 }
 
 export default function ProfileContent({
-    user, orders, points, events, puzzles, onSignOut
+    user, orders, points, events, puzzles, totalOrders, onSignOut
 }: ProfileContentProps) {
 
     const containerVariants: Variants = {
@@ -207,7 +209,7 @@ export default function ProfileContent({
                                 <div className="bg-blue-50 text-blue-600 p-3 rounded-2xl mb-1">
                                     <Package size={24} />
                                 </div>
-                                <h3 className="font-bold text-2xl text-neutral-900">{orders.length}</h3>
+                                <h3 className="font-bold text-2xl text-neutral-900">{totalOrders}</h3>
                                 <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Orders</p>
                             </div>
                             <div className="bg-white p-4 lg:p-6 rounded-3xl border border-neutral-100 shadow-sm flex flex-col items-center justify-center text-center gap-2 hover:scale-[1.02] transition-transform">
@@ -231,7 +233,7 @@ export default function ProfileContent({
                             <div className="flex items-center justify-between mb-6 px-2">
                                 <h2 className="text-2xl font-fredoka font-bold flex items-center gap-3">
                                     Recent Orders
-                                    <span className="bg-black text-white text-xs px-2 py-1 rounded-full font-sans">{orders.length}</span>
+                                    <span className="bg-black text-white text-xs px-2 py-1 rounded-full font-sans">{totalOrders}</span>
                                 </h2>
                                 <Link href="/shop" className="text-sm font-bold text-neutral-400 hover:text-[#F4C752] transition-colors">
                                     View Shop
@@ -278,11 +280,11 @@ export default function ProfileContent({
                                             </div>
 
                                             <div className="flex flex-col items-center sm:items-end gap-2">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
-                                                    order.status === 'SHIPPED' ? 'bg-blue-100 text-blue-700' :
+                                                <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${order.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' :
+                                                    order.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
                                                         'bg-yellow-100 text-yellow-700'
                                                     }`}>
-                                                    {order.status}
+                                                    {order.paymentStatus === 'PAID' ? "PAID" : order.status}
                                                 </span>
                                                 <span className="font-black text-xl">₹{order.totalAmount}</span>
                                             </div>

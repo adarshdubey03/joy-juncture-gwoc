@@ -123,36 +123,23 @@ export async function verifyEventPayment(
     razorpay_payment_id: string,
     razorpay_signature: string
 ) {
-    const session = await auth();
-    if (!session?.user?.id) return { error: "Unauthorized" };
-
     try {
-        if (!process.env.RAZORPAY_KEY_SECRET) {
-            throw new Error("Razorpay secret not defined");
-        }
-
-        const generated_signature = crypto
-            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-            .update(razorpay_order_id + "|" + razorpay_payment_id)
+        const body = razorpay_order_id + "|" + razorpay_payment_id;
+        const expectedSignature = crypto
+            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+            .update(body.toString())
             .digest("hex");
 
-        if (generated_signature !== razorpay_signature) {
+        if (expectedSignature !== razorpay_signature) {
             return { error: "Invalid payment signature" };
         }
 
-        // Signature valid - Update Registration
         const registration = await db.eventRegistration.findFirst({
             where: { razorpayOrderId: razorpay_order_id },
             include: { event: true, user: true }
         });
 
-        if (!registration) {
-            return { error: "Registration record not found" };
-        }
-
-        if (registration.paymentStatus === "PAID") {
-            return { success: true, ticketCode: registration.ticketCode };
-        }
+        if (!registration) return { error: "Registration not found" };
 
         const ticketCode = `EVT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
@@ -163,93 +150,60 @@ export async function verifyEventPayment(
                 razorpayPaymentId: razorpay_payment_id,
                 paymentSignature: razorpay_signature,
                 ticketCode,
-                ticketPrice: registration.ticketPrice // Confirm price
             }
         });
 
         // Send Notifications
-        if (registration.user.email) {
-            await sendTicketEmail(registration.user.email, registration.user.name || "User", registration.event, ticketCode);
-        }
-        if (registration.user.phoneNumber) {
-            await sendTicketSMS(registration.user.phoneNumber, registration.event.title, ticketCode);
+        try {
+            if (registration.user.email) {
+                await sendTicketEmail(registration.user.email, registration.user.name || "Gamer", registration.event, ticketCode);
+            }
+            if (registration.user.phoneNumber) {
+                await sendTicketSMS(registration.user.phoneNumber, registration.event.title, ticketCode);
+            }
+        } catch (e) {
+            console.error("NOTIFICATION_ERROR", e);
         }
 
         revalidatePath("/profile");
         revalidatePath(`/events/${registration.event.slug}`);
-
         return { success: true, ticketCode };
 
     } catch (error) {
-        console.error("PAYMENT_VERIFICATION_ERROR", error);
+        console.error("VERIFY_PAYMENT_ERROR", error);
         return { error: "Payment verification failed" };
     }
 }
 
-// Admin Action: Mark Attendance & Award Points
-export async function markEventAttendance(registrationId: string) {
-    // Ideally check for Admin role here
-    const session = await auth();
-    // if (!session?.user?.role === "ADMIN") ...
-
+// 3. Get Upcoming Events (Public)
+export async function getUpcomingEvents() {
     try {
-        return await db.$transaction(async (tx) => {
-            // 1. Get Registration with Event details
-            const registration = await tx.eventRegistration.findUnique({
-                where: { id: registrationId },
-                include: { event: true }
-            });
+        console.log("DEBUG: Fetching events. Server Time:", new Date().toISOString());
 
-            if (!registration) return { error: "Registration not found" };
-            if (registration.attended) return { error: "Already marked as attended" };
-
-            // 2. Mark as Attended
-            await tx.eventRegistration.update({
-                where: { id: registrationId },
-                data: {
-                    attended: true,
-                    attendedAt: new Date()
-                }
-            });
-
-            // 3. Create EventAttendance Record
-            const attendance = await tx.eventAttendance.create({
-                data: { registrationId }
-            });
-
-            // 4. Calculate Points Reward
-            let pointsToAward = 50;
-            if (registration.event.pointReward) {
-                pointsToAward = Number(registration.event.pointReward);
-            } else if (Number(registration.event.ticketPrice) > 0) {
-                pointsToAward = Math.floor(Number(registration.event.ticketPrice) * 0.10);
-            }
-
-            if (pointsToAward > 0) {
-                // 5. Update Wallet
-                await tx.wallet.upsert({
-                    where: { userId: registration.userId },
-                    create: { userId: registration.userId, balance: pointsToAward },
-                    update: { balance: { increment: pointsToAward } }
-                });
-
-                // 6. Create Point Transaction
-                await tx.pointTransaction.create({
-                    data: {
-                        userId: registration.userId,
-                        amount: pointsToAward,
-                        reason: PointTransactionReason.EVENT_ATTENDANCE,
-                        eventAttendanceId: attendance.id,
-                        description: `Attended ${registration.event.title}`
-                    }
-                });
-            }
-
-            return { success: true, pointsAwarded: pointsToAward };
+        const events = await db.event.findMany({
+            where: {
+                isActive: true,
+                // startTime: {
+                //     gte: new Date(),
+                // },
+            },
+            orderBy: {
+                startTime: "asc",
+            },
         });
 
+        console.log("DEBUG: Found events:", events.length);
+
+        const serializedEvents = events.map(event => ({
+            ...event,
+            pointReward: event.pointReward ? Number(event.pointReward) : null,
+            ticketPrice: event.ticketPrice ? Number(event.ticketPrice) : null,
+            earlyBirdPrice: event.earlyBirdPrice ? Number(event.earlyBirdPrice) : null,
+        }));
+
+        return { success: true, data: serializedEvents };
     } catch (error) {
-        console.error("MARK_ATTENDANCE_ERROR", error);
-        return { error: "Failed to mark attendance" };
+        console.error("GET_UPCOMING_EVENTS_ERROR", error);
+        return { error: "Failed to fetch events", data: [] };
     }
 }

@@ -37,7 +37,7 @@ export default async function ProfilePage() {
   }
 
   // Parallel data fetching for performance
-  const [userData, orders, eventRegistrations, puzzleAttempts] = await Promise.all([
+  const [userData, orders, totalOrders, eventRegistrations, puzzleAttempts] = await Promise.all([
     db.user.findUnique({
       where: { id: session.user.id },
       include: {
@@ -55,6 +55,9 @@ export default async function ProfilePage() {
       include: {
         items: true // items already contain snapshot data (productName, productImage, etc.)
       }
+    }),
+    db.order.count({
+      where: { userId: session.user.id }
     }),
     db.eventRegistration.findMany({
       where: { userId: session.user.id },
@@ -87,6 +90,7 @@ export default async function ProfilePage() {
   const formattedOrders = orders.map(order => ({
     id: order.id,
     status: order.status,
+    paymentStatus: order.paymentStatus,
     totalAmount: Number(order.totalAmount),
     createdAt: order.createdAt,
     items: order.items.map(item => ({
@@ -135,6 +139,7 @@ export default async function ProfilePage() {
     <ProfileContent
       user={formattedUser}
       orders={formattedOrders}
+      totalOrders={totalOrders}
       points={formattedPoints}
       events={formattedEvents}
       puzzles={formattedPuzzles}

@@ -33,19 +33,32 @@ export default function BigFooter() {
 
           {/* Social Icons */}
           <div className="flex gap-5 md:gap-6">
-            {[Instagram, Twitter, Linkedin].map((Icon, i) => (
-              <Icon
-                key={i}
-                className="
-                  h-5 w-5
-                  cursor-pointer
-                  text-[#FFF4D6]
-                  hover:text-[#F4C752]
-                  hover:-translate-y-0.5
-                  transition-all
-                "
-              />
-            ))}
+            <div className="flex gap-5 md:gap-6">
+              {[
+                { Icon: Instagram, href: "https://www.instagram.com/joy_juncture/" },
+                { Icon: Twitter, href: "#" },
+                { Icon: Linkedin, href: "https://www.linkedin.com/company/joy-juncture/?originalSubdomain=in" },
+              ].map(({ Icon, href }, i) => (
+                <a
+                  key={i}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={Icon.displayName || "Social Link"}
+                >
+                  <Icon
+                    className="
+                    h-5 w-5
+                    cursor-pointer
+                    text-[#FFF4D6]
+                    hover:text-[#F4C752]
+                    hover:-translate-y-0.5
+                    transition-all
+                  "
+                  />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 

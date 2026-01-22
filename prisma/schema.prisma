@@ -596,13 +596,13 @@ model EventRegistration {
   // Payment
   ticketPrice       Decimal?       @db.Decimal(10, 2)
   paymentId         String? // Internal or legacy
-  paymentStatus     PaymentStatus? @default(PENDING)
   razorpayOrderId   String?
+  ticketCode        String? @unique
+  paymentStatus     PaymentStatus? @default(PENDING)
   razorpayPaymentId String?
   paymentSignature  String?
 
-  // Ticket
-  ticketCode String? @unique
+
 
   // Attendance
   attended   Boolean   @default(false)
@@ -1148,9 +1148,12 @@ model Order {
   paymentStatus PaymentStatus @default(PENDING)
 
   // Payment Details
-  paymentMethod PaymentMethod?
-  paymentId     String? // Gateway transaction ID
-  paidAt        DateTime?
+  paymentMethod    PaymentMethod?
+  paymentId        String? // Gateway transaction ID (Legacy/General)
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  paymentSignature  String?
+  paidAt           DateTime?
 
   // Refund Details
   refundAmount  Decimal?       @db.Decimal(10, 2)
