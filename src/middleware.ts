@@ -28,17 +28,10 @@ export default auth((req) => {
   // We will attach headers to this response.
   const response = NextResponse.next();
 
-  // Logic for redirection
-  // if (isApiAuthRoute) {
-  //   // For API auth routes, we usually just return null to let NextAuth handle it, 
-  //   // OR we can return a passed-through response. 
-  //   // Returning undefined/null in auth wrapper usually means "allow".
-  //   // But if we want headers, we should return the response.
-  //   // Let's rely on NextAuth handling this internally if we return simply.
-  //   // But to be safe and stricter with headers, let's try to wrap it.
-  //   // actually for api/auth, we shouldn't interfere too much.
-  //   return NextResponse.next();
-  // }
+
+  if (isApiAuthRoute) {
+    return null;
+  }
 
   if (isAuthRoute) {
     // If logged in, we let them proceed to the auth page (e.g. login/register) 

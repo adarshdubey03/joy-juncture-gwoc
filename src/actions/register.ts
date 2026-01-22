@@ -10,12 +10,13 @@ import { sendVerificationEmail } from "@/lib/mail";
 import { sendVerificationSMS } from "@/lib/sms";
 
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
     try {
         // 1. IP Rate Limiting
-        const ip = "127.0.0.1"; // TODO: get real IP in production
-        const isAllowed = await checkRateLimit(ip, "REGISTER_ATTEMPT", 50, 3600); // 50 attempts per hour per IP (relaxed for dev)
+        const ip = await getClientIp();
+        const isAllowed = await checkRateLimit(ip, "REGISTER_ATTEMPT", 50, 3600); // 50 attempts per hour per IP
         if (!isAllowed) return { error: "Too many registration attempts. Please try again later." };
 
         const validatedFields = RegisterSchema.safeParse(values);

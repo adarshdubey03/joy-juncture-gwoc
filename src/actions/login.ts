@@ -13,14 +13,14 @@ import { AuthError } from "next-auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
     let email: string, password: string;
 
     try {
         // 1. IP Rate Limiting for Login
-        // TODO: Use real IP in production (e.g., req.headers.get("x-forwarded-for"))
-        const ip = "127.0.0.1";
+        const ip = await getClientIp();
         // Allow 5 attempts per 15 minutes (900 seconds)
         const isAllowed = await checkRateLimit(ip, "LOGIN_ATTEMPT", 5, 900);
 
